@@ -1,7 +1,4 @@
-// import _ from 'lodash';
-// import Cookie from 'universal-cookie';
-
-import axiosInstance from '../../../features/utils/Http/axios/axiosInstance';
+import axiosInstance from '../../../features/utils/Http/axiosInstance';
 import { COMMON_AUTH_API } from '../../Const/COMMON_API';
 import {
   AuthLoginType,
