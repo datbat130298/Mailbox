@@ -1,9 +1,9 @@
-import _, { get } from "lodash";
-import { matchPath } from "react-router-dom";
+import _, { get } from 'lodash';
+import { matchPath } from 'react-router-dom';
 
-const formatCurrency = (value, currency = "USD") => {
-  const formatter = new Intl.NumberFormat("en-US", {
-    style: "currency",
+const formatCurrency = (value, currency = 'USD') => {
+  const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
     currency,
   });
   return formatter.format(value);
@@ -16,9 +16,9 @@ const formatCurrency = (value, currency = "USD") => {
  */
 const normalizeCardNumber = (cardNumber) => {
   const cardNumberString = cardNumber.toString();
-  const cardNumberStringWithoutSpace = cardNumberString.replace(/\s/g, "");
-  const cardNumberStringWithoutSpaceAndDash = cardNumberStringWithoutSpace.replace(/-/g, "");
-  const cardNumberStringWithoutSpaceAndDashAndSlash = cardNumberStringWithoutSpaceAndDash.replace(/\//g, "");
+  const cardNumberStringWithoutSpace = cardNumberString.replace(/\s/g, '');
+  const cardNumberStringWithoutSpaceAndDash = cardNumberStringWithoutSpace.replace(/-/g, '');
+  const cardNumberStringWithoutSpaceAndDashAndSlash = cardNumberStringWithoutSpaceAndDash.replace(/\//g, '');
 
   return cardNumberStringWithoutSpaceAndDashAndSlash;
 };
@@ -30,11 +30,11 @@ const normalizeCardNumber = (cardNumber) => {
  */
 const beautifyCardNumber = (cardNumber) => {
   const cardNumberString = cardNumber.toString();
-  const cardNumberStringWithoutSpace = cardNumberString.replace(/\s/g, "");
-  const cardNumberStringWithoutSpaceAndDash = cardNumberStringWithoutSpace.replace(/-/g, "");
-  const cardNumberStringWithoutSpaceAndDashAndSlash = cardNumberStringWithoutSpaceAndDash.replace(/\//g, "");
+  const cardNumberStringWithoutSpace = cardNumberString.replace(/\s/g, '');
+  const cardNumberStringWithoutSpaceAndDash = cardNumberStringWithoutSpace.replace(/-/g, '');
+  const cardNumberStringWithoutSpaceAndDashAndSlash = cardNumberStringWithoutSpaceAndDash.replace(/\//g, '');
 
-  const cardNumberArray = cardNumberStringWithoutSpaceAndDashAndSlash.split("");
+  const cardNumberArray = cardNumberStringWithoutSpaceAndDashAndSlash.split('');
 
   const cardNumberArrayWithSpace = cardNumberArray.slice(0, 16).map((value, index) => {
     if (index % 4 === 0 && index !== 0) {
@@ -43,7 +43,7 @@ const beautifyCardNumber = (cardNumber) => {
     return value;
   });
 
-  return cardNumberArrayWithSpace.join("");
+  return cardNumberArrayWithSpace.join('');
 };
 
 /**
@@ -52,13 +52,13 @@ const beautifyCardNumber = (cardNumber) => {
  * @returns {String}
  */
 const normalizeMonth = (month) => {
-  if (!month) return "";
+  if (!month) return '';
 
   const monthNumber = parseInt(month, 10);
 
-  if (!monthNumber) return "";
+  if (!monthNumber) return '';
 
-  if (monthNumber > 12) return "12";
+  if (monthNumber > 12) return '12';
 
   if (monthNumber < 10) {
     return `0${monthNumber}`;
@@ -73,7 +73,7 @@ const normalizeMonth = (month) => {
  * @returns {String}
  */
 const normalizeYear = (year) => {
-  if (!year) return "";
+  if (!year) return '';
 
   const yearString = year.toString();
 
@@ -90,7 +90,7 @@ const normalizeYear = (year) => {
  */
 const getExpirationMonthAndYear = (expires) => {
   const expiresString = expires.toString();
-  const expiresArray = expiresString.split("/");
+  const expiresArray = expiresString.split('/');
 
   return {
     month: normalizeMonth(expiresArray[0]),
@@ -105,23 +105,23 @@ const generateImageUrlFromFile = (imageFile) => {
   return imageFile;
 };
 const clearLayout = () => {
-  const header = document.getElementById("header");
-  const footer = document.getElementById("footer");
-  const sidebar = document.getElementById("sidebar");
-  const content = document.getElementById("content");
+  const header = document.getElementById('header');
+  const footer = document.getElementById('footer');
+  const sidebar = document.getElementById('sidebar');
+  const content = document.getElementById('content');
 
-  if (header) header.classList.add("!hidden");
-  if (footer) footer.classList.add("hidden");
-  if (sidebar) sidebar.classList.add("hidden");
+  if (header) header.classList.add('!hidden');
+  if (footer) footer.classList.add('hidden');
+  if (sidebar) sidebar.classList.add('hidden');
   if (content) {
-    content.className = "w-full min-h-fit-layout";
+    content.className = 'w-full min-h-fit-layout';
   }
   return () => {
-    if (header) header.classList.remove("!hidden");
-    if (footer) footer.classList.remove("hidden");
-    if (sidebar) sidebar.classList.remove("hidden");
+    if (header) header.classList.remove('!hidden');
+    if (footer) footer.classList.remove('hidden');
+    if (sidebar) sidebar.classList.remove('hidden');
     if (content) {
-      content.className = "ml-72 min-h-fit-layout w-fit-layout";
+      content.className = 'ml-72 min-h-fit-layout w-fit-layout';
     }
   };
 };
@@ -133,10 +133,10 @@ const triggerClickOutside = (ref, callback) => {
     }
   };
 
-  document.addEventListener("click", handleClickOutside, true);
+  document.addEventListener('click', handleClickOutside, true);
 
   return () => {
-    document.removeEventListener("click", handleClickOutside, true);
+    document.removeEventListener('click', handleClickOutside, true);
   };
 };
 
@@ -166,15 +166,15 @@ const checkValidateSlug = (slug) => {
 };
 
 const queryParamsDefault = {
-  searchValue: "",
+  searchValue: '',
   searchBy: [],
   filterParams: [],
-  filterBy: "",
-  filterValue: "",
-  filterByDate: "",
-  filterByRelative: "",
-  filterValueRelative: "",
-  sort: "",
+  filterBy: '',
+  filterValue: '',
+  filterByDate: '',
+  filterByRelative: '',
+  filterValueRelative: '',
+  sort: '',
   page: 1,
   perPage: 10,
   customId: null,
@@ -200,7 +200,7 @@ const generateFilterParams = (columnFilters, searchValue, typeSearch) => {
 };
 
 const gernerateBackgroundColor = () => {
-  const arrayColor = ["bg-blue-400", "bg-red-400", "bg-orange-400", "bg-green-400", "bg-gray-400"];
+  const arrayColor = ['bg-blue-400', 'bg-red-400', 'bg-orange-400', 'bg-green-400', 'bg-gray-400'];
   const pickColor = _.random(0, 4);
   return arrayColor[pickColor];
 };
@@ -228,7 +228,7 @@ const checkPermission = (requiredPermission, userPermission) => {
 };
 
 const getFeatureName = (name, languageCode, config) => {
-  if (!name?.includes("{{")) return get(name, languageCode, name);
+  if (!name?.includes('{{')) return get(name, languageCode, name);
 
   Object.keys(config).forEach((key) => {
     // eslint-disable-next-line no-param-reassign
@@ -240,7 +240,7 @@ const getFeatureName = (name, languageCode, config) => {
 
 const getOptionBreadcrumb = (root, location) => {
   return location
-    .split("/")
+    .split('/')
     .filter(Boolean)
     .reduce(
       (acc, curr, idx, arr) => {
@@ -253,41 +253,41 @@ const getOptionBreadcrumb = (root, location) => {
         if (idx === arr.length - 1) return acc.crumbs;
         return acc;
       },
-      { path: "", crumbs: [{ path: "/", name: root }] }
+      { path: '', crumbs: [{ path: '/', name: root }] },
     );
 };
 
 const startOrCloseThemeDark = (isShow = false) => {
-  const root = document.getElementById("change_theme");
-  const dropdown = document.getElementById("dropdown-provider");
+  const root = document.getElementById('change_theme');
+  const dropdown = document.getElementById('dropdown-provider');
   if (isShow) {
-    root.classList.add("dark");
-    dropdown.classList.add("dark");
+    root.classList.add('dark');
+    dropdown.classList.add('dark');
   } else {
-    root.classList.remove("dark");
-    dropdown.classList.remove("dark");
+    root.classList.remove('dark');
+    dropdown.classList.remove('dark');
   }
 
   return () => {
-    if (root) root.classList.remove("dark");
-    if (dropdown) dropdown.classList.remove("dark");
+    if (root) root.classList.remove('dark');
+    if (dropdown) dropdown.classList.remove('dark');
   };
 };
 
 const excludeSidebarPaths = [
-  "my/profile/upgrade/*",
-  "my/profile/top-up/*",
-  "my/profile/add-on/*",
-  "admin/profile/upgrade/*",
-  "admin/profile/top-up/*",
-  "admin/profile/add-on/*",
-  "editor/profile/upgrade/*",
-  "editor/profile/top-up/*",
-  "editor/profile/add-on/*",
+  'my/profile/upgrade/*',
+  'my/profile/top-up/*',
+  'my/profile/add-on/*',
+  'admin/profile/upgrade/*',
+  'admin/profile/top-up/*',
+  'admin/profile/add-on/*',
+  'editor/profile/upgrade/*',
+  'editor/profile/top-up/*',
+  'editor/profile/add-on/*',
 ];
 
 const isMatchedExcludePathNotShowDarkMode = (pathname) => {
-  if (pathname.includes("/my") || pathname.includes("/admin") || pathname.includes("/editor")) {
+  if (pathname.includes('/my') || pathname.includes('/admin') || pathname.includes('/editor')) {
     return excludeSidebarPaths.some((path) => matchPath(path, pathname));
   }
   return true;

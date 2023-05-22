@@ -1,29 +1,33 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import _ from 'lodash';
 import { UserDataType } from '../../app/Types/userTypes';
 
-const initialState = {
-  user: null,
-  cart: [],
-  links: [],
+const initialState: UserDataType = {
+  uuid: 0,
+  email: '',
+  first_name: '',
+  last_name: '',
+  username: '',
+  roles: [],
 };
 
 export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setUser: (state, action) => {
-      if (!action.payload) {
-        state.user = null;
-        return;
+    setUser: (state, action: PayloadAction<UserDataType>) => {
+      if (!_.isEqual(action.payload, state)) {
+        Object.assign(state, action.payload);
       }
-
-      state.user = {
-        ...action.payload,
-      };
+    },
+    clearUser: (state) => {
+      Object.assign(state, initialState);
     },
   },
 });
 
-const { actions, reducer } = userSlice;
-export const { setUser } = actions;
-export default reducer;
+const { actions, reducer: userReducer } = userSlice;
+
+export const { setUser, clearUser } = actions;
+
+export default userReducer;

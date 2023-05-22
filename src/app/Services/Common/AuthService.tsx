@@ -1,3 +1,5 @@
+import _ from 'lodash';
+import Cookies from 'universal-cookie';
 import axiosInstance from '../../../features/utils/Http/axiosInstance';
 import { COMMON_AUTH_API } from '../../Const/COMMON_API';
 import {
@@ -13,7 +15,7 @@ import { getQueryURL } from './CommonService';
 const getMe = (): Promise<AxiosResponseType<UserDataType>> =>
   axiosInstance.get(
     getQueryURL(COMMON_AUTH_API.GETME, {
-      'expand[]': ['user__user_config', 'user__roles', 'user__add_by', 'user__main_folders'],
+      'expand[]': ['user__user_config', 'user__roles'],
     }),
     {
       redirectWhenError: false,
@@ -78,6 +80,12 @@ const loginWithEmailPassword = (
 
 const logOut = () => axiosInstance.post(COMMON_AUTH_API.LOGOUT);
 
+const getLoginStatus = async () => {
+  const cookie = new Cookies();
+  const isLogged = cookie.get('logged');
+  return _.isUndefined(isLogged) ? false : !!isLogged;
+};
+
 export {
   getMe,
   logOut,
@@ -86,4 +94,5 @@ export {
   setAccessTokens,
   refreshAccessToken,
   loginWithEmailPassword,
+  getLoginStatus,
 };

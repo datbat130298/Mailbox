@@ -1,6 +1,3 @@
-import _ from 'lodash';
-import Cookies from 'universal-cookie';
-
 import { TableColumnFiltersState } from '../../Types/commonTypes';
 
 interface ParamTypes {

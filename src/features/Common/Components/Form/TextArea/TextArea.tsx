@@ -140,7 +140,7 @@ const TextArea = ({
           {label}
         </div>
         {labelPostfix && (
-          <div className="absolute right-0 top-0 bottom-0 z-20 flex flex-col items-center justify-center">
+          <div className="absolute bottom-0 right-0 top-0 z-20 flex flex-col items-center justify-center">
             {labelPostfix}
           </div>
         )}
@@ -167,7 +167,7 @@ const TextArea = ({
           />
         </div>
       </label>
-      {!inlineError && error && <div className="mt-1.5 -mb-1.5 text-sm text-red-500">{error}</div>}
+      {!inlineError && error && <div className="-mb-1.5 mt-1.5 text-sm text-red-500">{error}</div>}
     </div>
   );
 };

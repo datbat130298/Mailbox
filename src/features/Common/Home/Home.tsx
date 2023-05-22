@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import Login from '../Auth/Login/Login';
 
 const Home = () => {
   useEffect(() => {
@@ -10,13 +9,7 @@ const Home = () => {
     });
   }, []);
 
-  return (
-    <div className="flex h-screen w-full items-center justify-center">
-      <div className="h-fit w-[800px]">
-        <Login />
-      </div>
-    </div>
-  );
+  return <div className="flex h-screen w-full  items-center justify-center">Home</div>;
 };
 
 export default Home;

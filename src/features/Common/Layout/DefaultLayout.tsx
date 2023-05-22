@@ -8,7 +8,7 @@ const DefaultLayout = ({ children }: DefaultLayoutProps) => {
   return (
     <>
       <Header />
-      {children}
+      <div className="z-0 mt-[-96px] h-screen w-full">{children}</div>
     </>
   );
 };

@@ -5,6 +5,7 @@ import isEmail from 'validator/lib/isEmail';
 import { AuthService } from '../../../../app/Services';
 import { AxiosErrorDataType } from '../../../../app/Types/commonTypes';
 import { setUser } from '../../../User/userSlice';
+import Alert from '../../Components/Alert/Alert';
 import Button from '../../Components/Button';
 import Input from '../../Components/Form/Input';
 import Logo from '../../Components/Logo/Logo';
@@ -24,7 +25,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    window.document.title = `Login - ${process.env.REACT_APP_FRONTEND_WEBSITE_NAME}`;
+    window.document.title = `Login - ${process.env.REACT_APP_WEBSITE_NAME}`;
     window.scrollTo({
       top: 0,
       behavior: 'smooth',
@@ -64,11 +65,12 @@ const Login = () => {
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
         AuthService.getMe().then((response: any) => {
           dispatch(setUser(response.data.data));
-          if (response?.data?.data?.roles?.find((role: any) => role.slug === 'admin')) {
-            from = searchParams.get('redirect') || '/admin';
-          } else {
-            from = searchParams.get('redirect') || '/my';
-          }
+          // if (response?.data?.data?.roles?.find((role: any) => role.slug === 'admin')) {
+          //   from = searchParams.get('redirect') || '/admin';
+          // } else {
+          //   from = searchParams.get('redirect') || '/my';
+          // }
+          from = '/auth/login-success';
           navigate(from, {
             replace: true,
           });
@@ -104,6 +106,25 @@ const Login = () => {
           </div>
         </div>
         <form action="" className="mt-10 sm:mt-14" onSubmit={handleSubmit}>
+          {error && (
+            <Alert
+              title="Username or password have arror. Please check it again"
+              message={error.message}
+              type="error"
+              className="mb-8"
+              onClose={() => setError(null)}
+            >
+              {error.code === 'not_exists' && (
+                <Link
+                  to={`/auth/register?email=${encodeURIComponent(email || '')}&redirect=${encodeURIComponent(
+                    searchParams.get('redirect') || '',
+                  )}`}
+                >
+                  Create account
+                </Link>
+              )}
+            </Alert>
+          )}
           <Input
             type="email"
             label="Email"
