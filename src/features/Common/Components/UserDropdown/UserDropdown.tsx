@@ -9,7 +9,7 @@ import useSelector from '../../../Hooks/useSelector';
 import { clearUser } from '../../../User/userSlice';
 
 interface UserDropdownProps {
-  onClick?: () => void;
+  onClick: () => void;
 }
 
 const UserDropdown = ({ onClick }: UserDropdownProps) => {
@@ -26,7 +26,8 @@ const UserDropdown = ({ onClick }: UserDropdownProps) => {
     logOut()
       .then(() => {
         dispatch(clearUser());
-        navigate('/*', {
+        onClick();
+        navigate('/', {
           replace: true,
         });
       })

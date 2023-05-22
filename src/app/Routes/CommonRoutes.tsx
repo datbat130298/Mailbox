@@ -4,18 +4,16 @@ import AuthPage from '../../features/Common/Auth/AuthPage';
 import LoginSuccess from '../../features/Common/Auth/Login/LoginSuccess';
 import Home from '../../features/Common/Home/Home';
 import useDispatch from '../../features/Hooks/useDispatch';
-import useSelector from '../../features/Hooks/useSelector';
 import { setUser } from '../../features/User/userSlice';
 import { getLoginStatus, getMe } from '../Services/Common/AuthService';
 
 const CommonRoutes = () => {
-  const user = useSelector((state) => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
-    if (user.uuid === 0) {
-      getLoginStatus()
-        .then(async () => {
+    getLoginStatus()
+      .then(async (resolve) => {
+        if (resolve) {
           return getMe()
             .then((res) => {
               return dispatch(setUser(res.data.data));
@@ -25,12 +23,13 @@ const CommonRoutes = () => {
                 replace: true,
               });
             });
-        })
-        .catch(() => {
-          return Promise.reject();
-        });
-    }
-  }, [user]);
+        }
+        return Promise.resolve();
+      })
+      .catch(() => {
+        return Promise.reject();
+      });
+  }, []);
   return (
     <Routes>
       <Route path="/*">
