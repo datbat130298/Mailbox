@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 const defaultTheme = require('tailwindcss/defaultTheme');
 const colors = require('tailwindcss/colors');
 
@@ -76,6 +74,7 @@ module.exports = {
         ...defaultTheme.boxShadow,
         xl: '0px 5px 14px 0px rgba(100, 100, 111, 0.2)',
         left: '0px 2px 4px 0px rgba(14, 30, 37, 0.12) , 0px 2px 16px 0px rgba(14, 30, 37, 0.32)',
+        box: '0px 0px 5px 0px rgba(0, 0, 0, 0.1), 0px 0px 1px 0px rgba(0, 0, 0, 0.1) ',
       },
       keyframes: {
         blink: {

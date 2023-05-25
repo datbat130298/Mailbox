@@ -1,15 +1,6 @@
 import { Id, toast, ToastOptions, TypeOptions } from 'react-toastify';
 import ToastMessage from '../Common/Components/ToastMessage/ToastMessage';
 
-/**
- * Basic used of notification.
- * const toast = useToast({ initialConfig});
- * toast.success('Message.');
- * toast.warning('Message.', 'Description.', {
- *   className: 0,
- * });
- */
-
 type ToastType = 'info' | 'success' | 'warning' | 'error' | 'loading';
 
 type ShowFunction = (

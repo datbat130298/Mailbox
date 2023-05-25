@@ -4,9 +4,9 @@ import { FiHelpCircle, FiLogOut, FiSettings, FiUser } from 'react-icons/fi';
 import { Link, useNavigate } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 import { logOut } from '../../../../app/Services/Common/AuthService';
+import { clearUser } from '../../../../app/Slices/userSlice';
 import useDispatch from '../../../Hooks/useDispatch';
 import useSelector from '../../../Hooks/useSelector';
-import { clearUser } from '../../../User/userSlice';
 
 interface UserDropdownProps {
   onClick: () => void;

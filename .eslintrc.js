@@ -23,6 +23,16 @@ module.exports = {
     sourceType: 'module',
     project: './tsconfig.json',
   },
+  ignorePatterns: [
+    '**/*.d.ts',
+    '**/*.test.*',
+    '**/*.stories.*',
+    'node_modules/',
+    'build/',
+    'dist/',
+    '*rc.js',
+    '*config.js',
+  ],
   plugins: ['@typescript-eslint'],
   rules: {
     '@typescript-eslint/no-unused-vars': 'warn',

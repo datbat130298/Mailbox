@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import Cookies from 'universal-cookie';
 import axiosInstance from '../../../features/utils/Http/axiosInstance';
 import { COMMON_AUTH_API } from '../../Const/COMMON_API';
@@ -83,7 +82,8 @@ const logOut = () => axiosInstance.post(COMMON_AUTH_API.LOGOUT);
 const getLoginStatus = async () => {
   const cookie = new Cookies();
   const isLogged = cookie.get('logged');
-  return _.isUndefined(isLogged) ? false : !!isLogged;
+  if (!isLogged) throw Error();
+  return true;
 };
 
 export {
