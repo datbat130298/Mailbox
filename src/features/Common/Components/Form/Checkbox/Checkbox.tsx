@@ -38,7 +38,7 @@ const Checkbox = ({
     >
       <div
         className={twMerge(
-          'absolute inset-0 -z-10 cursor-pointer rounded-md border-2 border-gray-200 group-hover:border-primary-700',
+          'absolute inset-0 -z-10 cursor-pointer rounded-md border-[1px] border-gray-200 group-hover:border-primary-700',
           checked && !indeterminate && !disabled && 'border-primary-700 bg-primary-700',
           indeterminate && !disabled && 'border-primary-700',
           disabled && 'cursor-not-allowed bg-gray-100 group-hover:border-gray-100',

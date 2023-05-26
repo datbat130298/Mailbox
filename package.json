@@ -17,6 +17,7 @@
     "@types/validator": "^13.7.17",
     "airbnb": "^0.0.2",
     "axios": "^1.4.0",
+    "dayjs": "^1.11.7",
     "eslint-config-airbnb-typescript": "^17.0.0",
     "eslint-plugin-prettier": "^4.2.1",
     "framer-motion": "^10.12.12",

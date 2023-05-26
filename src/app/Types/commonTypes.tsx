@@ -107,3 +107,10 @@ export interface DatePickerRangeType {
   start: Dayjs | null;
   end: Dayjs | null;
 }
+
+export interface MailType {
+  uuid: number;
+  author: string;
+  subject: string;
+  content: string;
+}
