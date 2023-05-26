@@ -3,6 +3,6 @@ interface SubSidebarContainerProps {
 }
 
 const SubSidebarContainer = ({ children }: SubSidebarContainerProps) => {
-  return <div className="h-full w-52 bg-slate-100 py-1 pr-4">{children}</div>;
+  return <div className="h-full w-52 bg-slate-100 pr-4 pt-0.5">{children}</div>;
 };
 export default SubSidebarContainer;
