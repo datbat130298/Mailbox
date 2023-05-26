@@ -29,7 +29,13 @@ const Checkbox = ({
   );
 
   return (
-    <div className={twMerge('z-0 h-5 w-5', className, 'group relative inline-block rounded-md bg-white')}>
+    <div
+      className={twMerge(
+        'z-0 h-[18px] w-[18px]',
+        className,
+        'group relative inline-block rounded-[4px] bg-white',
+      )}
+    >
       <div
         className={twMerge(
           'absolute inset-0 -z-10 cursor-pointer rounded-md border-2 border-gray-200 group-hover:border-primary-700',
@@ -39,9 +45,9 @@ const Checkbox = ({
         )}
       />
       {indeterminate ? (
-        <HiMinusSm size={20} className={iconClassName} />
+        <HiMinusSm size={18} className={iconClassName} />
       ) : (
-        <BsCheck className={iconClassName} size={20} />
+        <BsCheck className={iconClassName} size={18} />
       )}
       <input
         type={type}

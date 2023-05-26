@@ -10,7 +10,7 @@ const Tooltip = ({ children, className, title }: TooltipProps) => {
       data-tooltip-id="my-tooltip"
       data-tooltip-content={title}
       data-tooltip-place="right"
-      data-tooltip-variant="light"
+      data-tooltip-variant="dark"
       className={className}
     >
       {children}

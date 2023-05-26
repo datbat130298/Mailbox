@@ -1,10 +1,11 @@
 import { cloneElement, useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
+import useSelector from '../../../Hooks/useSelector';
 import Tooltip from '../Tooltip/Tooltip';
 
 interface SidebarItemProps {
-  to: string;
+  to?: string;
   tooltipText: string;
   icon: any;
   className?: string;
@@ -13,18 +14,19 @@ interface SidebarItemProps {
 
 const SidebarItem = ({ to, icon, title, className, tooltipText }: SidebarItemProps) => {
   const { pathname } = useLocation();
+  const isShowSubSideBar = useSelector((state) => state.layout.isShowSubSideBar);
 
   const isActivated = useMemo(() => {
-    if (tooltipText === 'Menu') return true;
+    if (tooltipText === 'Menu' && isShowSubSideBar) return true;
     if (pathname === to) return true;
     return false;
-  }, [pathname, tooltipText]);
+  }, [pathname, tooltipText, isShowSubSideBar]);
 
   return (
     <Link
-      to={to}
+      to={to || pathname}
       className={twMerge(
-        'group mt-1  flex h-fit w-full flex-shrink-0 items-center justify-center',
+        'group mb-2 mt-1  flex h-fit w-full flex-shrink-0 items-center justify-center text-gray-500',
         className,
       )}
     >
@@ -33,7 +35,7 @@ const SidebarItem = ({ to, icon, title, className, tooltipText }: SidebarItemPro
           <div className="flex h-fit w-full flex-shrink-0 items-center justify-center">
             <div
               className={twMerge(
-                'relative flex h-12 w-12 items-center rounded-full hover:bg-gray-200 hover:text-primary-700',
+                'relative flex h-8 w-12 items-center rounded-full hover:bg-gray-200 hover:text-primary-700',
                 isActivated && 'bg-gray-200 text-primary-700',
               )}
             >
@@ -48,7 +50,7 @@ const SidebarItem = ({ to, icon, title, className, tooltipText }: SidebarItemPro
         {title && (
           <div
             className={twMerge(
-              'line-clamp-1 h-fit w-full text-ellipsis break-all text-center text-sm group-hover:text-primary-700',
+              '-mt-[2px] line-clamp-1 h-fit w-full text-ellipsis break-all text-center text-sm group-hover:text-primary-700',
               isActivated && 'text-primary-700',
             )}
           >

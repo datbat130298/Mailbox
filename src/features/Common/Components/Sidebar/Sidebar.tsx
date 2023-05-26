@@ -21,7 +21,7 @@ const Sidebar = () => {
   return (
     <div className="fixed left-0 top-0 z-50 h-screen w-[72px] bg-gray-100 px-1 py-2 shadow">
       <div role="button" tabIndex={0} onClick={handleShowSubSidebar}>
-        <SidebarItem to="" tooltipText="Menu" icon={<AiOutlineMenu size={20} />} className="mb-0.5" />
+        <SidebarItem tooltipText="Menu" icon={<AiOutlineMenu size={20} />} className="mb-0.5" />
       </div>
       <SidebarItem to="/inbox" title="Inbox" tooltipText="Inbox" icon={<AiOutlineMail size={20} />} />
       <SidebarItem to="/sent" title="Sent" tooltipText="Sent" icon={<BsChatLeftText size={18} />} />

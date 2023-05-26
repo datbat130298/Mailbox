@@ -25,7 +25,7 @@ const ContainerWorkSpace = () => {
       )}
       <div
         className={twMerge(
-          'h-full w-full rounded-lg bg-white shadow-box',
+          'h-full w-full rounded-t-lg bg-white shadow-box',
           isShowSubSideBar && 'w-[calc(100%-208px)]',
         )}
       >
