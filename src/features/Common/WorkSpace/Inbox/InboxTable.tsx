@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { BsTrash } from 'react-icons/bs';
-import { FiChevronDown, FiFilter } from 'react-icons/fi';
 import { IoArchiveOutline } from 'react-icons/io5';
 import { MdOutlineMoreVert } from 'react-icons/md';
 import { twMerge } from 'tailwind-merge';
@@ -11,6 +10,7 @@ import Checkbox from '../../Components/Form/Checkbox';
 import MailTable from '../../Components/Mail/MailTable';
 import Pagination from '../../Components/Pagination/Pagination';
 import SelectViewStyle from '../../Components/SelectViewStyle/SelectViewStyle';
+import FilterDropdown from './FilterDropdown';
 
 const InboxTable = () => {
   const [inboxData, setInboxData] = useState<Array<MailType>>([]);
@@ -42,6 +42,47 @@ const InboxTable = () => {
     return setSelectRows([]);
   };
 
+  const filterCheckboxData = [
+    {
+      uuid: 1,
+      label: 'All',
+      value: 'all',
+    },
+    {
+      uuid: 2,
+      label: 'Unread',
+      value: 'unread',
+    },
+    {
+      uuid: 3,
+      label: 'Read',
+      value: 'read',
+    },
+  ];
+
+  const filterViewData = [
+    {
+      uuid: 1,
+      label: 'All',
+      value: 'all',
+    },
+    {
+      uuid: 2,
+      label: 'Sent',
+      value: 'Sent',
+    },
+    {
+      uuid: 3,
+      label: 'Drafts',
+      value: 'drafts',
+    },
+    {
+      uuid: 4,
+      label: 'Trash',
+      value: 'trash',
+    },
+  ];
+
   return (
     <div className="relative h-full w-full pt-14">
       <div
@@ -59,17 +100,10 @@ const InboxTable = () => {
                 className="group-hover:border-primary-700 group-hover:text-primary-700 "
               />
             </div>
-            <div className="flex-center ml-1 h-full w-max hover:text-primary-700  group-hover:text-primary-700">
-              <FiChevronDown size={14} />
-            </div>
+            <FilterDropdown type="checkbox" filterByData={filterCheckboxData} position="-left-6 top-10" />
           </div>
-          <div className="my-3 flex h-8 w-fit rounded-md px-2  hover:bg-gray-100 hover:text-primary-700">
-            <div className="flex-center h-full w-max">
-              <FiFilter size={14} />
-            </div>
-            <div className="ml-1 text-sm leading-8">Views</div>
-          </div>
-          <div className="my-3 flex h-8 w-fit rounded-md px-2  hover:bg-gray-100 hover:text-primary-700">
+          <FilterDropdown type="view" filterByData={filterViewData} position="left-0 top-[52px]" />
+          <div className="my-3 flex h-8 w-fit rounded-md px-2 hover:bg-gray-100 hover:text-primary-700">
             <div className="flex-center h-full w-max">
               <MdOutlineMoreVert size={18} />
             </div>

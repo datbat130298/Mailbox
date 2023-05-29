@@ -159,10 +159,12 @@ const dataInbox = [
   },
 ];
 
+const datawithDay = dataInbox?.map((item) => ({ ...item, time: 'May 29' }));
+
 const getInboxs = () => {
   return new Promise<MailType[]>((resolve) => {
     setTimeout(() => {
-      resolve(dataInbox);
+      resolve(datawithDay);
     }, 1000);
   });
 };
