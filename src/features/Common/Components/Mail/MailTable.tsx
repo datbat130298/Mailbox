@@ -24,7 +24,7 @@ const MailTable = ({ data, onChangeShowShadow, onChangeSelectRows, selectRows }:
     }
   }, [inViewport, onChangeShowShadow]);
   return (
-    <div className="overflow-overlay -z-10 h-full w-full gap-y-4  overflow-hidden overflow-y-auto">
+    <div className="overflow-overlay -z-10 h-full w-full gap-y-4  overflow-hidden overflow-y-auto ">
       <div className="h-fit w-full">
         <div className="h-[1px] w-full" ref={detectLoadingRef} />
         {_.isEmpty(data)

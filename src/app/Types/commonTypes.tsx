@@ -113,4 +113,5 @@ export interface MailType {
   author: string;
   subject: string;
   content: string;
+  time: string;
 }

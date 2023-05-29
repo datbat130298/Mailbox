@@ -24,20 +24,24 @@ const MailItem = ({ mail, onChangeSelectRows, selected }: MailItemProps) => {
             <Checkbox checked={selected} onChange={(e) => onChangeSelectRows(mail.uuid, e.target.checked)} />
           </div>
         </div>
-        <div className="h-full w-[calc(100%-48px)] pl-2">
+        <div className="relative h-full w-[calc(100%-48px)] pl-2 pr-24">
           <div className="flex h-full w-full justify-start overflow-hidden text-gray-700">
-            <div className="line-clamp-1 flex h-full w-56 flex-shrink-0  text-ellipsis break-all font-semibold leading-[52px] text-gray-700">
+            <div className="line-clamp-1 flex h-full w-48 flex-shrink-0  text-ellipsis break-all font-semibold leading-[52px] text-gray-700">
               {mail?.author}
             </div>
-            <div className="line-clamp-1  flex h-full w-fit flex-shrink-0 font-semibold leading-[52px]">
+            <div className="line-clamp-1 flex h-full w-fit flex-shrink-0 text-ellipsis break-all font-semibold leading-[52px]">
               {mail?.subject}
             </div>
-            <div className="line-clamp-1  h-full w-fit text-ellipsis break-all pl-1 leading-[52px]">
+            <div className="line-clamp-1 h-full w-fit text-ellipsis break-all pl-1 leading-[52px]">
               {!_.isEmpty(mail?.content) && `- ${mail?.content}`}
             </div>
           </div>
+          <div className="z-5 absolute right-0 top-0 line-clamp-1 flex h-full w-24 justify-end text-ellipsis break-all bg-white pr-4  text-center text-xs font-semibold leading-[52px] text-gray-700 group-hover:bg-gray-100">
+            {mail?.time}
+          </div>
         </div>
       </div>
+
       <MailItemAction />
     </div>
   );
