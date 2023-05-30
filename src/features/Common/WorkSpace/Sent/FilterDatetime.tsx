@@ -1,46 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { BsCalendar4 } from 'react-icons/bs';
 import { twMerge } from 'tailwind-merge';
+import { filterByDatetime } from '../../../utils/helpers';
 import Button from '../../Components/Button';
 import Input from '../../Components/Form/Input';
-
-interface FilterItemType {
-  uuid: number;
-  label: string;
-  value: string;
-}
 
 const FilterDatetime = () => {
   const filterRef = useRef<HTMLDivElement>(null);
   const [isShowFilterDropdown, setIsShowFilterDropdown] = useState(false);
   const [selectFilterBy, setSelectFilterBy] = useState('');
-  const filterByData: FilterItemType[] = [
-    {
-      uuid: 1,
-      label: 'Any time',
-      value: 'any_time',
-    },
-    {
-      uuid: 2,
-      label: 'Last 7 days',
-      value: 'last7days',
-    },
-    {
-      uuid: 3,
-      label: 'Last 30 days',
-      value: 'last30days',
-    },
-    {
-      uuid: 4,
-      label: 'Last 6 months',
-      value: 'last6months',
-    },
-    {
-      uuid: 5,
-      label: 'Custom range',
-      value: 'custom_range',
-    },
-  ];
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -77,7 +45,7 @@ const FilterDatetime = () => {
         )}
       >
         {selectFilterBy !== 'custom_range' &&
-          filterByData?.map((item) => (
+          filterByDatetime?.map((item) => (
             <div
               className={twMerge(
                 'flex h-8 w-full rounded-sm hover:bg-gray-200 hover:text-primary-700',
@@ -111,7 +79,7 @@ const FilterDatetime = () => {
                 inputClassName="text-sm leading-7"
               />
             </div>
-            <div className="mt-4 flex justify-end gap-x-1 border-t pt-3">
+            <div className="mt-4 flex justify-end gap-x-2 border-t pt-3">
               <Button
                 onClick={() => setSelectFilterBy('')}
                 color="light"
@@ -120,7 +88,7 @@ const FilterDatetime = () => {
               >
                 Cancel
               </Button>
-              <Button color="gray" size="xs" className="w-28 py-2 text-xs  shadow-none ring-1">
+              <Button size="xs" className="w-28 py-2 text-xs  shadow-none ring-1">
                 Apply
               </Button>
             </div>

@@ -1,21 +1,22 @@
 import _ from 'lodash';
-import { useCallback, useEffect, useState } from 'react';
-import { BsTrash } from 'react-icons/bs';
-import { IoArchiveOutline } from 'react-icons/io5';
-import { MdOutlineMoreVert } from 'react-icons/md';
-import { twMerge } from 'tailwind-merge';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { getInboxs } from '../../../../app/Services/Inbox/InboxService';
 import { MailType } from '../../../../app/Types/commonTypes';
-import Checkbox from '../../Components/Form/Checkbox';
+import HeaderMailTable from '../../Components/Mail/HeaderMailTable';
 import MailTable from '../../Components/Mail/MailTable';
-import Pagination from '../../Components/Pagination/Pagination';
-import SelectViewStyle from '../../Components/SelectViewStyle/SelectViewStyle';
-import FilterDropdown from './FilterDropdown';
+import ViewMailSpace from '../../Components/Mail/ViewMailSpace';
 
 const InboxTable = () => {
   const [inboxData, setInboxData] = useState<Array<MailType>>([]);
   const [isShowShadow, setIsShowShadow] = useState(false);
   const [selectRows, setSelectRows] = useState<Array<number>>([]);
+  const [isShowViewMailSpace, setIsShowViewMailSpace] = useState(false);
+  const [selectedMail, setSelectedMail] = useState({} as MailType);
+
+  const isChecked = useMemo(() => {
+    if (!_.isEmpty(selectRows)) return true;
+    return false;
+  }, [selectRows]);
 
   const fetchData = useCallback(() => {
     getInboxs().then((data: Array<MailType>) => {
@@ -42,101 +43,34 @@ const InboxTable = () => {
     return setSelectRows([]);
   };
 
-  const filterCheckboxData = [
-    {
-      uuid: 1,
-      label: 'All',
-      value: 'all',
-    },
-    {
-      uuid: 2,
-      label: 'Unread',
-      value: 'unread',
-    },
-    {
-      uuid: 3,
-      label: 'Read',
-      value: 'read',
-    },
-  ];
-
-  const filterViewData = [
-    {
-      uuid: 1,
-      label: 'All',
-      value: 'all',
-    },
-    {
-      uuid: 2,
-      label: 'Sent',
-      value: 'Sent',
-    },
-    {
-      uuid: 3,
-      label: 'Drafts',
-      value: 'drafts',
-    },
-    {
-      uuid: 4,
-      label: 'Trash',
-      value: 'trash',
-    },
-  ];
+  const handleSelectMail = (mail: MailType) => {
+    setSelectedMail(mail);
+    setIsShowViewMailSpace(true);
+  };
 
   return (
     <div className="relative h-full w-full pt-14">
-      <div
-        className={twMerge(
-          'absolute left-0 top-0 z-40 flex h-14 w-full justify-between rounded-t-lg px-2 text-gray-500 ',
-          isShowShadow ? 'shadow-bottom' : 'border-b-[0.5px]',
-        )}
-      >
-        <div className="flex h-full w-fit">
-          <div className="group my-3 flex h-8 w-fit rounded-md px-2 hover:bg-gray-100">
-            <div className="flex-center h-full w-max">
-              <Checkbox
-                checked={!_.isEmpty(selectRows)}
-                onChange={(e) => handleSelectAll(e.target.checked)}
-                className="group-hover:border-primary-700 group-hover:text-primary-700 "
-              />
-            </div>
-            <FilterDropdown type="checkbox" filterByData={filterCheckboxData} position="-left-6 top-10" />
-          </div>
-          <FilterDropdown type="view" filterByData={filterViewData} position="left-0 top-[52px]" />
-          <div className="my-3 flex h-8 w-fit rounded-md px-2 hover:bg-gray-100 hover:text-primary-700">
-            <div className="flex-center h-full w-max">
-              <MdOutlineMoreVert size={18} />
-            </div>
-            <div className="text-sm leading-8">More</div>
-          </div>
-          {!_.isEmpty(selectRows) && (
-            <>
-              <div className="my-3 ml-1 flex h-8 w-fit rounded-md px-2  hover:bg-gray-100 hover:text-primary-700">
-                <div className="flex-center h-full w-max">
-                  <IoArchiveOutline size={14} />
-                </div>
-                <div className="ml-1 text-sm leading-8">Archive</div>
-              </div>
-              <div className="my-3 ml-1 flex h-8 w-fit rounded-md px-2  hover:bg-gray-100 hover:text-primary-700">
-                <div className="flex-center h-full w-max">
-                  <BsTrash size={14} />
-                </div>
-                <div className="ml-1 text-sm leading-8">Delete</div>
-              </div>
-            </>
-          )}
-        </div>
-        <div className="flex h-full w-fit">
-          <Pagination />
-          <SelectViewStyle />
-        </div>
-      </div>
-      <MailTable
-        data={inboxData}
-        onChangeShowShadow={setIsShowShadow}
-        onChangeSelectRows={handleSelectRows}
-        selectRows={selectRows}
+      <HeaderMailTable
+        actionArray={['view']}
+        isShowShadow={isShowShadow}
+        isShowCheckboxHeader={isShowViewMailSpace}
+        isChecked={isChecked}
+        onClickSelectAll={handleSelectAll}
+        onCloseViewMailSpace={() => {
+          setIsShowViewMailSpace(false);
+          setSelectedMail({} as MailType);
+        }}
       />
+      {!isShowViewMailSpace && (
+        <MailTable
+          data={inboxData}
+          onChangeShowShadow={setIsShowShadow}
+          onChangeSelectRows={handleSelectRows}
+          onClickShowMail={handleSelectMail}
+          selectRows={selectRows}
+        />
+      )}
+      {isShowViewMailSpace && <ViewMailSpace mail={selectedMail} />}
     </div>
   );
 };
