@@ -1,4 +1,18 @@
+import { useEffect } from 'react';
+import SentTable from './SentTable';
+
 const ContainerSent = () => {
-  return <div className="flex h-full w-full flex-shrink-0 items-center justify-center text-4xl">Sent</div>;
+  useEffect(() => {
+    window.document.title = `Sent - ${process.env.REACT_APP_WEBSITE_NAME}`;
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  }, []);
+  return (
+    <div className="relative h-full w-full rounded-t-lg">
+      <SentTable />
+    </div>
+  );
 };
 export default ContainerSent;
