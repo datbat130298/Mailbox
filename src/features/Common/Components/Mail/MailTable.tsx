@@ -10,9 +10,16 @@ interface MailTableProps {
   onChangeShowShadow?: Dispatch<SetStateAction<boolean>>;
   onChangeSelectRows: (idRows: number, checked: boolean) => void;
   selectRows: Array<number>;
+  onClickShowMail: (mail: MailType) => void;
 }
 
-const MailTable = ({ data, onChangeShowShadow, onChangeSelectRows, selectRows }: MailTableProps) => {
+const MailTable = ({
+  data,
+  onChangeShowShadow,
+  onChangeSelectRows,
+  onClickShowMail,
+  selectRows,
+}: MailTableProps) => {
   const detectLoadingRef = useRef<HTMLDivElement>(null);
   const { inViewport } = useInViewport(detectLoadingRef);
   useLayoutEffect(() => {
@@ -38,6 +45,7 @@ const MailTable = ({ data, onChangeShowShadow, onChangeSelectRows, selectRows }:
                 mail={item}
                 selected={_.includes(selectRows, item.uuid)}
                 onChangeSelectRows={onChangeSelectRows}
+                onClickShowMail={onClickShowMail}
               />
             ))}
       </div>

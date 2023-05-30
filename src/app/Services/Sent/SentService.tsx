@@ -158,7 +158,11 @@ const dataInbox = [
   },
 ];
 
-const datawithDay = dataInbox?.map((item) => ({ ...item, time: 'May 29' }));
+const datawithDay = dataInbox?.map((item) => ({
+  ...item,
+  time: '2023-05-30T03:29:57+00:00',
+  address: 'khoi.tran@techupcorp.com',
+}));
 
 const getSents = () => {
   return new Promise<MailType[]>((resolve) => {

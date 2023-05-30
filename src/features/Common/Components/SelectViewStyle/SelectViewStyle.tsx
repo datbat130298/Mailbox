@@ -58,7 +58,10 @@ const SelectViewStyle = () => {
         >
           {styleViews?.map((item) => (
             <div
-              className="flex h-8 w-full rounded-sm hover:bg-gray-200 hover:text-primary-700"
+              className={twMerge(
+                'flex h-8 w-full rounded-sm hover:bg-gray-200 hover:text-primary-700',
+                selectStyle?.uuid === item.uuid && 'bg-gray-200 text-primary-700',
+              )}
               key={item.uuid}
               role="button"
               tabIndex={0}
