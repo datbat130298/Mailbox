@@ -1,0 +1,41 @@
+// CKEDITOR
+
+.ckeditor-hidden {
+  visibility: visible !important;
+}
+
+.document-editor__toolbar {
+  box-shadow: 0 0 5px hsla(0, 0%, 0%, 0.2);
+}
+
+.ck.ck-editor__editable.ck-focused:not(.ck-editor__nested-editable) {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.ck.ck-toolbar {
+  position: absolute;
+  bottom: 25px;
+  visibility: hidden;
+  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+}
+
+#cke5-editor-types-demo-bottom-toolbar {
+  display: flex;
+  flex-direction: column;
+}
+
+#cke5-editor-types-demo-bottom-toolbar-content {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+#cke5-editor-types-demo-bottom-toolbar-content:not(.ck-focused) {
+  border-color: var(--ck-color-base-border);
+}
+
+#cke5-editor-types-demo-bottom-toolbar-toolbar-container > .ck.ck-toolbar {
+  border-top-width: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}

@@ -5,4 +5,8 @@ const COMMON_AUTH_API = {
   LOGOUT: '/api/logout',
 };
 
-export { COMMON_AUTH_API };
+const COMMON_UPLOAD_FILE_API = {
+  UPLOAD_IMG: 'api/upload-img',
+};
+
+export { COMMON_AUTH_API, COMMON_UPLOAD_FILE_API };
