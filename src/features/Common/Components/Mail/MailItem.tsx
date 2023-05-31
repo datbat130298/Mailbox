@@ -36,8 +36,8 @@ const MailItem = ({ mail, onChangeSelectRows, onClickShowMail, selected }: MailI
             <div className="line-clamp-1 flex h-full w-48 flex-shrink-0  text-ellipsis break-all font-semibold leading-[52px] text-gray-700">
               {mail?.author}
             </div>
-            <div className=" flex h-full w-fit flex-shrink-0 text-ellipsis break-all font-semibold leading-[52px]">
-              {mail?.subject}
+            <div className="flex h-full max-w-[calc(100%-192px)] flex-shrink-0 text-ellipsis  font-semibold leading-[52px]">
+              <div className="line-clamp-1 break-all">{mail?.subject}</div>
             </div>
             <div className="line-clamp-1 h-full w-fit text-ellipsis break-all pl-1 leading-[52px]">
               {!_.isEmpty(mail?.content) && `- ${mail?.content}`}

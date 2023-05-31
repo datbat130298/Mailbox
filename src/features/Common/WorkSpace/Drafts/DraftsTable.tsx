@@ -1,14 +1,14 @@
 import _ from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { getSents } from '../../../../app/Services/Sent/SentService';
+import { getDrafts } from '../../../../app/Services/Drafts/DraftsService';
 import { MailType } from '../../../../app/Types/commonTypes';
 import EmptyData from '../../Components/EmptyData/EmptyData';
 import HeaderMailTable from '../../Components/Mail/HeaderMailTable';
 import MailTable from '../../Components/Mail/MailTable';
 import ViewMailSpace from '../../Components/Mail/ViewMailSpace';
 
-const SentTable = () => {
-  const [sentData, setSentData] = useState<Array<MailType>>([]);
+const DraftsTable = () => {
+  const [draftsData, setDraftsData] = useState<Array<MailType>>([]);
   const [isShowShadow, setIsShowShadow] = useState(false);
   const [selectRows, setSelectRows] = useState<Array<number>>([]);
   const [isShowViewMailSpace, setIsShowViewMailSpace] = useState(false);
@@ -22,9 +22,9 @@ const SentTable = () => {
 
   const fetchData = useCallback(() => {
     setIsLoading(true);
-    getSents()
+    getDrafts()
       .then((data: Array<MailType>) => {
-        setSentData(data);
+        setDraftsData(data);
       })
       .finally(() => {
         setIsLoading(false);
@@ -43,15 +43,15 @@ const SentTable = () => {
   };
 
   const handleSelectAll = (checked: boolean) => {
-    const selectAll = sentData.map((item) => item?.uuid);
+    const selectAll = draftsData.map((item) => item?.uuid);
     if (checked) {
       return setSelectRows(selectAll);
     }
     return setSelectRows([]);
   };
 
-  const handleSelectMail = (e: MailType) => {
-    setSelectedMail(e);
+  const handleSelectMail = (mail: MailType) => {
+    setSelectedMail(mail);
     setIsShowViewMailSpace(true);
   };
 
@@ -70,16 +70,16 @@ const SentTable = () => {
       />
       {!isShowViewMailSpace && (
         <MailTable
-          data={sentData}
           isLoading={isLoading}
+          data={draftsData}
           onChangeShowShadow={setIsShowShadow}
-          onClickShowMail={handleSelectMail}
           onChangeSelectRows={handleSelectRows}
+          onClickShowMail={handleSelectMail}
           selectRows={selectRows}
           emptyComponent={
             <EmptyData
-              message={"You don't have any saved sent."}
-              desription="You can click to compose button to create new mail."
+              message={"You don't have any saved drafts."}
+              desription={"Saving a draft allows you to keep a message you aren't ready to send yet."}
             />
           }
         />
@@ -88,4 +88,4 @@ const SentTable = () => {
     </div>
   );
 };
-export default SentTable;
+export default DraftsTable;

@@ -7,6 +7,8 @@ import MailItemSleleton from './MailItemSkeleton';
 
 interface MailTableProps {
   data: Array<MailType>;
+  isLoading: boolean;
+  emptyComponent?: React.ReactNode;
   onChangeShowShadow?: Dispatch<SetStateAction<boolean>>;
   onChangeSelectRows: (idRows: number, checked: boolean) => void;
   selectRows: Array<number>;
@@ -15,6 +17,8 @@ interface MailTableProps {
 
 const MailTable = ({
   data,
+  isLoading,
+  emptyComponent,
   onChangeShowShadow,
   onChangeSelectRows,
   onClickShowMail,
@@ -34,20 +38,32 @@ const MailTable = ({
     <div className="overflow-overlay -z-10 h-full w-full gap-y-4  overflow-hidden overflow-y-auto ">
       <div className="h-fit w-full">
         <div className="h-[1px] w-full" ref={detectLoadingRef} />
-        {_.isEmpty(data)
-          ? Array.from({ length: 17 }).map((_1, index) => (
-              // eslint-disable-next-line react/no-array-index-key
-              <MailItemSleleton key={index} />
-            ))
-          : data?.map((item) => (
-              <MailItem
-                key={item.uuid}
-                mail={item}
-                selected={_.includes(selectRows, item.uuid)}
-                onChangeSelectRows={onChangeSelectRows}
-                onClickShowMail={onClickShowMail}
-              />
-            ))}
+        {_.isEmpty(data) &&
+          isLoading &&
+          Array.from({ length: 17 }).map((_1, index) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <MailItemSleleton key={index} />
+          ))}
+        {!_.isEmpty(data) &&
+          !isLoading &&
+          data?.map((item) => (
+            <MailItem
+              key={item.uuid}
+              mail={item}
+              selected={_.includes(selectRows, item.uuid)}
+              onChangeSelectRows={onChangeSelectRows}
+              onClickShowMail={onClickShowMail}
+            />
+          ))}
+        {_.isEmpty(data) && !isLoading && emptyComponent}
+        {!_.isEmpty(data) && !isLoading && (
+          <div className="flex-center my-4 h-fit w-full text-center text-gray-500 ">
+            <div>
+              <div className="h-fit w-full text-sm hover:underline">Program Policies</div>
+              <div className="h-fit w-full text-sm hover:underline">Powered by SENDGPT</div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

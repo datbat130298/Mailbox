@@ -1,10 +1,11 @@
 import _ from 'lodash';
+import { FiFilter } from 'react-icons/fi';
 import { IoArrowBackOutline } from 'react-icons/io5';
 
 import { twMerge } from 'tailwind-merge';
 import { filterCheckboxData, filterViewData } from '../../../utils/helpers';
-import FilterDropdown from '../../WorkSpace/Inbox/FilterDropdown';
 import FilterDatetime from '../../WorkSpace/Sent/FilterDatetime';
+import FilterDropdown from '../FilterDropdown/FilterDropdown';
 import Checkbox from '../Form/Checkbox';
 import Pagination from '../Pagination/Pagination';
 import SelectViewStyle from '../SelectViewStyle/SelectViewStyle';
@@ -44,10 +45,15 @@ const HeaderMailTable = ({
                 className="group-hover:border-primary-700 group-hover:text-primary-700 "
               />
             </div>
-            <FilterDropdown type="checkbox" filterByData={filterCheckboxData} position="-left-6 top-10" />
+            <FilterDropdown noneIcon data={filterCheckboxData} position="-left-6 top-10" />
           </div>
           {_.includes(actionArray, 'view') && (
-            <FilterDropdown type="view" filterByData={filterViewData} position="left-0 top-[52px]" />
+            <FilterDropdown
+              data={filterViewData}
+              icon={<FiFilter size={14} />}
+              label="View"
+              position="left-0 top-[52px]"
+            />
           )}
           {_.includes(actionArray, 'datetime') && <FilterDatetime />}
           <HeaderAction showAction={isChecked} />

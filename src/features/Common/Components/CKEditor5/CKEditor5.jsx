@@ -74,6 +74,7 @@ const CKEditor5 = ({
   data = '',
   onChange,
   onBlur,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   isLoading,
   isDisabled,
   isRadiousToolbar = false,

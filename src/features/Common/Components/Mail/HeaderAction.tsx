@@ -1,6 +1,8 @@
 import { BsTrash } from 'react-icons/bs';
 import { IoArchiveOutline } from 'react-icons/io5';
 import { MdOutlineMoreVert, MdOutlineReport } from 'react-icons/md';
+import { moreAction } from '../../../utils/helpers';
+import FilterDropdown from '../FilterDropdown/FilterDropdown';
 
 interface HeaderActionProps {
   showAction: boolean;
@@ -31,11 +33,13 @@ const HeaderAction = ({ showAction }: HeaderActionProps) => {
           </div>
         </>
       )}
-      <div className="my-3 flex h-8 w-fit rounded-md px-2 hover:bg-gray-100 hover:text-primary-700">
-        <div className="flex-center h-full w-max">
-          <MdOutlineMoreVert size={18} />
-        </div>
-        <div className="text-sm leading-8">More</div>
+      <div className="-ml-1">
+        <FilterDropdown
+          data={moreAction}
+          icon={<MdOutlineMoreVert size={18} />}
+          label="More"
+          position="left-0 top-[52px]"
+        />
       </div>
     </>
   );

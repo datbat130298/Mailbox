@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { getInboxs } from '../../../../app/Services/Inbox/InboxService';
 import { MailType } from '../../../../app/Types/commonTypes';
+import EmptyData from '../../Components/EmptyData/EmptyData';
 import HeaderMailTable from '../../Components/Mail/HeaderMailTable';
 import MailTable from '../../Components/Mail/MailTable';
 import ViewMailSpace from '../../Components/Mail/ViewMailSpace';
@@ -12,6 +13,7 @@ const InboxTable = () => {
   const [selectRows, setSelectRows] = useState<Array<number>>([]);
   const [isShowViewMailSpace, setIsShowViewMailSpace] = useState(false);
   const [selectedMail, setSelectedMail] = useState({} as MailType);
+  const [isLoading, setIsLoading] = useState(false);
 
   const isChecked = useMemo(() => {
     if (!_.isEmpty(selectRows)) return true;
@@ -19,9 +21,14 @@ const InboxTable = () => {
   }, [selectRows]);
 
   const fetchData = useCallback(() => {
-    getInboxs().then((data: Array<MailType>) => {
-      setInboxData(data);
-    });
+    setIsLoading(true);
+    getInboxs()
+      .then((data: Array<MailType>) => {
+        setInboxData(data);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, []);
 
   useEffect(() => {
@@ -51,7 +58,7 @@ const InboxTable = () => {
   return (
     <div className="relative h-full w-full pt-14">
       <HeaderMailTable
-        actionArray={['view']}
+        actionArray={['view', 'datetime']}
         isShowShadow={isShowShadow}
         isShowCheckboxHeader={isShowViewMailSpace}
         isChecked={isChecked}
@@ -64,10 +71,17 @@ const InboxTable = () => {
       {!isShowViewMailSpace && (
         <MailTable
           data={inboxData}
+          isLoading={isLoading}
           onChangeShowShadow={setIsShowShadow}
           onChangeSelectRows={handleSelectRows}
           onClickShowMail={handleSelectMail}
           selectRows={selectRows}
+          emptyComponent={
+            <EmptyData
+              message={"You don't have any saved inbox."}
+              desription="You can click to compose button to create new mail."
+            />
+          }
         />
       )}
       {isShowViewMailSpace && <ViewMailSpace mail={selectedMail} />}
