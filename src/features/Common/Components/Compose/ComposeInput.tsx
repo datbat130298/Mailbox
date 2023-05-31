@@ -55,7 +55,7 @@ const ComposeInput = (
 
   return (
     <div className="mx-2 my-1 flex items-center gap-2 border-b-[1px] border-gray-200 py-2 pb-3" id={id}>
-      {/* <span className="text-sm font-medium text-gray-500">{ label}</span> */}
+      {/* <span className="text-sm font-medium text-gray-700">{ label}</span> */}
       <input
         placeholder={label}
         className={twMerge('w-full border-none bg-inherit text-sm outline-none transition-none')}

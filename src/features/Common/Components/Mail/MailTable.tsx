@@ -57,7 +57,7 @@ const MailTable = ({
           ))}
         {_.isEmpty(data) && !isLoading && emptyComponent}
         {!_.isEmpty(data) && !isLoading && (
-          <div className="flex-center my-4 h-fit w-full text-center text-gray-500 ">
+          <div className="flex-center my-4 h-fit w-full text-center text-gray-700 ">
             <div>
               <div className="h-fit w-full text-sm hover:underline">Program Policies</div>
               <div className="h-fit w-full text-sm hover:underline">Powered by SENDGPT</div>

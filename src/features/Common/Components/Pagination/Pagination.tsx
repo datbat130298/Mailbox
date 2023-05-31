@@ -2,7 +2,7 @@ import { MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from 'react-i
 
 const Pagination = () => {
   return (
-    <div className="flex h-full w-fit text-gray-500">
+    <div className="flex h-full w-fit text-gray-700">
       <div className="flex-center my-3 flex h-8 w-max rounded-md p-2 text-sm hover:bg-gray-100">
         View 1-50 of 200
       </div>

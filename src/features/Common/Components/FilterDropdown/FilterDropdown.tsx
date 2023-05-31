@@ -1,6 +1,8 @@
+import { DefaultTFuncReturn } from 'i18next';
 import { useEffect, useRef, useState } from 'react';
 import { FiChevronDown } from 'react-icons/fi';
 import { twMerge } from 'tailwind-merge';
+import { triggerClickOutside } from '../../../utils/helpers';
 
 interface FilterItemType {
   uuid: number;
@@ -13,7 +15,7 @@ interface FilterDropdownProps {
   position: string;
   noneIcon?: boolean;
   icon?: React.ReactNode;
-  label?: string;
+  label?: DefaultTFuncReturn;
 }
 
 const FilterDropdown = ({ data, position, noneIcon, icon, label }: FilterDropdownProps) => {
@@ -22,18 +24,8 @@ const FilterDropdown = ({ data, position, noneIcon, icon, label }: FilterDropdow
   const [selectFilterBy, setSelectFilterBy] = useState('');
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
-        setIsShowFilterDropdown(false);
-      }
-    };
-
-    document.addEventListener('click', handleClickOutside, true);
-
-    return () => {
-      document.removeEventListener('click', handleClickOutside, true);
-    };
-  }, [filterRef]);
+    triggerClickOutside(filterRef, () => setIsShowFilterDropdown(false));
+  }, [filterRef, triggerClickOutside]);
   return (
     <div className="relative" ref={filterRef}>
       {noneIcon && (
@@ -69,7 +61,7 @@ const FilterDropdown = ({ data, position, noneIcon, icon, label }: FilterDropdow
       )}
       <div
         className={twMerge(
-          'absolute z-50 hidden h-fit w-fit rounded-md bg-white p-1 text-gray-500 shadow-box',
+          'absolute z-50 hidden h-fit w-fit rounded-md bg-white p-1 text-gray-700 shadow-box',
           position,
           isShowFilterDropdown && 'block',
         )}

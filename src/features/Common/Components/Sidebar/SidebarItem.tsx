@@ -1,3 +1,4 @@
+import { DefaultTFuncReturn } from 'i18next';
 import { cloneElement, useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
@@ -9,7 +10,7 @@ interface SidebarItemProps {
   tooltipText: string;
   icon: any;
   className?: string;
-  title?: string;
+  title?: DefaultTFuncReturn;
 }
 
 const SidebarItem = ({ to, icon, title, className, tooltipText }: SidebarItemProps) => {
@@ -26,7 +27,7 @@ const SidebarItem = ({ to, icon, title, className, tooltipText }: SidebarItemPro
     <Link
       to={to || pathname}
       className={twMerge(
-        'group mb-2 mt-1  flex h-fit w-full flex-shrink-0 items-center justify-center text-gray-500',
+        'group mb-2 mt-1  flex h-fit w-full flex-shrink-0 items-center justify-center text-gray-700',
         className,
       )}
     >

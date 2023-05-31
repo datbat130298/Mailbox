@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getSents } from '../../../../app/Services/Sent/SentService';
 import { MailType } from '../../../../app/Types/commonTypes';
 import EmptyData from '../../Components/EmptyData/EmptyData';
@@ -14,6 +15,7 @@ const SentTable = () => {
   const [isShowViewMailSpace, setIsShowViewMailSpace] = useState(false);
   const [selectedMail, setSelectedMail] = useState({} as MailType);
   const [isLoading, setIsLoading] = useState(false);
+  const { t } = useTranslation();
 
   const isChecked = useMemo(() => {
     if (!_.isEmpty(selectRows)) return true;
@@ -77,10 +79,7 @@ const SentTable = () => {
           onChangeSelectRows={handleSelectRows}
           selectRows={selectRows}
           emptyComponent={
-            <EmptyData
-              message={"You don't have any saved sent."}
-              desription="You can click to compose button to create new mail."
-            />
+            <EmptyData message={t('sent_empty_message')} desription={t('sent_empty_description')} />
           }
         />
       )}

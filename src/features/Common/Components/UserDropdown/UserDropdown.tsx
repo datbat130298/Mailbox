@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FiHelpCircle, FiLogOut, FiSettings, FiUser } from 'react-icons/fi';
 import { Link, useNavigate } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
@@ -17,6 +18,7 @@ const UserDropdown = ({ onClick }: UserDropdownProps) => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleClickLogout = () => {
     if (isSubmitting) {
@@ -76,7 +78,7 @@ const UserDropdown = ({ onClick }: UserDropdownProps) => {
               (user.roles?.find((role) => role.slug === 'user') && '/my/profile')
             }`}
           >
-            Profile
+            {t('profile')}
           </Link>
         </p>
       </div>
@@ -95,7 +97,7 @@ const UserDropdown = ({ onClick }: UserDropdownProps) => {
               (user.roles?.find((role) => role.slug === 'user') && 'my')
             }`}
           >
-            Setting
+            {t('setting')}
           </Link>
         </p>
       </div>
@@ -114,7 +116,7 @@ const UserDropdown = ({ onClick }: UserDropdownProps) => {
             (user.roles?.find((role) => role.slug === 'editor') && 'editor/help')
           }`}
         >
-          <p className="ml-3 text-sm">Help and contact</p>
+          <p className="ml-3 text-sm">{t('help_and_contact')}</p>
         </Link>
       </div>
       <div
@@ -128,7 +130,7 @@ const UserDropdown = ({ onClick }: UserDropdownProps) => {
         ) : (
           <FiLogOut />
         )}
-        <div className="ml-3 text-sm">Logout</div>
+        <div className="ml-3 text-sm">{t('logout')}</div>
       </div>
     </div>
   );

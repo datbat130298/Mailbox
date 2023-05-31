@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { useTranslation } from 'react-i18next';
 import { CgMailForward, CgMailReply } from 'react-icons/cg';
 import { MdArrowDropDown, MdOutlineMoreVert } from 'react-icons/md';
 import { twMerge } from 'tailwind-merge';
@@ -12,6 +13,7 @@ interface ViewMailSpaceProps {
 }
 
 const ViewMailSpace = ({ mail }: ViewMailSpaceProps) => {
+  const { t } = useTranslation();
   return (
     <div className="min-h-[calc(100%-16px)] w-full px-4">
       <div className="mt-2 flex min-h-[40px] w-full items-start justify-start gap-x-2 pl-16 text-xl">
@@ -32,27 +34,27 @@ const ViewMailSpace = ({ mail }: ViewMailSpaceProps) => {
           <div>
             <div className="flex h-6 w-fit justify-start ">
               <div className="text-sm font-semibold leading-6">{mail.author}</div>
-              <div className="px-1 text-xs leading-6 text-gray-500">{`<${mail.address}>`}</div>
+              <div className="px-1 text-xs leading-6 text-gray-700">{`<${mail.address}>`}</div>
             </div>
             <div className="flex h-6 w-fit gap-x-1 text-xs ">
-              <div className="h-full  leading-[22px] text-gray-500">to me</div>
+              <div className="h-full  leading-[22px] text-gray-700">to me</div>
               <div className="flex-center h-full">
                 <MdArrowDropDown size={16} />
               </div>
             </div>
           </div>
-          <div className="flex h-full w-fit justify-end text-gray-500">
+          <div className="flex h-full w-fit justify-end text-gray-700">
             <div className="h-full w-fit pr-2 text-xs leading-[48px]">
               {dayjs(mail.time).format('MMMM D, YYYY HH:mm A')}
             </div>
-            <Tooltip title="Reply" position="bottom">
+            <Tooltip title={t('reply')} position="bottom">
               <div className="flex-center h-full w-fit">
                 <div className="flex-center h-10  w-10 rounded-full hover:bg-gray-100 hover:text-primary-700">
                   <CgMailReply size={18} />
                 </div>
               </div>
             </Tooltip>
-            <Tooltip title="More" position="bottom">
+            <Tooltip title={t('more')} position="bottom">
               <div className="flex-center h-full w-fit">
                 <div className="flex-center h-10 w-10 rounded-full hover:bg-gray-100 hover:text-primary-700">
                   <MdOutlineMoreVert size={18} />
@@ -66,27 +68,27 @@ const ViewMailSpace = ({ mail }: ViewMailSpaceProps) => {
         <div className="h-fit w-full justify-start">{mail.content}</div>
         <div className="mt-8 flex h-fit w-full justify-start gap-x-3">
           <Button
-            className="h-8 rounded-2xl border-none bg-white text-gray-500 ring-1"
+            className="h-8  rounded-2xl border-none bg-white text-gray-700 ring-1"
             size="sm"
             color="light"
           >
-            <div className="mx-1 flex w-16 items-center justify-center gap-x-2">
+            <div className="mx-1 flex min-w-[64px] items-center justify-center gap-x-2">
               <div>
                 <CgMailReply size={18} />
               </div>
-              <div className="text-sm">Reply</div>
+              <div className="text-sm">{t('reply')}</div>
             </div>
           </Button>
           <Button
-            className="h-8 rounded-2xl border-none bg-white text-gray-500 ring-1"
+            className="h-8 w-max rounded-2xl border-none bg-white text-gray-700 ring-1"
             size="sm"
             color="light"
           >
-            <div className="mx-1 flex w-16 items-center justify-center gap-x-2">
+            <div className="mx-1 flex min-w-[64px] items-center justify-center gap-x-2">
               <div>
                 <CgMailForward size={18} className="h-full w-fit" />
               </div>
-              <div className="text-sm">Forward</div>
+              <div className="text-sm">{t('forward')}</div>
             </div>
           </Button>
         </div>

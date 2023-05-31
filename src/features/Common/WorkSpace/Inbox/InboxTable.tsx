@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getInboxs } from '../../../../app/Services/Inbox/InboxService';
 import { MailType } from '../../../../app/Types/commonTypes';
 import EmptyData from '../../Components/EmptyData/EmptyData';
@@ -14,6 +15,8 @@ const InboxTable = () => {
   const [isShowViewMailSpace, setIsShowViewMailSpace] = useState(false);
   const [selectedMail, setSelectedMail] = useState({} as MailType);
   const [isLoading, setIsLoading] = useState(false);
+
+  const { t } = useTranslation();
 
   const isChecked = useMemo(() => {
     if (!_.isEmpty(selectRows)) return true;
@@ -77,10 +80,7 @@ const InboxTable = () => {
           onClickShowMail={handleSelectMail}
           selectRows={selectRows}
           emptyComponent={
-            <EmptyData
-              message={"You don't have any saved inbox."}
-              desription="You can click to compose button to create new mail."
-            />
+            <EmptyData message={t('inbox_empty_message')} desription={t('inbox_empty_description')} />
           }
         />
       )}

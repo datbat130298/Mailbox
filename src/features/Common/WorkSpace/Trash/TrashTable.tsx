@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getTrashs } from '../../../../app/Services/Trash/TrashService';
 import { MailType } from '../../../../app/Types/commonTypes';
 import EmptyData from '../../Components/EmptyData/EmptyData';
@@ -15,6 +16,7 @@ const TrashTable = () => {
   const [selectedMail, setSelectedMail] = useState({} as MailType);
   const [isLoading, setIsLoading] = useState(false);
 
+  const { t } = useTranslation();
   const isChecked = useMemo(() => {
     if (!_.isEmpty(selectRows)) return true;
     return false;
@@ -77,11 +79,7 @@ const TrashTable = () => {
           onClickShowMail={handleSelectMail}
           selectRows={selectRows}
           emptyComponent={
-            <EmptyData
-              message="No conversations in Trash."
-              desription="Messages that have been in Trash more than 30 days will be automatically deleted.
-              "
-            />
+            <EmptyData message={t('trash_empty_message')} desription={t('trash_empty_description')} />
           }
         />
       )}

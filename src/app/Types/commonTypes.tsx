@@ -116,3 +116,9 @@ export interface MailType {
   time: string;
   address: string;
 }
+
+export interface FlagType {
+  code: string;
+  name: string;
+  flag_image: string;
+}
