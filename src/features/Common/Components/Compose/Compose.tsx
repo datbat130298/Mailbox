@@ -42,6 +42,7 @@ const Compose = ({ isOpen, setOpen }: ComposeProps) => {
   };
 
   const handleClickDeleteFooter = () => {
+    // eslint-disable-next-line no-console
     console.log('this is click delete');
   };
 

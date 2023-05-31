@@ -42,7 +42,7 @@ const SelectViewStyle = () => {
   }, [viewStyleTabRef]);
   return (
     <div
-      className="flex-center my-3 h-8 w-max rounded-md p-2 text-sm hover:bg-gray-100"
+      className="flex-center my-3 h-8 w-max rounded-md p-2 text-sm hover:bg-gray-100 hover:text-primary-700"
       role="button"
       tabIndex={0}
       onClick={() => setIsShowSelectViewStyle((prev) => !prev)}

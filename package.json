@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@ckeditor/ckeditor5-build-decoupled-document": "^35.2.1",
+    "@ckeditor/ckeditor5-build-decoupled-document": "^38.0.1",
     "@ckeditor/ckeditor5-find-and-replace": "^36.0.1",
     "@ckeditor/ckeditor5-font": "^36.0.1",
     "@ckeditor/ckeditor5-highlight": "^36.0.1",
@@ -12,7 +12,7 @@
     "@ckeditor/ckeditor5-markdown-gfm": "^36.0.1",
     "@ckeditor/ckeditor5-media-embed": "^36.0.1",
     "@ckeditor/ckeditor5-minimap": "^36.0.1",
-    "@ckeditor/ckeditor5-react": "^5.1.0",
+    "@ckeditor/ckeditor5-react": "^6.0.0",
     "@ckeditor/ckeditor5-special-characters": "^36.0.1",
     "@ckeditor/ckeditor5-style": "^36.0.1",
     "@ckeditor/ckeditor5-upload": "^36.0.1",

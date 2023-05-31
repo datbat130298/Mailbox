@@ -26,7 +26,10 @@ const FilterDatetime = () => {
   return (
     <div className="relative" ref={filterRef}>
       <div
-        className="my-3 flex h-8 w-fit rounded-md px-2  hover:bg-gray-100 hover:text-primary-700"
+        className={twMerge(
+          'my-3 flex h-8 w-fit rounded-md px-2  hover:bg-gray-100 hover:text-primary-700',
+          isShowFilterDropdown && 'bg-gray-100 text-primary-700',
+        )}
         role="button"
         tabIndex={0}
         onClick={() => {

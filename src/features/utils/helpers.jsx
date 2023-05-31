@@ -81,4 +81,17 @@ const filterByDatetime = [
   },
 ];
 
-export { filterCheckboxData, filterViewData, filterByDatetime, triggerClickOutside };
+const moreAction = [
+  {
+    uuid: 1,
+    label: 'Mask as read',
+    value: 'mask_as_read',
+  },
+  {
+    uuid: 2,
+    label: 'Delete',
+    value: 'delete',
+  },
+];
+
+export { filterCheckboxData, filterViewData, filterByDatetime, moreAction, triggerClickOutside };

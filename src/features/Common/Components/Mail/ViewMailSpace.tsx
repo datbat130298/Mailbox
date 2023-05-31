@@ -5,6 +5,7 @@ import { twMerge } from 'tailwind-merge';
 import { MailType } from '../../../../app/Types/commonTypes';
 import Button from '../Button';
 import Tooltip from '../Tooltip/Tooltip';
+import MailTag from './MailTag';
 
 interface ViewMailSpaceProps {
   mail: MailType;
@@ -13,7 +14,10 @@ interface ViewMailSpaceProps {
 const ViewMailSpace = ({ mail }: ViewMailSpaceProps) => {
   return (
     <div className="min-h-[calc(100%-16px)] w-full px-4">
-      <div className="mt-2 min-h-[40px] w-full pl-16 text-xl">{mail.subject}</div>
+      <div className="mt-2 flex min-h-[40px] w-full items-start justify-start gap-x-2 pl-16 text-xl">
+        <div className="flex-shink-0">{mail.subject}</div>
+        <MailTag />
+      </div>
       <div className="mb-4 flex h-12 w-full">
         <div className="flex h-12 w-fit flex-shrink-0 items-center justify-center">
           <div
@@ -43,14 +47,14 @@ const ViewMailSpace = ({ mail }: ViewMailSpaceProps) => {
             </div>
             <Tooltip title="Reply" position="bottom">
               <div className="flex-center h-full w-fit">
-                <div className="flex-center h-10  w-10 rounded-full hover:bg-gray-200 hover:text-primary-700">
+                <div className="flex-center h-10  w-10 rounded-full hover:bg-gray-100 hover:text-primary-700">
                   <CgMailReply size={18} />
                 </div>
               </div>
             </Tooltip>
             <Tooltip title="More" position="bottom">
               <div className="flex-center h-full w-fit">
-                <div className="flex-center h-10 w-10 rounded-full hover:bg-gray-200 hover:text-primary-700">
+                <div className="flex-center h-10 w-10 rounded-full hover:bg-gray-100 hover:text-primary-700">
                   <MdOutlineMoreVert size={18} />
                 </div>
               </div>
