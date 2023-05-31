@@ -61,7 +61,7 @@ const Input = (
   if (isFocusing || value) {
     textColor = 'text-blue-500';
   } else {
-    textColor = 'text-gray-500';
+    textColor = 'text-gray-700';
   }
   const sizeClassNames = {
     block: '',

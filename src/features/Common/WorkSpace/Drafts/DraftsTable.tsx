@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getDrafts } from '../../../../app/Services/Drafts/DraftsService';
 import { MailType } from '../../../../app/Types/commonTypes';
 import EmptyData from '../../Components/EmptyData/EmptyData';
@@ -14,6 +15,7 @@ const DraftsTable = () => {
   const [isShowViewMailSpace, setIsShowViewMailSpace] = useState(false);
   const [selectedMail, setSelectedMail] = useState({} as MailType);
   const [isLoading, setIsLoading] = useState(false);
+  const { t } = useTranslation();
 
   const isChecked = useMemo(() => {
     if (!_.isEmpty(selectRows)) return true;
@@ -77,10 +79,7 @@ const DraftsTable = () => {
           onClickShowMail={handleSelectMail}
           selectRows={selectRows}
           emptyComponent={
-            <EmptyData
-              message={"You don't have any saved drafts."}
-              desription={"Saving a draft allows you to keep a message you aren't ready to send yet."}
-            />
+            <EmptyData message={t('drafts_empty_message')} desription={t('drafts_empty_description')} />
           }
         />
       )}

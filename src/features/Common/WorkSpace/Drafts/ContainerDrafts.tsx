@@ -1,9 +1,11 @@
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import DraftsTable from './DraftsTable';
 
 const ContainerDrafts = () => {
+  const { t } = useTranslation();
   useEffect(() => {
-    window.document.title = `Drafts - ${process.env.REACT_APP_WEBSITE_NAME}`;
+    window.document.title = `${t('drafts')} - ${process.env.REACT_APP_WEBSITE_NAME}`;
     window.scrollTo({
       top: 0,
       behavior: 'smooth',

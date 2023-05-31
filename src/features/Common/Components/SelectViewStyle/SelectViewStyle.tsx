@@ -1,45 +1,38 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { MdOutlineViewList, MdOutlineViewModule, MdOutlineViewQuilt } from 'react-icons/md';
 import { twMerge } from 'tailwind-merge';
+import { triggerClickOutside } from '../../../utils/helpers';
 
 const SelectViewStyle = () => {
+  const { t } = useTranslation();
   const viewStyleTabRef = useRef<HTMLDivElement>(null);
   const [isShowSelectViewStyle, setIsShowSelectViewStyle] = useState(false);
   const [selectStyle, setSelectStyle] = useState({
     uuid: 1,
-    label: 'Classic',
+    label: t('classic'),
     icon: <MdOutlineViewQuilt size={20} />,
   });
   const styleViews = [
     {
       uuid: 1,
-      label: 'Classic',
+      label: t('classic'),
       icon: <MdOutlineViewQuilt size={20} />,
     },
     {
       uuid: 2,
-      label: 'Compact',
+      label: t('compact'),
       icon: <MdOutlineViewModule size={20} />,
     },
     {
       uuid: 3,
-      label: 'Super Compact',
+      label: t('super_compact'),
       icon: <MdOutlineViewList size={20} />,
     },
   ];
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (viewStyleTabRef.current && !viewStyleTabRef.current.contains(event.target as Node)) {
-        setIsShowSelectViewStyle(false);
-      }
-    };
-
-    document.addEventListener('click', handleClickOutside, true);
-
-    return () => {
-      document.removeEventListener('click', handleClickOutside, true);
-    };
-  }, [viewStyleTabRef]);
+    triggerClickOutside(viewStyleTabRef, () => setIsShowSelectViewStyle(false));
+  }, [viewStyleTabRef, triggerClickOutside]);
   return (
     <div
       className="flex-center my-3 h-8 w-max rounded-md p-2 text-sm hover:bg-gray-100 hover:text-primary-700"
@@ -52,7 +45,7 @@ const SelectViewStyle = () => {
         {selectStyle.icon}
         <div
           className={twMerge(
-            'absolute -right-2 top-8 z-50 hidden h-fit w-fit rounded-md bg-white p-1 text-gray-500 shadow-box',
+            'absolute -right-2 top-8 z-50 hidden h-fit w-fit rounded-md bg-white p-1 text-gray-700 shadow-box',
             isShowSelectViewStyle && 'block',
           )}
         >

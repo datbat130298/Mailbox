@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { AiOutlineMail, AiOutlineMenu } from 'react-icons/ai';
 import { BsChatLeftText, BsTrash } from 'react-icons/bs';
 import { MdOutlineDrafts } from 'react-icons/md';
@@ -10,6 +11,7 @@ import SidebarItem from './SidebarItem';
 const Sidebar = () => {
   const dispatch = useDispatch();
   const isShowSubSideBar = useSelector((state) => state.layout.isShowSubSideBar);
+  const { t } = useTranslation();
 
   const handleShowSubSidebar = useCallback(() => {
     if (isShowSubSideBar) {
@@ -23,10 +25,20 @@ const Sidebar = () => {
       <div role="button" tabIndex={0} onClick={handleShowSubSidebar}>
         <SidebarItem tooltipText="Menu" icon={<AiOutlineMenu size={20} />} className="mb-4" />
       </div>
-      <SidebarItem to="/inbox" title="Inbox" tooltipText="Inbox" icon={<AiOutlineMail size={20} />} />
-      <SidebarItem to="/sent" title="Sent" tooltipText="Sent" icon={<BsChatLeftText size={18} />} />
-      <SidebarItem to="/drafts" title="Drafts" tooltipText="Drafts" icon={<MdOutlineDrafts size={22} />} />
-      <SidebarItem to="/trash" title="Trash" tooltipText="Trash" icon={<BsTrash size={20} />} />
+      <SidebarItem
+        to="/inbox"
+        title={t('inbox')}
+        tooltipText={t('inbox')}
+        icon={<AiOutlineMail size={20} />}
+      />
+      <SidebarItem to="/sent" title={t('sent')} tooltipText={t('sent')} icon={<BsChatLeftText size={18} />} />
+      <SidebarItem
+        to="/drafts"
+        title={t('drafts')}
+        tooltipText={t('drafts')}
+        icon={<MdOutlineDrafts size={22} />}
+      />
+      <SidebarItem to="/trash" title={t('trash')} tooltipText={t('trash')} icon={<BsTrash size={20} />} />
     </div>
   );
 };

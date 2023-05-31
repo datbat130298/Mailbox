@@ -77,7 +77,7 @@ const ConfirmationModal = ({
         <div className="text-center sm:mx-6 sm:mt-0 sm:text-left">
           <h3 className="mt-2 text-lg font-medium leading-6 text-gray-900">{title}</h3>
           <div className="mt-4">
-            <p className="text-sm text-gray-500">{message}</p>
+            <p className="text-sm text-gray-700">{message}</p>
           </div>
         </div>
       </div>

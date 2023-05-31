@@ -1,9 +1,11 @@
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import SentTable from './SentTable';
 
 const ContainerSent = () => {
+  const { t } = useTranslation();
   useEffect(() => {
-    window.document.title = `Sent - ${process.env.REACT_APP_WEBSITE_NAME}`;
+    window.document.title = `${t('sent')} - ${process.env.REACT_APP_WEBSITE_NAME}`;
     window.scrollTo({
       top: 0,
       behavior: 'smooth',
