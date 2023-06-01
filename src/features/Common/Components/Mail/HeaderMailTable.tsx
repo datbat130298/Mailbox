@@ -17,6 +17,8 @@ interface HeaderMailTableProps {
   isShowCheckboxHeader: boolean;
   onClickSelectAll: (e: boolean) => void;
   onCloseViewMailSpace: () => void;
+  onClickNextButton: () => boolean;
+  onClickPrevButton: () => boolean;
 }
 
 const HeaderMailTable = ({
@@ -26,6 +28,8 @@ const HeaderMailTable = ({
   isShowCheckboxHeader,
   onClickSelectAll,
   onCloseViewMailSpace,
+  onClickNextButton,
+  onClickPrevButton,
 }: HeaderMailTableProps) => {
   const { t } = useTranslation();
   const filterCheckboxData = [
@@ -82,12 +86,20 @@ const HeaderMailTable = ({
             <div className="flex-center h-full w-max">
               <Checkbox
                 checked={isChecked}
+                indeterminate={isChecked}
                 onChange={(e) => onClickSelectAll(e.target.checked)}
-                className="group-hover:border-primary-700 group-hover:text-primary-700 "
+                className="group-hover:border-primary-700 group-hover:text-primary-700"
               />
             </div>
             <FilterDropdown noneIcon data={filterCheckboxData} position="-left-6 top-10" />
           </div>
+          {_.includes(actionArray, 'delete_forrever') && isChecked && (
+            <div className="my-3 flex h-8 w-fit rounded-md px-2  hover:bg-gray-100 hover:text-primary-700">
+              <div className="h-full w-full text-center text-sm font-semibold leading-8">
+                {t('delete_forever')}
+              </div>
+            </div>
+          )}
           {_.includes(actionArray, 'view') && (
             <FilterDropdown
               data={filterViewData}
@@ -117,7 +129,11 @@ const HeaderMailTable = ({
         </div>
       )}
       <div className="flex h-full w-fit">
-        <Pagination />
+        <Pagination
+          isHiddenRange={isShowCheckboxHeader}
+          onClickNextButton={onClickNextButton}
+          onClickPrevButton={onClickPrevButton}
+        />
         <SelectViewStyle />
       </div>
     </div>

@@ -3,6 +3,11 @@ import Cookies from 'universal-cookie';
 import axiosInstance from '../../../features/utils/Http/axiosInstance';
 import { generateParamString } from '../Common/CommonService';
 
+interface LanguageType {
+  lang: string;
+  langs?: string;
+}
+
 const getFlagURLPattern = () => {
   const FLAG_URL_PATTERN = 'https://purecatamphetamine.github.io/country-flag-icons/3x2/:code.svg';
   return FLAG_URL_PATTERN;
@@ -23,7 +28,7 @@ const getActiveLanguageList = async () => {
   return response.data;
 };
 
-const setLanguagesPage = ({ lang, langs }: any) => {
+const setLanguagesPage = ({ lang, langs }: LanguageType) => {
   const paramString = generateParamString({
     lang: [lang],
     langs: [langs],

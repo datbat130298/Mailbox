@@ -52,7 +52,7 @@ const Checkbox = ({
       <input
         type={type}
         name="nameClass"
-        className="relative h-full w-full cursor-pointer opacity-0"
+        className="absolute left-0 top-0 h-full w-full cursor-pointer opacity-0"
         checked={!!checked}
         disabled={disabled}
         {...otherProps}

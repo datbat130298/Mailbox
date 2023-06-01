@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getInboxs } from '../../../../app/Services/Inbox/InboxService';
 import { MailType } from '../../../../app/Types/commonTypes';
+import { triggerClickNext, triggerClickPrev } from '../../../utils/helpers';
 import EmptyData from '../../Components/EmptyData/EmptyData';
 import HeaderMailTable from '../../Components/Mail/HeaderMailTable';
 import MailTable from '../../Components/Mail/MailTable';
@@ -58,6 +59,14 @@ const InboxTable = () => {
     setIsShowViewMailSpace(true);
   };
 
+  const handleClickNextButton = () => {
+    return triggerClickNext(inboxData, selectedMail, setSelectedMail);
+  };
+
+  const handleClickPrevButton = () => {
+    return triggerClickPrev(inboxData, selectedMail, setSelectedMail);
+  };
+
   return (
     <div className="relative h-full w-full pt-14">
       <HeaderMailTable
@@ -66,6 +75,8 @@ const InboxTable = () => {
         isShowCheckboxHeader={isShowViewMailSpace}
         isChecked={isChecked}
         onClickSelectAll={handleSelectAll}
+        onClickNextButton={handleClickNextButton}
+        onClickPrevButton={handleClickPrevButton}
         onCloseViewMailSpace={() => {
           setIsShowViewMailSpace(false);
           setSelectedMail({} as MailType);

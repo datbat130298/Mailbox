@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getDrafts } from '../../../../app/Services/Drafts/DraftsService';
 import { MailType } from '../../../../app/Types/commonTypes';
+import { triggerClickNext, triggerClickPrev } from '../../../utils/helpers';
 import EmptyData from '../../Components/EmptyData/EmptyData';
 import HeaderMailTable from '../../Components/Mail/HeaderMailTable';
 import MailTable from '../../Components/Mail/MailTable';
@@ -57,6 +58,14 @@ const DraftsTable = () => {
     setIsShowViewMailSpace(true);
   };
 
+  const handleClickNextButton = () => {
+    return triggerClickNext(draftsData, selectedMail, setSelectedMail);
+  };
+
+  const handleClickPrevButton = () => {
+    return triggerClickPrev(draftsData, selectedMail, setSelectedMail);
+  };
+
   return (
     <div className="relative h-full w-full pt-14">
       <HeaderMailTable
@@ -65,6 +74,8 @@ const DraftsTable = () => {
         isShowCheckboxHeader={isShowViewMailSpace}
         isChecked={isChecked}
         onClickSelectAll={handleSelectAll}
+        onClickNextButton={handleClickNextButton}
+        onClickPrevButton={handleClickPrevButton}
         onCloseViewMailSpace={() => {
           setIsShowViewMailSpace(false);
           setSelectedMail({} as MailType);
