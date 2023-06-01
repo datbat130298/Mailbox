@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import CKEditor5 from '../CKEditor5/CKEditor5';
+import CKEditor5 from '../../CKEditor5/CKEditor5';
 
 const editorConfiguration = {
   toolbar: {

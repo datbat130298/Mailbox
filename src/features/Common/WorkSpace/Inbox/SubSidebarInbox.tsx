@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { HiOutlinePencil } from 'react-icons/hi';
 import Button from '../../Components/Button';
-import Compose from '../../Components/Compose/Compose';
+import ComposePopup from '../../Components/ComposePopup/ComposePopup';
 
 const SubSidebarInbox = () => {
   const [isShowCompose, setIsShowCompose] = useState<boolean>(false);
@@ -23,7 +23,7 @@ const SubSidebarInbox = () => {
           <div className="h-full w-max px-4 leading-[15px]">{t('compose')}</div>
         </div>
       </Button>
-      <Compose isOpen={isShowCompose} setOpen={setIsShowCompose} />
+      <ComposePopup isOpen={isShowCompose} setOpen={setIsShowCompose} />
     </div>
   );
 };

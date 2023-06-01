@@ -14,10 +14,12 @@ export interface ModalProps extends React.HTMLAttributes<HTMLDivElement> {
   title?: string;
   onClose: () => void;
   onConfirm?: () => void;
+  subTitle?: string;
 }
 
 const Modal = (
   {
+    subTitle,
     isOpen,
     isShowHeader = true,
     isShowFooter = true,
@@ -84,10 +86,11 @@ const Modal = (
             <motion.div variants={modalVariants} initial="hidden" animate="visible" exit="exit">
               <div className="relative z-20 w-full md:m-auto md:rounded-lg">
                 <div className={twMerge('h-fit w-fit rounded-lg bg-white', isShowHeader && 'pt-7')}>
-                  <div className="px-10">
+                  <div className="">
                     {isShowHeader && (
                       <div>
                         <div className="h-fit w-fit pb-2 text-lg font-semibold">{title}</div>
+                        {subTitle && <div className="h-fit w-fit pb-2 text-base font-normal">{subTitle}</div>}
                         <div className="mt-2 h-1 w-16 rounded-md bg-gray-100" />
                       </div>
                     )}
