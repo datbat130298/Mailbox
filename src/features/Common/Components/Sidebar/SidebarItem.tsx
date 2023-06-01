@@ -1,5 +1,5 @@
 import { DefaultTFuncReturn } from 'i18next';
-import { cloneElement, useMemo } from 'react';
+import { cloneElement, ReactElement, useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 import useSelector from '../../../Hooks/useSelector';
@@ -8,7 +8,7 @@ import Tooltip from '../Tooltip/Tooltip';
 interface SidebarItemProps {
   to?: string;
   tooltipText: string;
-  icon: any;
+  icon: ReactElement;
   className?: string;
   title?: DefaultTFuncReturn;
 }
@@ -36,8 +36,8 @@ const SidebarItem = ({ to, icon, title, className, tooltipText }: SidebarItemPro
           <div className="flex h-fit w-full flex-shrink-0 items-center justify-center">
             <div
               className={twMerge(
-                'relative flex h-8 w-12 items-center rounded-full hover:bg-gray-200 hover:text-primary-700',
-                isActivated && 'bg-gray-200 text-primary-700',
+                'relative flex h-8 w-12 items-center rounded-full hover:bg-slate-300 hover:text-primary-700',
+                isActivated && 'bg-gray-300 text-primary-700',
               )}
             >
               <div className="flex h-full w-full flex-shrink-0 items-center justify-center group-hover:text-primary-700">

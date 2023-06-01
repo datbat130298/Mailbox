@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getTrashs } from '../../../../app/Services/Trash/TrashService';
 import { MailType } from '../../../../app/Types/commonTypes';
+import { triggerClickNext, triggerClickPrev } from '../../../utils/helpers';
 import EmptyData from '../../Components/EmptyData/EmptyData';
 import HeaderMailTable from '../../Components/Mail/HeaderMailTable';
 import MailTable from '../../Components/Mail/MailTable';
@@ -57,14 +58,24 @@ const TrashTable = () => {
     setIsShowViewMailSpace(true);
   };
 
+  const handleClickNextButton = () => {
+    return triggerClickNext(trashData, selectedMail, setSelectedMail);
+  };
+
+  const handleClickPrevButton = () => {
+    return triggerClickPrev(trashData, selectedMail, setSelectedMail);
+  };
+
   return (
     <div className="relative h-full w-full pt-14">
       <HeaderMailTable
-        actionArray={['datetime']}
+        actionArray={['datetime', 'delete_forrever']}
         isShowShadow={isShowShadow}
         isShowCheckboxHeader={isShowViewMailSpace}
         isChecked={isChecked}
         onClickSelectAll={handleSelectAll}
+        onClickNextButton={handleClickNextButton}
+        onClickPrevButton={handleClickPrevButton}
         onCloseViewMailSpace={() => {
           setIsShowViewMailSpace(false);
           setSelectedMail({} as MailType);

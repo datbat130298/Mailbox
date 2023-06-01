@@ -7,14 +7,14 @@
   "all": "All",
   "read": "Read",
   "unread": "Unread",
-  "all_time": "All time",
+  "any_time": "Any time",
   "last_7_days": "Last 7 days",
   "last_30_days": "Last 30 days",
   "last_6_months": "Last 6 months",
   "custom_range": "Custom range",
   "classic": "Classic",
   "compact": "Compact",
-  "super_compact": "Super Compact",
+  "grid": "Grid",
   "mask_as_read": "Mask as read",
   "delete": "Delete",
   "archive": "Archive",
@@ -44,5 +44,6 @@
   "end_date": "End date",
   "cancel": "Cancel",
   "confirm": "Confirm",
-  "apply": "Apply"
+  "apply": "Apply",
+  "delete_forever": "Delete forever"
 }

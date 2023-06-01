@@ -2,37 +2,60 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdOutlineViewList, MdOutlineViewModule, MdOutlineViewQuilt } from 'react-icons/md';
 import { twMerge } from 'tailwind-merge';
+import { setMailItemStyle } from '../../../../app/Slices/layoutSlice';
+import useDispatch from '../../../Hooks/useDispatch';
+import useSelector from '../../../Hooks/useSelector';
 import { triggerClickOutside } from '../../../utils/helpers';
+
+interface SelectViewStyleType {
+  uuid: number;
+  label: string;
+  value: string;
+  icon: React.ReactNode;
+}
 
 const SelectViewStyle = () => {
   const { t } = useTranslation();
   const viewStyleTabRef = useRef<HTMLDivElement>(null);
   const [isShowSelectViewStyle, setIsShowSelectViewStyle] = useState(false);
-  const [selectStyle, setSelectStyle] = useState({
+  const dispatch = useDispatch();
+  const { itemMailStyle } = useSelector((state) => state.layout);
+  const [selectStyle, setSelectStyle] = useState<SelectViewStyleType>({
     uuid: 1,
     label: t('classic'),
+    value: 'classic',
     icon: <MdOutlineViewQuilt size={20} />,
   });
   const styleViews = [
     {
       uuid: 1,
-      label: t('classic'),
-      icon: <MdOutlineViewQuilt size={20} />,
-    },
-    {
-      uuid: 2,
-      label: t('compact'),
+      label: t('grid'),
+      value: 'grid',
       icon: <MdOutlineViewModule size={20} />,
     },
     {
+      uuid: 2,
+      label: t('classic'),
+      value: 'classic',
+      icon: <MdOutlineViewQuilt size={20} />,
+    },
+    {
       uuid: 3,
-      label: t('super_compact'),
+      label: t('compact'),
+      value: 'compact',
       icon: <MdOutlineViewList size={20} />,
     },
   ];
   useEffect(() => {
     triggerClickOutside(viewStyleTabRef, () => setIsShowSelectViewStyle(false));
   }, [viewStyleTabRef, triggerClickOutside]);
+
+  useEffect(() => {
+    const currentStyle = styleViews.find((item) => item.value === itemMailStyle);
+    if (currentStyle) {
+      setSelectStyle(currentStyle);
+    }
+  }, [itemMailStyle]);
   return (
     <div
       className="flex-center my-3 h-8 w-max rounded-md p-2 text-sm hover:bg-gray-100 hover:text-primary-700"
@@ -60,6 +83,7 @@ const SelectViewStyle = () => {
               tabIndex={0}
               onClick={() => {
                 setSelectStyle(item);
+                dispatch(setMailItemStyle(item.value));
                 setIsShowSelectViewStyle(false);
               }}
             >

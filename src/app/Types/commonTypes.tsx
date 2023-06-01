@@ -115,6 +115,7 @@ export interface MailType {
   content: string;
   time: string;
   address: string;
+  readed?: boolean;
 }
 
 export interface FlagType {

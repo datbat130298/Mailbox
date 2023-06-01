@@ -75,7 +75,7 @@ module.exports = {
         xl: '0px 5px 14px 0px rgba(100, 100, 111, 0.2)',
         left: '0px 2px 4px 0px rgba(14, 30, 37, 0.12) , 0px 2px 16px 0px rgba(14, 30, 37, 0.32)',
         box: '0px 0px 5px 0px rgba(0, 0, 0, 0.1), 0px 0px 1px 0px rgba(0, 0, 0, 0.1) ',
-        bottom: '0px 15px 10px -15px rgba(0, 0, 0, 0.1)',
+        bottom: '0 10px 20px -5px rgba(0, 0, 0, 0.1)',
         compose: '0px 0px 3px 2px rgba(0,0,0,0.15)',
       },
       keyframes: {

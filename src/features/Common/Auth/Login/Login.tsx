@@ -63,7 +63,7 @@ const Login = () => {
       .then(() => {
         let from = searchParams.get('redirect') || '';
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        AuthService.getMe().then((response: any) => {
+        AuthService.getMe().then((response) => {
           dispatch(setUser(response.data.data));
           // if (response?.data?.data?.roles?.find((role: any) => role.slug === 'admin')) {
           //   from = searchParams.get('redirect') || '/admin';
@@ -76,7 +76,7 @@ const Login = () => {
           });
         });
       })
-      .catch((err: any) => {
+      .catch((err) => {
         const { response } = err;
         if (response) {
           const { status } = response;
