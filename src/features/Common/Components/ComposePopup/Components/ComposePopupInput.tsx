@@ -6,7 +6,7 @@ export type InputSizeType = 'xs' | 'sm' | 'normal';
 
 export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
   size?: InputSizeType;
-  label?: string;
+  label: string;
   labelPostfix?: JSX.Element;
   error?: string;
   inlineError?: boolean;
@@ -14,7 +14,7 @@ export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
   inputClassName?: string;
 }
 
-const ComposeInput = (
+const ComposePopupInput = (
   {
     label,
     id,
@@ -70,4 +70,4 @@ const ComposeInput = (
   );
 };
 
-export default forwardRef(ComposeInput);
+export default forwardRef(ComposePopupInput);

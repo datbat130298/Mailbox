@@ -5,8 +5,15 @@
 //Item center
 
 .flex-center {
-  display: flex;
-  flex-shrink: 0;
-  justify-content: center;
-  align-items: center;
+  @apply flex flex-shrink-0 items-center justify-center;
+}
+
+input.compose[type='date']::-webkit-inner-spin-button,
+input.compose[type='date']::-webkit-calendar-picker-indicator {
+  @apply hidden;
+}
+
+input.compose-time[type='time']::-webkit-inner-spin-button,
+input.compose-time[type='time']::-webkit-calendar-picker-indicator {
+  @apply opacity-0;
 }
