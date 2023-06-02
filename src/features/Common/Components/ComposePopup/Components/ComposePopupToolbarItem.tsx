@@ -7,6 +7,7 @@ interface ComposePopupToolbarItemProps {
   title: string | '';
   isActive?: boolean;
   className?: string;
+  id?: string;
 }
 
 const ComposePopupToolbarItem = ({
@@ -15,10 +16,12 @@ const ComposePopupToolbarItem = ({
   title,
   isActive,
   className,
+  id,
 }: ComposePopupToolbarItemProps) => {
   return (
     <Tooltip title={title} position="top">
       <div
+        id={id}
         className={twMerge(
           'mx-0.5 flex h-7 w-7 items-center rounded-sm pl-1 hover:bg-gray-100',
           isActive && 'bg-gray-200',

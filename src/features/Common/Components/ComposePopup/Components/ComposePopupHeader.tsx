@@ -7,13 +7,19 @@ import Tooltip from '../../Tooltip/Tooltip';
 
 interface ComposePopupHeaderProps {
   onClose: () => void;
-  onRestore?: () => void;
-  onCollect?: () => void;
+  onChangeViewType: () => void;
+  onCollect: () => void;
   title?: string;
   className?: string;
 }
 
-const ComposePopupHeader = ({ className, onClose, onRestore, onCollect, title }: ComposePopupHeaderProps) => {
+const ComposePopupHeader = ({
+  className,
+  onClose,
+  onChangeViewType,
+  onCollect,
+  title,
+}: ComposePopupHeaderProps) => {
   const { t } = useTranslation();
 
   return (
@@ -36,7 +42,7 @@ const ComposePopupHeader = ({ className, onClose, onRestore, onCollect, title }:
               className="relative h-[15px] w-[18px] hover:bg-slate-200"
               role="button"
               tabIndex={0}
-              onClick={onRestore}
+              onClick={onChangeViewType}
             >
               <VscChromeRestore size={15} className="absolute -bottom-0.5 left-0.5 p-[1px]" />
             </div>

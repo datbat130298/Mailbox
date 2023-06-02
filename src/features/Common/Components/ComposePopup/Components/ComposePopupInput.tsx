@@ -17,7 +17,6 @@ export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
 const ComposePopupInput = (
   {
     label,
-    id,
     className,
     value,
     disabled,
@@ -54,7 +53,7 @@ const ComposePopupInput = (
   }, [disabled]);
 
   return (
-    <div className="mx-2 my-1 flex items-center gap-2 border-b-[1px] border-gray-200 py-2 pb-3" id={id}>
+    <div className="mx-2 my-1 flex items-center gap-2 border-b-[1px] border-gray-200 py-2 pb-3">
       {/* <span className="text-sm font-medium text-gray-700">{ label}</span> */}
       <input
         placeholder={label}

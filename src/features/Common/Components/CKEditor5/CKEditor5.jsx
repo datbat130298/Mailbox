@@ -2,7 +2,6 @@ import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import _ from 'lodash';
 import { useMemo } from 'react';
-import { useSelector } from 'react-redux';
 import { twMerge } from 'tailwind-merge';
 import './CKEditor.scss';
 import { UploadAdaptor } from './UploadAdaptor';
@@ -79,37 +78,36 @@ const CKEditor5 = ({
   isDisabled,
   isRadiousToolbar = false,
 }) => {
-  const { layout } = useSelector((state) => state);
+  const editWriter = (editor) => {
+    if (editor) {
+      editor?.editing?.view.focus();
+      editor?.ui
+        ?.getEditableElement()
+        ?.parentElement?.insertBefore(editor.ui.view.toolbar.element, editor.ui.getEditableElement());
+      /* eslint no-param-reassign: "error" */
+      editor.plugins.get('FileRepository').createUploadAdapter = (loader) => new UploadAdaptor(loader);
+      const toolbarElement = editor.ui.view.toolbar.element;
+      toolbarElement.style.height = '40px';
+      toolbarElement.style.width = 'fit-content';
+      toolbarElement.style.borderLeft = 'none';
+      toolbarElement.style.borderRight = 'none';
+      toolbarElement.style.borderTop = 'none';
+      // config.toolbarLocation = 'bottom';
+      // toolbarElement.style.backgroundColor = '#FFFFFF';
+      toolbarElement.style.borderTopLeftRadius = isRadiousToolbar && '6px';
+      toolbarElement.style.borderTopRightRadius = isRadiousToolbar && '6px';
+    }
+  };
 
   const render = useMemo(() => {
     return (
-      <div className={twMerge('relative h-full ', layout.darkMode && 'dark')}>
+      <div className={twMerge('relative h-full')}>
         <CKEditor
           editor={DecoupledEditor}
           data={data}
           config={config}
           disabled={isDisabled}
-          onReady={(editor) => {
-            if (editor) {
-              editor?.editing?.view.focus();
-              editor?.ui
-                ?.getEditableElement()
-                ?.parentElement?.insertBefore(editor.ui.view.toolbar.element, editor.ui.getEditableElement());
-              /* eslint no-param-reassign: "error" */
-              editor.plugins.get('FileRepository').createUploadAdapter = (loader) =>
-                new UploadAdaptor(loader);
-              const toolbarElement = editor.ui.view.toolbar.element;
-              toolbarElement.style.height = '40px';
-              toolbarElement.style.width = 'fit-content';
-              toolbarElement.style.borderLeft = 'none';
-              toolbarElement.style.borderRight = 'none';
-              toolbarElement.style.borderTop = 'none';
-              // config.toolbarLocation = 'bottom';
-              // toolbarElement.style.backgroundColor = '#FFFFFF';
-              toolbarElement.style.borderTopLeftRadius = isRadiousToolbar && '6px';
-              toolbarElement.style.borderTopRightRadius = isRadiousToolbar && '6px';
-            }
-          }}
+          onReady={(editor) => editWriter(editor)}
           onChange={_.debounce((_event, editor) => {
             onChange?.(editor.getData());
           }, 500)}
@@ -119,7 +117,7 @@ const CKEditor5 = ({
         />
       </div>
     );
-  }, [layout, isRadiousToolbar, data, onChange, onBlur]);
+  }, [isRadiousToolbar, data, onChange, onBlur]);
 
   return render;
 };
