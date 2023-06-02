@@ -72,12 +72,12 @@ const ComposePopupSelectTimeModal = ({ isOpen, setOpen, onSubmit }: ComposePopup
             <div className="flex items-center justify-between px-3 pt-2">
               <span className="text-2xl font-semibold text-gray-700">{t('schedule_send')}</span>
               <div
-                className="-mr-3 rounded-full p-2 text-gray-700 hover:bg-gray-100 hover:text-black"
+                className="-mr-3 rounded-full border border-gray-200 p-1 text-gray-800 hover:bg-slate-100 hover:text-black"
                 tabIndex={0}
                 role="button"
                 onClick={() => setOpen(false)}
               >
-                <IoClose size={20} />
+                <IoClose size={18} />
               </div>
             </div>
           </div>

@@ -53,7 +53,7 @@ const ComposePopupPickDateAndTimeModal = ({ isOpen, onClose }: ComposePopupPickD
       <div className="flex  items-center justify-between pl-8 pr-9 text-xl font-semibold">
         {t('pick_date_time')}
         <div
-          className="rounded-full border border-gray-200 p-1 hover:bg-slate-100"
+          className="rounded-full border border-gray-200 p-1 text-gray-800 hover:bg-slate-100 hover:text-black"
           role="button"
           tabIndex={0}
           onClick={onClose}
