@@ -35,8 +35,8 @@ module.exports = {
   ],
   plugins: ['@typescript-eslint'],
   rules: {
+    '@typescript-eslint/no-unused-vars': 'error',
     '@typescript-eslint/no-explicit-any': 'error',
-    '@typescript-eslint/no-unused-vars': 'warn',
     'import/no-cycle': 'off',
     'import/prefer-default-export': 'off',
     'jsx-a11y/click-events-have-key-events': 'off',

@@ -63,5 +63,6 @@
   "delete_forever": "Delete forever",
   "minimize": "Minimize",
   "full_screen": "Full screen",
-  "save_close": "Save and close"
+  "save_close": "Save and close",
+  "open_in_a_popup": "Open in a popup"
 }

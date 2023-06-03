@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import _ from 'lodash';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CgFormatColor } from 'react-icons/cg';
 import { FaRegTrashAlt } from 'react-icons/fa';
@@ -7,45 +8,58 @@ import { IoMdAttach } from 'react-icons/io';
 import { IoImageOutline } from 'react-icons/io5';
 import { MdTagFaces } from 'react-icons/md';
 import { twMerge } from 'tailwind-merge';
+import { ComposeViewTypeEnum } from '../../../../../app/Enums/commonEnums';
+import { ComposePopupStyleType, MailType } from '../../../../../app/Types/commonTypes';
 import ComposePopupButtonSend from './ComposePopupButtonSend';
 import ComposePopupHeader from './ComposePopupHeader';
 import ComposePopupInput from './ComposePopupInput';
 import ComposePopupSelectTimeModal from './ComposePopupSelectTimeModal';
 import ComposePopupToolbarItem from './ComposePopupToolbarItem';
 import WriterCompose from './EditorWriterCompose';
+import ReplyAndForwardHeader from './ReplyAndForwardHeader';
 
 export interface ComposePopupProps {
-  onClickViewType: () => void;
+  composeClassName?: string;
   viewType?: string;
+  subject: string;
+  receiver: string;
+  debounceSubject: string;
+  fromMail?: MailType;
+  composePopupStyle?: ComposePopupStyleType;
+  setViewType: Dispatch<SetStateAction<ComposeViewTypeEnum>>;
   onClose: () => void;
   onCollect: () => void;
-  subject: string;
   onChangeSubjectInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  debounceSubject: string;
+  onChangeReceiverInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onClear?: () => void;
 }
 
 const ComposePopup = ({
-  onChangeSubjectInput,
+  composeClassName,
   subject,
-  onClose,
-  onClickViewType,
+  receiver,
   viewType,
-  onCollect,
   debounceSubject,
+  fromMail,
+  composePopupStyle,
+  setViewType,
+  onChangeSubjectInput,
+  onChangeReceiverInput,
+  onClose,
+  onCollect,
+  onClear,
 }: ComposePopupProps) => {
   const [isVisibleToolbar, setIsVisibleToolbar] = useState<boolean>(false);
-  const [receiver, setReceiver] = useState<string>('');
   const [isShowSelectTimeModal, setIsShowSelectTimeModal] = useState<boolean>(false);
 
   const { t } = useTranslation();
 
-  const onChangeReceiverInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setReceiver(e.target.value);
-  };
-
   const handleClickDeleteFooter = () => {
     // eslint-disable-next-line no-console
     console.log('this is click delete');
+    if (onClear) {
+      onClear();
+    }
   };
 
   useEffect(() => {
@@ -57,7 +71,7 @@ const ComposePopup = ({
       }
       toolbar.style.visibility = 'visible';
     }
-  }, [isVisibleToolbar, viewType]);
+  }, [isVisibleToolbar]);
 
   const handleClickFormat = () => {
     setIsVisibleToolbar((prev) => !prev);
@@ -84,31 +98,65 @@ const ComposePopup = ({
     console.log('this is SubmitSchudule');
   };
 
-  const handleClickViewType = () => {
-    onClickViewType();
+  const handleChangeViewType = () => {
+    if (viewType === ComposeViewTypeEnum.POPUP) {
+      setViewType(ComposeViewTypeEnum.MODAL);
+      return;
+    }
+    setViewType(ComposeViewTypeEnum.POPUP);
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      if (viewType === 'fullscreen') {
+    const delayVisibleToolbar = setTimeout(() => {
+      if (viewType === ComposeViewTypeEnum.MODAL) {
         setIsVisibleToolbar(true);
       }
     }, 100);
+    return () => clearTimeout(delayVisibleToolbar);
   }, [viewType]);
 
   return (
-    <div>
-      <ComposePopupHeader
-        title={debounceSubject}
-        onClose={onClose}
-        onCollect={onCollect}
-        onChangeViewType={handleClickViewType}
-      />
-      <div className="mt-0.5 px-2">
-        <ComposePopupInput label={t('recipients')} value={receiver} onChange={onChangeReceiverInput} />
-        <ComposePopupInput label={t('subject')} value={subject} onChange={onChangeSubjectInput} />
-      </div>
-      <div className={twMerge('mx-2 h-[450px]', viewType === 'fullscreen' && 'h-[73vh]')}>
+    <div
+      className={twMerge(
+        'fixed bottom-0 right-8 z-50 h-[610px] w-[540px] rounded-t-md bg-white shadow-compose',
+        composePopupStyle?.containerClassName,
+        viewType === ComposeViewTypeEnum.MODAL && 'rounded-md',
+        composeClassName,
+      )}
+    >
+      {(viewType === ComposeViewTypeEnum.REPLY || viewType === ComposeViewTypeEnum.FORWARD) && (
+        <ReplyAndForwardHeader
+          setViewType={setViewType}
+          type={viewType}
+          toEmail={fromMail?.from_user?.email}
+        />
+      )}
+      {(viewType === ComposeViewTypeEnum.MODAL || viewType === ComposeViewTypeEnum.POPUP) && (
+        <>
+          <ComposePopupHeader
+            title={!_.isEmpty(fromMail) ? `${t('reply')}: ${debounceSubject}` : debounceSubject}
+            onClose={() => {
+              onClose();
+              if (onClear) {
+                onClear();
+              }
+            }}
+            onCollect={onCollect}
+            onChangeViewType={handleChangeViewType}
+          />
+          <div className="mt-0.5 px-2">
+            <ComposePopupInput label={t('recipients')} value={receiver} onChange={onChangeReceiverInput} />
+            <ComposePopupInput label={t('subject')} value={subject} onChange={onChangeSubjectInput} />
+          </div>
+        </>
+      )}
+      <div
+        className={twMerge(
+          'mx-2 h-[428px]',
+          viewType === ComposeViewTypeEnum.MODAL && 'h-[71vh]',
+          composePopupStyle?.composeClassName,
+        )}
+      >
         <WriterCompose
           data={undefined}
           handleChangeEditor={undefined}
@@ -117,14 +165,14 @@ const ComposePopup = ({
           isDisabled={undefined}
         />
       </div>
-      <div className={twMerge('relative bottom-4 flex w-full items-center justify-between px-4')}>
+      <div className={twMerge('relative flex w-full items-center justify-between px-4')}>
         <div className="flex justify-start gap-4">
           <ComposePopupButtonSend
             onClickSend={handleClickSend}
             onClickArrow={handleClickArrow}
             onClickSendWithTime={handleClickSendWihTime}
           />
-          <div className="flex w-full items-center justify-start">
+          <div className="flex w-full items-center  justify-start">
             <ComposePopupToolbarItem
               id="format"
               isActive={isVisibleToolbar}
@@ -163,7 +211,7 @@ const ComposePopup = ({
         <ComposePopupToolbarItem
           onClick={handleClickDeleteFooter}
           title={t('discard_draft')}
-          icon={<FaRegTrashAlt size={14} className="ml-0.5" />}
+          icon={<FaRegTrashAlt size={14} />}
         />
       </div>
 

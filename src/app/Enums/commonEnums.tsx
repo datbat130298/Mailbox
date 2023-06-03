@@ -4,3 +4,10 @@ export enum SelectPositionEnum {
   BOTTOM_LEFT = 'bottom-left',
   BOTTOM_RIGHT = 'bottom-right',
 }
+
+export enum ComposeViewTypeEnum {
+  POPUP = 'popup',
+  MODAL = 'modal',
+  REPLY = 'reply',
+  FORWARD = 'forward',
+}

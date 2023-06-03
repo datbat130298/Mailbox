@@ -85,6 +85,7 @@ const ComposePopupSelectTimeModal = ({ isOpen, setOpen, onSubmit }: ComposePopup
           <div className="pb-2 pt-5">
             {selectTimeOption.map((item, id) => (
               <div
+                key={item.id}
                 className={twMerge(
                   'flex items-center justify-between px-9 py-2 text-sm font-normal hover:cursor-pointer hover:bg-gray-100',
                   id === selectTime && 'bg-gray-200',

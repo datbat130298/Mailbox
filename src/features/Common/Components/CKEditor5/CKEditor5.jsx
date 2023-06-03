@@ -92,8 +92,6 @@ const CKEditor5 = ({
       toolbarElement.style.borderLeft = 'none';
       toolbarElement.style.borderRight = 'none';
       toolbarElement.style.borderTop = 'none';
-      // config.toolbarLocation = 'bottom';
-      // toolbarElement.style.backgroundColor = '#FFFFFF';
       toolbarElement.style.borderTopLeftRadius = isRadiousToolbar && '6px';
       toolbarElement.style.borderTopRightRadius = isRadiousToolbar && '6px';
     }
@@ -101,7 +99,7 @@ const CKEditor5 = ({
 
   const render = useMemo(() => {
     return (
-      <div className={twMerge('relative h-full')}>
+      <div className={twMerge('relative h-full w-full')}>
         <CKEditor
           editor={DecoupledEditor}
           data={data}

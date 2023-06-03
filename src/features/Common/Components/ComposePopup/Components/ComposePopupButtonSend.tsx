@@ -30,9 +30,9 @@ const ComposePopupButtonSend = ({
 
   return (
     <>
-      <div className="item-center relative flex rounded-full bg-blue-700 text-white">
+      <div className="item-center relative flex translate-y-[4px] rounded-full bg-primary-500 text-white">
         <div
-          className="flex items-center rounded-l-full border-r border-gray-800 py-2 pl-5 pr-4 text-sm font-medium uppercase hover:bg-blue-600"
+          className="flex items-center rounded-l-full border-r border-gray-200 py-2 pl-5 pr-4 text-sm font-medium uppercase hover:bg-primary-700"
           tabIndex={0}
           role="button"
           onClick={onClickSend}
@@ -40,7 +40,7 @@ const ComposePopupButtonSend = ({
           {t('send')}
         </div>
         <div
-          className="py-auto flex items-center rounded-r-full px-2 hover:bg-blue-600"
+          className="py-auto flex items-center rounded-r-full px-2 hover:bg-primary-700"
           tabIndex={0}
           role="button"
           onClick={handleClickArrow}
@@ -48,7 +48,11 @@ const ComposePopupButtonSend = ({
           <RiArrowUpSFill size={15} className="rotate-180" />
         </div>
       </div>
-      <ComposePopupSelectStatusSend isShow={isShowStatusSend} onClickSendWithTime={handleClickSendWihTime} />
+      <ComposePopupSelectStatusSend
+        isShow={isShowStatusSend}
+        setIsShow={setIsShowStatusSend}
+        onClickSendWithTime={handleClickSendWihTime}
+      />
     </>
   );
 };

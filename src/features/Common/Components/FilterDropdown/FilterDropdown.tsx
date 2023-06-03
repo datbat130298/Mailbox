@@ -1,5 +1,5 @@
 import { DefaultTFuncReturn } from 'i18next';
-import { useEffect, useRef, useState } from 'react';
+import { cloneElement, ReactElement, useEffect, useRef, useState } from 'react';
 import { FiChevronDown } from 'react-icons/fi';
 import { twMerge } from 'tailwind-merge';
 import { triggerClickOutside } from '../../../utils/helpers';
@@ -8,17 +8,18 @@ interface FilterItemType {
   uuid: number;
   label: string;
   value: string;
+  onClick?: () => void;
 }
 
 interface FilterDropdownProps {
   data: Array<FilterItemType>;
   position: string;
-  noneIcon?: boolean;
+  elementStyle?: ReactElement;
   icon?: React.ReactNode;
   label?: DefaultTFuncReturn;
 }
 
-const FilterDropdown = ({ data, position, noneIcon, icon, label }: FilterDropdownProps) => {
+const FilterDropdown = ({ data, position, elementStyle, icon, label }: FilterDropdownProps) => {
   const filterRef = useRef<HTMLDivElement>(null);
   const [isShowFilterDropdown, setIsShowFilterDropdown] = useState(false);
   const [selectFilterBy, setSelectFilterBy] = useState('');
@@ -28,22 +29,29 @@ const FilterDropdown = ({ data, position, noneIcon, icon, label }: FilterDropdow
   }, [filterRef, triggerClickOutside]);
   return (
     <div className="relative" ref={filterRef}>
-      {noneIcon && (
-        <div
-          className={twMerge(
-            'flex-center ml-1 h-full w-max hover:text-primary-700  group-hover:text-primary-700',
-            isShowFilterDropdown && ' text-primary-700',
-          )}
-          role="button"
-          tabIndex={0}
-          onClick={() => {
-            setIsShowFilterDropdown(true);
-          }}
-        >
-          <FiChevronDown size={14} />
+      {elementStyle && (
+        <div className={twMerge('group flex h-full w-fit')}>
+          {cloneElement(elementStyle, {
+            onClick: () => {
+              setIsShowFilterDropdown(true);
+            },
+          })}
+          <div
+            className={twMerge(
+              'flex-center ml-1 h-full w-max hover:text-primary-700  group-hover:text-primary-700',
+              isShowFilterDropdown && ' text-primary-700',
+            )}
+            role="button"
+            tabIndex={0}
+            onClick={() => {
+              setIsShowFilterDropdown(true);
+            }}
+          >
+            <FiChevronDown size={14} />
+          </div>
         </div>
       )}
-      {!noneIcon && (
+      {!elementStyle && (
         <div
           className={twMerge(
             'my-3 flex h-8 w-fit rounded-md px-2  hover:bg-gray-100 hover:text-primary-700',
@@ -76,6 +84,9 @@ const FilterDropdown = ({ data, position, noneIcon, icon, label }: FilterDropdow
             role="button"
             tabIndex={0}
             onClick={() => {
+              if (item.onClick) {
+                item.onClick();
+              }
               setSelectFilterBy(item.value);
               setIsShowFilterDropdown(false);
             }}

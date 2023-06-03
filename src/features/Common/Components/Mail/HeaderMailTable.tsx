@@ -91,7 +91,11 @@ const HeaderMailTable = ({
                 className="group-hover:border-primary-700 group-hover:text-primary-700"
               />
             </div>
-            <FilterDropdown noneIcon data={filterCheckboxData} position="-left-6 top-10" />
+            <FilterDropdown
+              elementStyle={<div className="hidden" />}
+              data={filterCheckboxData}
+              position="-left-6 top-10"
+            />
           </div>
           {_.includes(actionArray, 'delete_forrever') && isChecked && (
             <div className="my-3 flex h-8 w-fit rounded-md px-2  hover:bg-gray-100 hover:text-primary-700">
@@ -134,7 +138,7 @@ const HeaderMailTable = ({
           onClickNextButton={onClickNextButton}
           onClickPrevButton={onClickPrevButton}
         />
-        <SelectViewStyle />
+        {!isShowCheckboxHeader && <SelectViewStyle />}
       </div>
     </div>
   );
