@@ -184,6 +184,19 @@ const datawithDay = dataInbox?.map((item) => ({
   ...item,
   time: '2023-05-30T03:29:57+00:00',
   address: 'khoi.tran@techupcorp.com',
+  from_user: {
+    uuid: 311,
+    username: 'khoi.tran@techupcorp.com',
+    first_name: 'Khoi',
+    last_name: 'Tran',
+    email: 'khoi.tran@techupcorp.com',
+    roles: [
+      {
+        uuid: 1,
+        name: 'User',
+      },
+    ],
+  },
 }));
 
 const getInboxs = () => {

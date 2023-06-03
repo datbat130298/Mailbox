@@ -1,14 +1,21 @@
-import { useMemo } from 'react';
+import { Dispatch, SetStateAction, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdOutlineScheduleSend } from 'react-icons/md';
+import { triggerClickOutside } from '../../../../utils/helpers';
 
 interface ComposePopupSelectStatusSendProps {
   onClickSendWithTime: () => void;
   isShow: boolean;
+  setIsShow: Dispatch<SetStateAction<boolean>>;
 }
 
-const ComposePopupSelectStatusSend = ({ onClickSendWithTime, isShow }: ComposePopupSelectStatusSendProps) => {
+const ComposePopupSelectStatusSend = ({
+  onClickSendWithTime,
+  isShow,
+  setIsShow,
+}: ComposePopupSelectStatusSendProps) => {
   const { t } = useTranslation();
+  const tabRef = useRef<HTMLDivElement>(null);
 
   const optionSend = useMemo(
     () => [
@@ -21,8 +28,13 @@ const ComposePopupSelectStatusSend = ({ onClickSendWithTime, isShow }: ComposePo
 
     [],
   );
+
+  useEffect(() => {
+    triggerClickOutside(tabRef, () => setIsShow(false));
+  }, [tabRef, triggerClickOutside]);
+
   return (
-    <div className="absolute -top-10 rounded-lg bg-white shadow-compose">
+    <div className="absolute -top-10 rounded-lg bg-white shadow-compose" ref={tabRef}>
       {isShow &&
         optionSend.map((item) => (
           <div

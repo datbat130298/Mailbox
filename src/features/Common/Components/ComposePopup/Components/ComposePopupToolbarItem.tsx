@@ -23,7 +23,7 @@ const ComposePopupToolbarItem = ({
       <div
         id={id}
         className={twMerge(
-          'mx-0.5 flex h-7 w-7 items-center rounded-sm pl-1 hover:bg-gray-100',
+          '-mb-2.5 -mr-1 flex h-8 w-8 items-center justify-center rounded-md hover:bg-gray-100',
           isActive && 'bg-gray-200',
           className,
         )}

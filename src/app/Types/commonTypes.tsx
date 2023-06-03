@@ -2,6 +2,7 @@ import { PaginationState } from '@tanstack/react-table';
 import { AxiosError, AxiosResponse } from 'axios';
 import { Dayjs } from 'dayjs';
 import { TableColumnFilterState } from './elementTypes';
+import { UserDataType } from './userTypes';
 
 export interface AuthTokensType {
   accessToken: string;
@@ -116,10 +117,16 @@ export interface MailType {
   time: string;
   address: string;
   readed?: boolean;
+  from_user?: UserDataType;
 }
 
 export interface FlagType {
   code: string;
   name: string;
   flag_image: string;
+}
+
+export interface ComposePopupStyleType {
+  containerClassName: string;
+  composeClassName: string;
 }

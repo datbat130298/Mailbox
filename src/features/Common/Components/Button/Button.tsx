@@ -43,7 +43,7 @@ const Button = ({
       spinnerColorClassNames += 'border-gray-400';
       break;
     default:
-      colorClassNames += `bg-primary-700 hover:bg-primary-800 text-white ring-primary-700 disabled:ring-gray-300 disabled:bg-gray-300`;
+      colorClassNames += `bg-primary-500 hover:bg-primary-700 text-white ring-primary-700 disabled:ring-gray-300 disabled:bg-gray-300`;
       spinnerColorClassNames += disabled ? 'border-white' : 'border-gray-400';
   }
 

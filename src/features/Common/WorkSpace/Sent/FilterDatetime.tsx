@@ -111,7 +111,7 @@ const FilterDatetime = () => {
               >
                 {t('cancel')}
               </Button>
-              <Button size="xs" className="w-28 py-2 text-xs  shadow-none ring-1">
+              <Button size="xs" className="w-28 py-2 text-xs shadow-none ring-1">
                 {t('apply')}
               </Button>
             </div>

@@ -21,13 +21,14 @@ const ComposePopupHeader = ({
   title,
 }: ComposePopupHeaderProps) => {
   const { t } = useTranslation();
-
   return (
     <div className={twMerge('rounded-t-md bg-[#F2F6FC]', className)}>
       <div className="relative flex w-full justify-between p-2 px-2 py-2">
-        <div className="pl-2 text-sm font-semibold">{title || t('new_message')}</div>
+        <div className="line-clamp-1 w-[calc(100%-60px)] text-ellipsis break-all pl-2 text-sm font-semibold">
+          {title || t('new_message')}
+        </div>
         <div className="absolute right-3 top-[8px] flex items-center">
-          <Tooltip title={t('minimize')} position="bottom">
+          <Tooltip title={t('minimize')} position="left">
             <div
               className="h-[15px] w-[18px] hover:bg-slate-200"
               role="button"
@@ -37,7 +38,7 @@ const ComposePopupHeader = ({
               <MdMinimize size={18} className="absolute -bottom-[1px]" />
             </div>
           </Tooltip>
-          <Tooltip title={t('full_screen')} position="bottom">
+          <Tooltip title={t('full_screen')} position="left">
             <div
               className="relative h-[15px] w-[18px] hover:bg-slate-200"
               role="button"
@@ -47,7 +48,7 @@ const ComposePopupHeader = ({
               <VscChromeRestore size={15} className="absolute -bottom-0.5 left-0.5 p-[1px]" />
             </div>
           </Tooltip>
-          <Tooltip title={t('save_close')} position="bottom">
+          <Tooltip title={t('save_close')} position="left">
             <div
               className="h-[15px] w-[18px] hover:bg-slate-200"
               role="button"

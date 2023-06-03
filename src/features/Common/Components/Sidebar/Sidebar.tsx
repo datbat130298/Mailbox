@@ -23,7 +23,7 @@ const Sidebar = () => {
   return (
     <div className="fixed left-0 top-0 z-50 h-screen w-[72px] bg-gray-200 px-1 py-6 shadow">
       <div role="button" tabIndex={0} onClick={handleShowSubSidebar}>
-        <SidebarItem tooltipText="Menu" icon={<AiOutlineMenu size={20} />} className="mb-4" />
+        <SidebarItem tooltipText="Menu" icon={<AiOutlineMenu size={20} />} className="mb-5" />
       </div>
       <SidebarItem
         to="/inbox"
