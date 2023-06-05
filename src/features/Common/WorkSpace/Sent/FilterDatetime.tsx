@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BsCalendar4 } from 'react-icons/bs';
@@ -10,6 +11,8 @@ const FilterDatetime = () => {
   const filterRef = useRef<HTMLDivElement>(null);
   const [isShowFilterDropdown, setIsShowFilterDropdown] = useState(false);
   const [selectFilterBy, setSelectFilterBy] = useState('');
+  const [startDate, setStartDate] = useState(new Date().toString());
+  const [endDate, setEndDate] = useState(new Date().toString());
   const { t } = useTranslation();
 
   const filterByDatetime = [
@@ -92,14 +95,22 @@ const FilterDatetime = () => {
                 placeholder={t('start_date') as string}
                 size="sm"
                 className="w-40  border"
+                type="date"
+                value={dayjs(startDate).format('YYYY-MM-DD')}
                 inputClassName="text-sm leading-7"
+                onChange={(e) => setStartDate(e.target.value)}
+                max={dayjs(new Date()).format('YYYY-MM-DD')}
               />
               <Input
                 isShowPlacehoder
                 placeholder={t('end_date') as string}
                 size="sm"
                 className="w-40  border"
+                type="date"
+                value={dayjs(endDate).format('YYYY-MM-DD')}
                 inputClassName="text-sm leading-7"
+                onChange={(e) => setEndDate(e.target.value)}
+                max={dayjs(new Date()).format('YYYY-MM-DD')}
               />
             </div>
             <div className="mt-4 flex justify-end gap-x-2 border-t pt-3">

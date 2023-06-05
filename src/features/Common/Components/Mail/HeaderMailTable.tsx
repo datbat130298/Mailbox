@@ -104,7 +104,7 @@ const HeaderMailTable = ({
               </div>
             </div>
           )}
-          {_.includes(actionArray, 'view') && (
+          {_.includes(actionArray, 'view') && !isChecked && (
             <FilterDropdown
               data={filterViewData}
               icon={<FiFilter size={14} />}
@@ -112,7 +112,7 @@ const HeaderMailTable = ({
               position="left-0 top-[52px]"
             />
           )}
-          {_.includes(actionArray, 'datetime') && <FilterDatetime />}
+          {_.includes(actionArray, 'datetime') && !isChecked && <FilterDatetime />}
           <HeaderAction showAction={isChecked} />
         </div>
       )}

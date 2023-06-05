@@ -17,9 +17,10 @@ interface FilterDropdownProps {
   elementStyle?: ReactElement;
   icon?: React.ReactNode;
   label?: DefaultTFuncReturn;
+  className?: string;
 }
 
-const FilterDropdown = ({ data, position, elementStyle, icon, label }: FilterDropdownProps) => {
+const FilterDropdown = ({ data, position, elementStyle, icon, label, className }: FilterDropdownProps) => {
   const filterRef = useRef<HTMLDivElement>(null);
   const [isShowFilterDropdown, setIsShowFilterDropdown] = useState(false);
   const [selectFilterBy, setSelectFilterBy] = useState('');
@@ -56,6 +57,7 @@ const FilterDropdown = ({ data, position, elementStyle, icon, label }: FilterDro
           className={twMerge(
             'my-3 flex h-8 w-fit rounded-md px-2  hover:bg-gray-100 hover:text-primary-700',
             isShowFilterDropdown && 'bg-gray-100 text-primary-700',
+            className,
           )}
           role="button"
           tabIndex={0}

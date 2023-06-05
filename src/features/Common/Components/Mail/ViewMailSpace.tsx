@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CgMailForward, CgMailReply } from 'react-icons/cg';
 import { MdArrowDropDown, MdOutlineMoreVert } from 'react-icons/md';
@@ -35,12 +35,8 @@ const ViewMailSpace = ({ mail }: ViewMailSpaceProps) => {
     setIsShowComposePopup(false);
   };
 
-  useEffect(() => {
-    console.log(composeViewType);
-  }, [composeViewType]);
-
   return (
-    <div className="min-h-[calc(100%-16px)] w-full overflow-x-hidden overflow-y-scroll px-4">
+    <div className="overflow-overlay -z-10 h-full w-full overflow-hidden overflow-y-auto  px-4">
       <div className="mt-2 flex min-h-[40px] w-full items-start justify-start gap-x-2 pl-16 text-xl">
         <div className="flex-shink-0">{mail.subject}</div>
         <MailTag />
@@ -90,7 +86,7 @@ const ViewMailSpace = ({ mail }: ViewMailSpaceProps) => {
         </div>
       </div>
       <div className="h-fit pl-16">
-        <div className="h-fit w-full justify-start">{mail.content}</div>
+        <div className="h-fit w-full text-left">{mail.content}</div>
         {composeViewType === ComposeViewTypeEnum.POPUP && (
           <div className="mt-8 flex h-fit w-full justify-start gap-x-3 pb-8">
             <Button
@@ -123,7 +119,7 @@ const ViewMailSpace = ({ mail }: ViewMailSpaceProps) => {
         )}
       </div>
 
-      <div className="relative mt-8 flex h-fit w-full">
+      <div className="relative z-0 my-8 flex h-[344px] w-full">
         {(composeViewType === ComposeViewTypeEnum.REPLY ||
           composeViewType === ComposeViewTypeEnum.FORWARD) && (
           <div className="h-16 w-16 ">
@@ -140,6 +136,7 @@ const ViewMailSpace = ({ mail }: ViewMailSpaceProps) => {
         )}
 
         <ComposePopupContainer
+          composeClassName="z-0"
           onClear={handleClear}
           composeViewType={composeViewType}
           setComposeViewType={setComposeViewType}
