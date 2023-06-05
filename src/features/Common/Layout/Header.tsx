@@ -1,15 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { HiOutlineSearch } from 'react-icons/hi';
-import { IoOptionsSharp } from 'react-icons/io5';
 import { NavLink } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 import { getLanguagesPage, setLanguagesPage } from '../../../app/Services/Language/LanguageService';
 import logoText from '../../../assets/image/logo_text.png';
 import useSelector from '../../Hooks/useSelector';
+import { triggerClickOutside } from '../../utils/helpers';
+import AdvancedSearch from '../Components/AdvancedSearch/AdvancedSearch';
 import Button from '../Components/Button';
 import ChooseLanguage from '../Components/ChooseLanguage/ChooseLanguage';
-import Input from '../Components/Form/Input';
 import UserDropdown from '../Components/UserDropdown/UserDropdown';
 
 const Header = () => {
@@ -34,17 +33,7 @@ const Header = () => {
   };
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (userTabRef.current && !userTabRef.current.contains(event.target as Node)) {
-        setUserTabVisible(false);
-      }
-    };
-
-    document.addEventListener('click', handleClickOutside, true);
-
-    return () => {
-      document.removeEventListener('click', handleClickOutside, true);
-    };
+    triggerClickOutside(userTabRef, () => setUserTabVisible(false));
   }, [userTabRef]);
   return (
     <div className="fixed right-0 top-0 z-50 flex h-20 w-[calc(100vw-72px)] justify-between bg-slate-100 pl-4 pr-2">
@@ -52,21 +41,7 @@ const Header = () => {
         <div className="flex h-full w-52 flex-shrink-0 items-center justify-start">
           <img className="h-[28px] w-[120px]" src={logoText} alt="Workflow" />
         </div>
-        <div className="my-3.5 flex  h-12 w-[720px] justify-start rounded-4xl bg-slate-200 p-1.5">
-          <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-gray-700 hover:bg-gray-300">
-            <HiOutlineSearch size={18} />
-          </div>
-          <Input
-            size="sm"
-            placeholder={t('search') as string}
-            className="mx-1 h-full w-[628px] border-none bg-transparent px-[-4px]"
-            inputClassName="placeholder-slate-400"
-            isShowPlacehoder
-          />
-          <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-gray-700 hover:bg-gray-300">
-            <IoOptionsSharp size={20} />
-          </div>
-        </div>
+        <AdvancedSearch />
       </div>
       <div className="flex h-full w-fit flex-shrink-0 items-center justify-center">
         {user?.uuid === 0 ? (

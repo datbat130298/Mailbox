@@ -32,7 +32,7 @@ const SidebarItem = ({ to, icon, title, className, tooltipText }: SidebarItemPro
       )}
     >
       <div>
-        <Tooltip title={tooltipText}>
+        <Tooltip title={tooltipText} position="right">
           <div className="flex h-fit w-full flex-shrink-0 items-center justify-center">
             <div
               className={twMerge(

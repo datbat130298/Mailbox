@@ -17,7 +17,7 @@ const ContainerWorkSpace = () => {
   }, []);
 
   return (
-    <div className="flex h-full w-full justify-start bg-slate-100 pl-4 pr-2">
+    <div className="flex h-full w-full justify-start overflow-x-hidden bg-slate-100 pl-4 pr-2">
       {isShowSubSideBar && (
         <SubSidebarContainer>
           <SubSidebarInbox />

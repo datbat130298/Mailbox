@@ -7,7 +7,7 @@ interface TooltipProps {
   position?: PlacesType | undefined;
 }
 
-const Tooltip = ({ children, className, title, position = 'right' }: TooltipProps) => {
+const Tooltip = ({ children, className, title, position = 'bottom' }: TooltipProps) => {
   return (
     <div
       data-tooltip-id="my-tooltip"

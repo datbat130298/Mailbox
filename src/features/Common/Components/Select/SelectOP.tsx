@@ -10,6 +10,7 @@ export interface SelectProps extends Omit<React.HTMLAttributes<HTMLSelectElement
   position?: SelectPositionEnum;
   onChange?: (value: string) => void;
   customPostLabel?: string;
+  selectClassName?: string;
 }
 
 const Select = ({
@@ -20,6 +21,7 @@ const Select = ({
   position = SelectPositionEnum.BOTTOM_LEFT,
   onChange,
   customPostLabel,
+  selectClassName,
 }: SelectProps) => {
   const [selectedOption, setSelectedOption] = useState<React.ReactElement | null>(null);
   const [isShowOptions, setIsShowOptions] = useState(false);
@@ -97,6 +99,7 @@ const Select = ({
           'absolute w-max overflow-hidden rounded-lg border-2 border-gray-100 bg-white px-0 py-3 text-left shadow-lg shadow-gray-100',
           getClassNameByPosition(position),
           !isShowOptions && 'hidden',
+          selectClassName,
         )}
       >
         {Children.map(children, (child) => (

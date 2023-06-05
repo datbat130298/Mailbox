@@ -52,6 +52,7 @@ const HeaderAction = ({ showAction }: HeaderActionProps) => {
           icon={<MdOutlineMoreVert size={18} />}
           label={t('more')}
           position="left-0 top-10"
+          className="mx-1 px-1"
         />
       </div>
     </>

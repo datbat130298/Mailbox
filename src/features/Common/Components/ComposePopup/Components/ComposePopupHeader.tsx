@@ -24,10 +24,10 @@ const ComposePopupHeader = ({
   return (
     <div className={twMerge('rounded-t-md bg-[#F2F6FC]', className)}>
       <div className="relative flex w-full justify-between p-2 px-2 py-2">
-        <div className="line-clamp-1 w-[calc(100%-60px)] text-ellipsis break-all pl-2 text-sm font-semibold">
+        <div className="line-clamp-1 w-[calc(100%-68px)] text-ellipsis break-all pl-2 text-sm font-semibold">
           {title || t('new_message')}
         </div>
-        <div className="absolute right-3 top-[8px] flex items-center">
+        <div className="absolute right-3 top-[8px] flex items-center gap-x-1">
           <Tooltip title={t('minimize')} position="left">
             <div
               className="h-[15px] w-[18px] hover:bg-slate-200"
