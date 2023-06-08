@@ -7,6 +7,8 @@ import { FiLink2, FiMoreVertical } from 'react-icons/fi';
 import { IoMdAttach } from 'react-icons/io';
 import { IoImageOutline } from 'react-icons/io5';
 import { MdTagFaces } from 'react-icons/md';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import striptags from 'striptags';
 import { twMerge } from 'tailwind-merge';
 import { ComposeViewTypeEnum } from '../../../../../app/Enums/commonEnums';
 import { ComposePopupStyleType, MailType } from '../../../../../app/Types/commonTypes';
@@ -50,6 +52,7 @@ const ComposePopup = ({
   const [isVisibleToolbar, setIsVisibleToolbar] = useState<boolean>(false);
   const [isShowSelectTimeModal, setIsShowSelectTimeModal] = useState<boolean>(false);
   const [isShowOptionMore, setIsShowOptionMore] = useState<boolean>(false);
+  const [content, setContent] = useState<string>('');
 
   const { t } = useTranslation();
 
@@ -109,6 +112,10 @@ const ComposePopup = ({
     setViewType(ComposeViewTypeEnum.POPUP);
   };
 
+  const handleChangeEditor = (value: string) => {
+    setContent(value);
+  };
+
   useEffect(() => {
     const delayVisibleToolbar = setTimeout(() => {
       if (viewType === ComposeViewTypeEnum.MODAL) {
@@ -117,6 +124,15 @@ const ComposePopup = ({
     }, 100);
     return () => clearTimeout(delayVisibleToolbar);
   }, [viewType]);
+
+  const handleFormat = () => {
+    setContent(striptags(content));
+  };
+
+  const handleClick = () => {
+    // eslint-disable-next-line no-console
+    console.log('click');
+  };
 
   return (
     <div
@@ -167,8 +183,8 @@ const ComposePopup = ({
           )}
         >
           <WriterCompose
-            data={undefined}
-            handleChangeEditor={undefined}
+            data={content}
+            handleChangeEditor={handleChangeEditor}
             handleChangeBlur={undefined}
             isLoading={undefined}
             isDisabled={undefined}
@@ -217,6 +233,9 @@ const ComposePopup = ({
                 onClick={handleClickFormat}
               />
               <ComposePopupButtonMore
+                content={content}
+                onClickFormat={handleFormat}
+                onClickTest={handleClick}
                 title={t('more')}
                 icon={<FiMoreVertical size={19} />}
                 onClick={handleClickMore}
