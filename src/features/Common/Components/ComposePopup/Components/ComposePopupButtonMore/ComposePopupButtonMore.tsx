@@ -1,4 +1,6 @@
-import { Dispatch, SetStateAction, useEffect, useMemo, useRef } from 'react';
+import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import striptags from 'striptags';
 import { twMerge } from 'tailwind-merge';
 import { triggerClickOutside } from '../../../../../utils/helpers';
 import Tooltip from '../../../Tooltip/Tooltip';
@@ -12,9 +14,14 @@ interface ComposePopupButtonMoreProp {
   icon: React.ReactNode;
   isActive: boolean;
   setActive: Dispatch<SetStateAction<boolean>>;
+  onClickFormat: () => void;
+  onClickTest: () => void;
+  content: string;
 }
 
 const ComposePopupButtonMore = ({
+  content,
+  onClickFormat,
   className,
   title,
   onClick,
@@ -22,8 +29,10 @@ const ComposePopupButtonMore = ({
   icon,
   isActive,
   setActive,
+  onClickTest,
 }: ComposePopupButtonMoreProp) => {
   const ref = useRef(null);
+  const [isActiveFormat, setIsActiveFormat] = useState<boolean>(false);
 
   const handleClickSetDefaultFullScreen = () => {
     setActive(false);
@@ -69,6 +78,24 @@ const ComposePopupButtonMore = ({
     triggerClickOutside(ref, () => setActive(false));
   }, [ref, triggerClickOutside]);
 
+  useEffect(() => {
+    if (isActiveFormat) {
+      if (content !== striptags(content, ['p'])) {
+        setIsActiveFormat(false);
+      }
+    }
+  }, [content, isActiveFormat]);
+
+  const handleClickFormat = () => {
+    if (isActiveFormat) {
+      setIsActiveFormat(false);
+    } else {
+      onClickFormat();
+      setIsActiveFormat(true);
+    }
+    setActive(false);
+  };
+
   return (
     <div className="relative">
       <Tooltip title={title} position="top">
@@ -89,13 +116,21 @@ const ComposePopupButtonMore = ({
       {isActive && (
         <div className="absolute -right-48 -top-48" ref={ref}>
           <div className="h-max w-max rounded-lg bg-white py-1 text-center shadow-compose">
-            {arrayOption.map((option) => (
-              <ComposePopupMoreOptionItem
-                item={option}
-                className=""
-                onClick={handleClickSetDefaultFullScreen}
-              />
-            ))}
+            <ComposePopupMoreOptionItem
+              item={arrayOption[0]}
+              className=""
+              onClick={handleClickSetDefaultFullScreen}
+            />
+            <ComposePopupMoreOptionItem item={arrayOption[1]} className="" onClick={onClickTest} />
+            <ComposePopupMoreOptionItem
+              item={arrayOption[2]}
+              className=""
+              isActiveFormat={isActiveFormat}
+              onClick={handleClickFormat}
+            />
+            <ComposePopupMoreOptionItem item={arrayOption[3]} className="" onClick={onClickTest} />
+            <ComposePopupMoreOptionItem item={arrayOption[4]} className="" onClick={onClickTest} />
+            <ComposePopupMoreOptionItem item={arrayOption[5]} className="" onClick={onClickTest} />
           </div>
         </div>
       )}

@@ -12,9 +12,15 @@ interface ComposePopupMoreOptionItemProps {
   item: ItemOption;
   className: string;
   onClick: () => void;
+  isActiveFormat?: boolean;
 }
 
-const ComposePopupMoreOptionItem = ({ item, onClick, className }: ComposePopupMoreOptionItemProps) => {
+const ComposePopupMoreOptionItem = ({
+  item,
+  onClick,
+  className,
+  isActiveFormat,
+}: ComposePopupMoreOptionItemProps) => {
   const handleClick = (e: MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     onClick();
@@ -43,6 +49,7 @@ const ComposePopupMoreOptionItem = ({ item, onClick, className }: ComposePopupMo
         className={twMerge(
           'invisible px-2 text-black',
           localStorage.getItem('defaultFullScreen') === 'true' && item.id === 1 && 'visible',
+          isActiveFormat && item.id === 2 && 'visible',
         )}
       >
         <FiCheck size={18} />
