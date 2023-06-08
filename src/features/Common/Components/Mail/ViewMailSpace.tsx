@@ -146,7 +146,8 @@ const ViewMailSpace = ({ mail }: ViewMailSpaceProps) => {
           composePopupStyle={
             composeViewType === ComposeViewTypeEnum.REPLY || composeViewType === ComposeViewTypeEnum.FORWARD
               ? {
-                  containerClassName: 'absolute right-0 top-0 h-[344px] w-[calc(100%-64px)] rounded-2xl',
+                  containerClassName:
+                    'absolute right-0 top-0 h-[444px] w-[calc(100%-64px)] rounded-2xl overflow-auto',
                   composeClassName: 'h-[258px]',
                 }
               : {

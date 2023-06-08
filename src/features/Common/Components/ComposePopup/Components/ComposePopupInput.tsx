@@ -3,7 +3,8 @@ import React, { ForwardedRef, forwardRef, useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 export interface ComposePopupInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
-  label: string;
+  placeholder: string;
+  label?: string;
   labelPostfix?: JSX.Element;
   error?: string;
   inlineError?: boolean;
@@ -14,6 +15,7 @@ export interface ComposePopupInputProps extends Omit<React.InputHTMLAttributes<H
 const ComposePopupInput = (
   {
     label,
+    placeholder,
     className,
     value,
     disabled,
@@ -48,8 +50,9 @@ const ComposePopupInput = (
 
   return (
     <div className="mx-2 my-1 flex items-center gap-2 border-b-[1px] border-gray-200 py-2 pb-3">
+      {label && <span className="text-sm">{label}</span>}
       <input
-        placeholder={label}
+        placeholder={placeholder}
         className={twMerge('w-full border-none bg-inherit text-sm outline-none transition-none')}
         value={value || ''}
         disabled={disabled}
