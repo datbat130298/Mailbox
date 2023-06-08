@@ -30,7 +30,7 @@ const ComposePopupContainer = ({
 }: ComposePopupContainerProps) => {
   const [isZoomIn, setIsZoomIn] = useState<boolean>(false);
   const [subject, setSubject] = useState<string>('');
-  const [receiver, setReceiver] = useState<string>('');
+  // const [receiver, setReceiver] = useState<string>('');
   const [debounceSubject, setDebounceSubject] = useState<string>('');
 
   const handleClose = () => {
@@ -46,10 +46,6 @@ const ComposePopupContainer = ({
     }, 1000),
     [],
   );
-
-  const onChangeReceiverInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setReceiver(e.target.value);
-  };
 
   const onChangeSubjectInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSubject(e.target.value);
@@ -73,7 +69,6 @@ const ComposePopupContainer = ({
 
   useEffect(() => {
     if (!_.isEmpty(fromMail)) {
-      setReceiver(fromMail?.from_user?.email || '');
       setSubject(fromMail.subject);
       setDebounceSubject(fromMail.subject);
     }
@@ -87,10 +82,8 @@ const ComposePopupContainer = ({
           composeViewType === ComposeViewTypeEnum.FORWARD) && (
           <ComposePopup
             onChangeSubjectInput={onChangeSubjectInput}
-            onChangeReceiverInput={onChangeReceiverInput}
             debounceSubject={debounceSubject}
             subject={subject}
-            receiver={receiver}
             onCollect={handleClickCollect}
             viewType={composeViewType}
             onClose={handleClose}
@@ -111,10 +104,8 @@ const ComposePopupContainer = ({
         >
           <ComposePopup
             onChangeSubjectInput={onChangeSubjectInput}
-            onChangeReceiverInput={onChangeReceiverInput}
             debounceSubject={debounceSubject}
             subject={subject}
-            receiver={receiver}
             onCollect={handleClickCollect}
             onClose={handleClose}
             onClear={onClear}

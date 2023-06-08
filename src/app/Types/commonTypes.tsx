@@ -130,3 +130,9 @@ export interface ComposePopupStyleType {
   containerClassName: string;
   composeClassName: string;
 }
+
+export interface ContactType {
+  id: string;
+  avatar: string;
+  email: string;
+}

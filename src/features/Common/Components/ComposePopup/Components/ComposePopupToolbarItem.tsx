@@ -19,21 +19,23 @@ const ComposePopupToolbarItem = ({
   id,
 }: ComposePopupToolbarItemProps) => {
   return (
-    <Tooltip title={title} position="top">
-      <div
-        id={id}
-        className={twMerge(
-          '-mb-2.5 -mr-1 flex h-8 w-8 items-center justify-center rounded-md hover:bg-gray-100',
-          isActive && 'bg-gray-200',
-          className,
-        )}
-        onClick={onClick}
-        role="button"
-        tabIndex={0}
-      >
-        {icon}
-      </div>
-    </Tooltip>
+    <div className="">
+      <Tooltip title={title} position="top">
+        <div
+          id={id}
+          className={twMerge(
+            '-mb-2.5 -mr-1 flex h-8 w-8 items-center justify-center rounded-md hover:bg-gray-100',
+            isActive && 'bg-gray-200',
+            className,
+          )}
+          onClick={onClick}
+          role="button"
+          tabIndex={0}
+        >
+          {icon}
+        </div>
+      </Tooltip>
+    </div>
   );
 };
 

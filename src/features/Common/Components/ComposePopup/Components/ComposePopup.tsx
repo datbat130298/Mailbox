@@ -10,9 +10,11 @@ import { MdTagFaces } from 'react-icons/md';
 import { twMerge } from 'tailwind-merge';
 import { ComposeViewTypeEnum } from '../../../../../app/Enums/commonEnums';
 import { ComposePopupStyleType, MailType } from '../../../../../app/Types/commonTypes';
+import ComposePopupButtonMore from './ComposePopupButtonMore/ComposePopupButtonMore';
 import ComposePopupButtonSend from './ComposePopupButtonSend';
 import ComposePopupHeader from './ComposePopupHeader';
 import ComposePopupInput from './ComposePopupInput';
+import ComposePopupRecipient from './ComposePopupRecipient/ComposePopupRecipient';
 import ComposePopupSelectTimeModal from './ComposePopupSelectTimeModal';
 import ComposePopupToolbarItem from './ComposePopupToolbarItem';
 import WriterCompose from './EditorWriterCompose';
@@ -22,7 +24,6 @@ export interface ComposePopupProps {
   composeClassName?: string;
   viewType?: string;
   subject: string;
-  receiver: string;
   debounceSubject: string;
   fromMail?: MailType;
   composePopupStyle?: ComposePopupStyleType;
@@ -30,27 +31,25 @@ export interface ComposePopupProps {
   onClose: () => void;
   onCollect: () => void;
   onChangeSubjectInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onChangeReceiverInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onClear?: () => void;
 }
 
 const ComposePopup = ({
   composeClassName,
   subject,
-  receiver,
   viewType,
   debounceSubject,
   fromMail,
   composePopupStyle,
   setViewType,
   onChangeSubjectInput,
-  onChangeReceiverInput,
   onClose,
   onCollect,
   onClear,
 }: ComposePopupProps) => {
   const [isVisibleToolbar, setIsVisibleToolbar] = useState<boolean>(false);
   const [isShowSelectTimeModal, setIsShowSelectTimeModal] = useState<boolean>(false);
+  const [isShowOptionMore, setIsShowOptionMore] = useState<boolean>(false);
 
   const { t } = useTranslation();
 
@@ -72,6 +71,10 @@ const ComposePopup = ({
       toolbar.style.visibility = 'visible';
     }
   }, [isVisibleToolbar]);
+
+  const handleClickMore = () => {
+    setIsShowOptionMore((prev) => !prev);
+  };
 
   const handleClickFormat = () => {
     setIsVisibleToolbar((prev) => !prev);
@@ -132,87 +135,103 @@ const ComposePopup = ({
         />
       )}
       {(viewType === ComposeViewTypeEnum.MODAL || viewType === ComposeViewTypeEnum.POPUP) && (
-        <>
-          <ComposePopupHeader
-            title={!_.isEmpty(fromMail) ? `${t('reply')}: ${debounceSubject}` : debounceSubject}
-            onClose={() => {
-              onClose();
-              if (onClear) {
-                onClear();
-              }
-            }}
-            onCollect={onCollect}
-            onChangeViewType={handleChangeViewType}
-          />
-          <div className="mt-0.5 px-2">
-            <ComposePopupInput label={t('recipients')} value={receiver} onChange={onChangeReceiverInput} />
-            <ComposePopupInput label={t('subject')} value={subject} onChange={onChangeSubjectInput} />
-          </div>
-        </>
+        <ComposePopupHeader
+          title={!_.isEmpty(fromMail) ? `${t('reply')}: ${debounceSubject}` : debounceSubject}
+          onClose={() => {
+            onClose();
+            if (onClear) {
+              onClear();
+            }
+          }}
+          onCollect={onCollect}
+          onChangeViewType={handleChangeViewType}
+        />
       )}
       <div
         className={twMerge(
-          'mx-2 h-[428px]',
-          viewType === ComposeViewTypeEnum.MODAL && 'h-[71vh]',
-          composePopupStyle?.composeClassName,
+          'h-full w-full overflow-auto',
+          viewType === ComposeViewTypeEnum.POPUP && 'h-[550px]',
+          viewType === ComposeViewTypeEnum.REPLY && 'h-[400px]',
+          viewType === ComposeViewTypeEnum.FORWARD && 'h-[400px]',
         )}
       >
-        <WriterCompose
-          data={undefined}
-          handleChangeEditor={undefined}
-          handleChangeBlur={undefined}
-          isLoading={undefined}
-          isDisabled={undefined}
-        />
-      </div>
-      <div className={twMerge('relative flex w-full items-center justify-between px-4')}>
-        <div className="flex justify-start gap-4">
-          <ComposePopupButtonSend
-            onClickSend={handleClickSend}
-            onClickArrow={handleClickArrow}
-            onClickSendWithTime={handleClickSendWihTime}
-          />
-          <div className="flex w-full items-center  justify-start">
-            <ComposePopupToolbarItem
-              id="format"
-              isActive={isVisibleToolbar}
-              title={t('format_options')}
-              icon={<CgFormatColor size={20} />}
-              onClick={handleClickFormat}
-            />
-            <ComposePopupToolbarItem
-              title={t('attach_files')}
-              icon={<IoMdAttach size={19} />}
-              onClick={handleClickFormat}
-            />
-            <ComposePopupToolbarItem
-              title={t('insert_link')}
-              icon={<FiLink2 size={19} />}
-              onClick={handleClickFormat}
-            />
-            <ComposePopupToolbarItem
-              title={t('insert_emotion')}
-              icon={<MdTagFaces size={19} />}
-              onClick={handleClickFormat}
-            />
-            <ComposePopupToolbarItem
-              title={t('insert_photo')}
-              icon={<IoImageOutline size={19} />}
-              onClick={handleClickFormat}
-            />
-            <ComposePopupToolbarItem
-              title={t('more')}
-              icon={<FiMoreVertical size={19} />}
-              onClick={handleClickFormat}
-            />
-          </div>
+        <div className="mt-0.5 px-2">
+          <ComposePopupRecipient />
+          <ComposePopupInput placeholder={t('subject')} value={subject} onChange={onChangeSubjectInput} />
         </div>
+        <div
+          className={twMerge(
+            'mx-2 h-[450px] overflow-auto',
+            viewType === ComposeViewTypeEnum.MODAL && 'h-[73vh]',
+            composePopupStyle?.composeClassName,
+          )}
+        >
+          <WriterCompose
+            data={undefined}
+            handleChangeEditor={undefined}
+            handleChangeBlur={undefined}
+            isLoading={undefined}
+            isDisabled={undefined}
+          />
+        </div>
+        <div
+          className={twMerge(
+            'fixed bottom-3 flex w-[540px] items-center justify-between px-4 ',
+            viewType === ComposeViewTypeEnum.MODAL && 'w-[80vw]',
+            (viewType === ComposeViewTypeEnum.REPLY || viewType === ComposeViewTypeEnum.FORWARD) &&
+              'relative bottom-0 w-full',
+          )}
+        >
+          <div className="flex justify-start gap-4">
+            <ComposePopupButtonSend
+              onClickSend={handleClickSend}
+              onClickArrow={handleClickArrow}
+              onClickSendWithTime={handleClickSendWihTime}
+            />
+            <div className="flex w-full items-center justify-start">
+              <ComposePopupToolbarItem
+                id="format"
+                isActive={isVisibleToolbar}
+                title={t('format_options')}
+                icon={<CgFormatColor size={20} />}
+                onClick={handleClickFormat}
+              />
+              <ComposePopupToolbarItem
+                title={t('attach_files')}
+                icon={<IoMdAttach size={19} />}
+                onClick={handleClickFormat}
+              />
+              <ComposePopupToolbarItem
+                title={t('insert_link')}
+                icon={<FiLink2 size={19} />}
+                onClick={handleClickFormat}
+              />
+              <ComposePopupToolbarItem
+                title={t('insert_emotion')}
+                icon={<MdTagFaces size={19} />}
+                onClick={handleClickFormat}
+              />
+              <ComposePopupToolbarItem
+                title={t('insert_photo')}
+                icon={<IoImageOutline size={19} />}
+                onClick={handleClickFormat}
+              />
+              <ComposePopupButtonMore
+                title={t('more')}
+                icon={<FiMoreVertical size={19} />}
+                onClick={handleClickMore}
+                isActive={isShowOptionMore}
+                setActive={setIsShowOptionMore}
+              />
+            </div>
+          </div>
 
-        <ComposePopupToolbarItem
-          onClick={handleClickDeleteFooter}
-          title={t('discard_draft')}
-          icon={<FaRegTrashAlt size={14} />}
-        />
+          <ComposePopupToolbarItem
+            onClick={handleClickDeleteFooter}
+            title={t('discard_draft')}
+            icon={<FaRegTrashAlt size={14} />}
+          />
+        </div>
       </div>
 
       <ComposePopupSelectTimeModal
