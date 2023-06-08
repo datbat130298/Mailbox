@@ -117,6 +117,7 @@ const ComposePopupSelectRecipient = ({
         {label}
       </div>
       <Select
+        autoFocus
         closeMenuOnSelect={false}
         inputValue={inputValue}
         onInputChange={(newValue) => setInputValue(newValue)}

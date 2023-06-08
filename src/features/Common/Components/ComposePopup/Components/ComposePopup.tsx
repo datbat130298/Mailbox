@@ -166,7 +166,7 @@ const ComposePopup = ({
       <div
         className={twMerge(
           'h-full w-full overflow-auto',
-          viewType === ComposeViewTypeEnum.POPUP && 'h-[550px]',
+          viewType === ComposeViewTypeEnum.POPUP && 'h-[520px]',
           viewType === ComposeViewTypeEnum.REPLY && 'h-[400px]',
           viewType === ComposeViewTypeEnum.FORWARD && 'h-[400px]',
         )}
@@ -177,7 +177,7 @@ const ComposePopup = ({
         </div>
         <div
           className={twMerge(
-            'mx-2 h-[450px] overflow-auto',
+            'mx-2 h-[420px] overflow-auto',
             viewType === ComposeViewTypeEnum.MODAL && 'h-[73vh]',
             composePopupStyle?.composeClassName,
           )}
