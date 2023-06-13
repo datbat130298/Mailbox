@@ -94,7 +94,7 @@ const TrashTable = () => {
           }
         />
       )}
-      {isShowViewMailSpace && <ViewMailSpace mail={selectedMail} />}
+      {isShowViewMailSpace && <ViewMailSpace />}
     </div>
   );
 };

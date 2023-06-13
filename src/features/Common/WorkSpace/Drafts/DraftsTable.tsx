@@ -94,7 +94,7 @@ const DraftsTable = () => {
           }
         />
       )}
-      {isShowViewMailSpace && <ViewMailSpace mail={selectedMail} />}
+      {isShowViewMailSpace && <ViewMailSpace />}
     </div>
   );
 };
