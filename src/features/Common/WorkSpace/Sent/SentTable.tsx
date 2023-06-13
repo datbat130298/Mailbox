@@ -94,7 +94,7 @@ const SentTable = () => {
           }
         />
       )}
-      {isShowViewMailSpace && <ViewMailSpace mail={selectedMail} />}
+      {isShowViewMailSpace && <ViewMailSpace />}
     </div>
   );
 };

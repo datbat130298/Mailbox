@@ -95,7 +95,7 @@ const InboxTable = () => {
           }
         />
       )}
-      {isShowViewMailSpace && <ViewMailSpace mail={selectedMail} />}
+      {isShowViewMailSpace && <ViewMailSpace />}
     </div>
   );
 };
