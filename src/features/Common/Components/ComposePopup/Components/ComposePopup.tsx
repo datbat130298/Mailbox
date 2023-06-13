@@ -7,6 +7,7 @@ import { FiLink2, FiMoreVertical } from 'react-icons/fi';
 import { IoMdAttach } from 'react-icons/io';
 import { IoImageOutline } from 'react-icons/io5';
 import { MdTagFaces } from 'react-icons/md';
+import { MultiValue } from 'react-select';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import striptags from 'striptags';
 import { twMerge } from 'tailwind-merge';
@@ -17,12 +18,21 @@ import ComposePopupButtonSend from './ComposePopupButtonSend';
 import ComposePopupHeader from './ComposePopupHeader';
 import ComposePopupInput from './ComposePopupInput';
 import ComposePopupRecipient from './ComposePopupRecipient/ComposePopupRecipient';
+import { OptionLabel } from './ComposePopupRecipient/ComposePopupSelectRecipients';
 import ComposePopupSelectTimeModal from './ComposePopupSelectTimeModal';
 import ComposePopupToolbarItem from './ComposePopupToolbarItem';
 import WriterCompose from './EditorWriterCompose';
 import ReplyAndForwardHeader from './ReplyAndForwardHeader';
 
 export interface ComposePopupProps {
+  content: string;
+  onChangeEditor: (value: string) => void;
+  selectRecipient: readonly OptionLabel[] | undefined;
+  selectedCcRecipient: readonly OptionLabel[] | undefined;
+  selectedBccRecipient: readonly OptionLabel[] | undefined;
+  onChangeSelectRecipient: (selected: MultiValue<OptionLabel>) => void;
+  onChangeSelectCcRecipient: (selected: MultiValue<OptionLabel>) => void;
+  onChangeSelectBccRecipient: (selected: MultiValue<OptionLabel>) => void;
   composeClassName?: string;
   viewType?: string;
   subject: string;
@@ -37,6 +47,14 @@ export interface ComposePopupProps {
 }
 
 const ComposePopup = ({
+  content,
+  onChangeEditor,
+  selectRecipient,
+  selectedCcRecipient,
+  selectedBccRecipient,
+  onChangeSelectRecipient,
+  onChangeSelectCcRecipient,
+  onChangeSelectBccRecipient,
   composeClassName,
   subject,
   viewType,
@@ -52,7 +70,6 @@ const ComposePopup = ({
   const [isVisibleToolbar, setIsVisibleToolbar] = useState<boolean>(false);
   const [isShowSelectTimeModal, setIsShowSelectTimeModal] = useState<boolean>(false);
   const [isShowOptionMore, setIsShowOptionMore] = useState<boolean>(false);
-  const [content, setContent] = useState<string>('');
 
   const { t } = useTranslation();
 
@@ -85,7 +102,7 @@ const ComposePopup = ({
 
   const handleClickSend = () => {
     // eslint-disable-next-line no-console
-    console.log('this is Send');
+    console.log('mailbox');
   };
 
   const handleClickArrow = () => {
@@ -112,10 +129,6 @@ const ComposePopup = ({
     setViewType(ComposeViewTypeEnum.POPUP);
   };
 
-  const handleChangeEditor = (value: string) => {
-    setContent(value);
-  };
-
   useEffect(() => {
     const delayVisibleToolbar = setTimeout(() => {
       if (viewType === ComposeViewTypeEnum.MODAL) {
@@ -126,7 +139,7 @@ const ComposePopup = ({
   }, [viewType]);
 
   const handleFormat = () => {
-    setContent(striptags(content));
+    onChangeEditor(striptags(content));
   };
 
   const handleClick = () => {
@@ -134,10 +147,17 @@ const ComposePopup = ({
     console.log('click');
   };
 
+  const handleClose = () => {
+    onClose();
+    if (_.isFunction(onClear)) {
+      onClear();
+    }
+  };
+
   return (
     <div
       className={twMerge(
-        'fixed bottom-0 right-8 z-50 h-[610px] w-[540px] rounded-t-md bg-white shadow-compose',
+        'z-50 h-[610px] min-w-[540px] rounded-t-md bg-white shadow-compose',
         composePopupStyle?.containerClassName,
         viewType === ComposeViewTypeEnum.MODAL && 'rounded-md',
         composeClassName,
@@ -153,12 +173,7 @@ const ComposePopup = ({
       {(viewType === ComposeViewTypeEnum.MODAL || viewType === ComposeViewTypeEnum.POPUP) && (
         <ComposePopupHeader
           title={!_.isEmpty(fromMail) ? `${t('reply')}: ${debounceSubject}` : debounceSubject}
-          onClose={() => {
-            onClose();
-            if (onClear) {
-              onClear();
-            }
-          }}
+          onClose={handleClose}
           onCollect={onCollect}
           onChangeViewType={handleChangeViewType}
         />
@@ -166,25 +181,32 @@ const ComposePopup = ({
       <div
         className={twMerge(
           'h-full w-full overflow-auto',
-          viewType === ComposeViewTypeEnum.POPUP && 'h-[520px]',
+          viewType === ComposeViewTypeEnum.POPUP && 'h-[550px]',
           viewType === ComposeViewTypeEnum.REPLY && 'h-[400px]',
           viewType === ComposeViewTypeEnum.FORWARD && 'h-[400px]',
         )}
       >
         <div className="mt-0.5 px-2">
-          <ComposePopupRecipient />
+          <ComposePopupRecipient
+            selectRecipient={selectRecipient}
+            selectedCcRecipient={selectedCcRecipient}
+            selectedBccRecipient={selectedBccRecipient}
+            onChangeSelectRecipient={onChangeSelectRecipient}
+            onChangeSelectCcRecipient={onChangeSelectCcRecipient}
+            onChangeSelectBccRecipient={onChangeSelectBccRecipient}
+          />
           <ComposePopupInput placeholder={t('subject')} value={subject} onChange={onChangeSubjectInput} />
         </div>
         <div
           className={twMerge(
-            'mx-2 h-[420px] overflow-auto',
+            'mx-2 h-[450px] overflow-auto',
             viewType === ComposeViewTypeEnum.MODAL && 'h-[73vh]',
             composePopupStyle?.composeClassName,
           )}
         >
           <WriterCompose
             data={content}
-            handleChangeEditor={handleChangeEditor}
+            handleChangeEditor={onChangeEditor}
             handleChangeBlur={undefined}
             isLoading={undefined}
             isDisabled={undefined}

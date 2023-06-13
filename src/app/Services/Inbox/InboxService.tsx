@@ -209,7 +209,6 @@ const getInboxs = () => {
 
 const getInboxById = (id: number) => {
   const data = datawithDay?.find((item) => item.uuid === id);
-  console.log(data);
   return data;
 };
 

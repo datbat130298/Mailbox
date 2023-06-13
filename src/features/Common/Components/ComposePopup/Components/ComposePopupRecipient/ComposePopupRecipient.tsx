@@ -8,13 +8,26 @@ import { ContactType } from '../../../../../../app/Types/commonTypes';
 import { triggerClickOutside } from '../../../../../utils/helpers';
 import ComposePopupSelectRecipients, { OptionLabel } from './ComposePopupSelectRecipients';
 
-const ComposePopupRecipient = () => {
+interface ComposePopupRecipientProps {
+  selectRecipient: readonly OptionLabel[] | undefined;
+  selectedCcRecipient: readonly OptionLabel[] | undefined;
+  selectedBccRecipient: readonly OptionLabel[] | undefined;
+  onChangeSelectRecipient: (selected: MultiValue<OptionLabel>) => void;
+  onChangeSelectCcRecipient: (selected: MultiValue<OptionLabel>) => void;
+  onChangeSelectBccRecipient: (selected: MultiValue<OptionLabel>) => void;
+}
+
+const ComposePopupRecipient = ({
+  selectRecipient,
+  selectedCcRecipient,
+  selectedBccRecipient,
+  onChangeSelectRecipient,
+  onChangeSelectCcRecipient,
+  onChangeSelectBccRecipient,
+}: ComposePopupRecipientProps) => {
   const [viewText, setViewText] = useState<boolean>(true);
   const [contacts, setContacts] = useState<Array<ContactType>>([]);
-  const [selected, setSelected] = useState<readonly OptionLabel[]>([]);
   const [isShowCcInput, setIsShowCcInput] = useState<boolean>(false);
-  const [selectedCcInput, setSelectedCcInput] = useState<readonly OptionLabel[]>([]);
-  const [selectedBccInput, setSelectedBccInput] = useState<readonly OptionLabel[]>([]);
   const [isShowBccInput, setIsShowBccInput] = useState<boolean>(false);
   const recipientRef = useRef<HTMLDivElement>(null);
 
@@ -47,10 +60,10 @@ const ComposePopupRecipient = () => {
   }, []);
 
   const transferString = useMemo(() => {
-    const array = selected.concat(selectedCcInput, selectedBccInput);
-    const string = array.map((item: OptionLabel) => item.label);
-    return string.join(', ');
-  }, [selected, selectedCcInput, selectedBccInput]);
+    const array = selectRecipient?.concat(selectedBccRecipient || [], selectedCcRecipient || []);
+    const string = array?.map((item: OptionLabel) => item.label);
+    return string?.join(', ');
+  }, [selectRecipient, selectedCcRecipient, selectedBccRecipient]);
 
   const options = useMemo(() => {
     return contacts.map((contact) => ({
@@ -60,17 +73,11 @@ const ComposePopupRecipient = () => {
     }));
   }, [contacts]);
 
-  const handleOnChange = (selectedOptions: MultiValue<OptionLabel>) => setSelected(selectedOptions);
-  const handleOnChangeCcInput = (selectedOptions: MultiValue<OptionLabel>) =>
-    setSelectedCcInput(selectedOptions);
-  const handleOnChangeBccInput = (selectedOptions: MultiValue<OptionLabel>) =>
-    setSelectedBccInput(selectedOptions);
-
   useEffect(() => {
-    if (_.isEmpty(selectedCcInput)) {
+    if (_.isEmpty(selectedCcRecipient)) {
       setIsShowCcInput(false);
     }
-    if (_.isEmpty(selectedBccInput)) {
+    if (_.isEmpty(selectedBccRecipient)) {
       setIsShowBccInput(false);
     }
   }, [viewText]);
@@ -95,23 +102,23 @@ const ComposePopupRecipient = () => {
         <div
           className={twMerge(
             'mx-1 flex flex-col items-center border-b-[1px] border-gray-200 px-1 py-0',
-            _.isEmpty(selected) && 'mx-2 flex-row items-center',
+            _.isEmpty(selectRecipient) && 'mx-2 flex-row items-center',
             (isShowBccInput || isShowCcInput) && 'mx-1 flex-col ',
           )}
         >
           <ComposePopupSelectRecipients
             label={t('to')}
             options={options}
-            defaultValue={selected}
-            onChange={handleOnChange}
+            defaultValue={selectRecipient || []}
+            onChange={onChangeSelectRecipient}
           />
           {isShowCcInput && (
             <ComposePopupSelectRecipients
               className="-mt-1.5"
               label={t('cc')}
               options={options}
-              defaultValue={selectedCcInput}
-              onChange={handleOnChangeCcInput}
+              defaultValue={selectedCcRecipient || []}
+              onChange={onChangeSelectCcRecipient}
             />
           )}
           {isShowBccInput && (
@@ -119,8 +126,8 @@ const ComposePopupRecipient = () => {
               className="-mt-1.5"
               label={t('bcc')}
               options={options}
-              defaultValue={selectedBccInput}
-              onChange={handleOnChangeBccInput}
+              defaultValue={selectedBccRecipient || []}
+              onChange={onChangeSelectBccRecipient}
             />
           )}
           <div className="flex w-full justify-end gap-1 text-sm text-slate-700">

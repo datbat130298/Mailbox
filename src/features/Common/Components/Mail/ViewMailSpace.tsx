@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 import { ComposeViewTypeEnum } from '../../../../app/Enums/commonEnums';
 import { getInboxById } from '../../../../app/Services/Inbox/InboxService';
-import { MailType } from '../../../../app/Types/commonTypes';
+import { ComposeType, MailType } from '../../../../app/Types/commonTypes';
 import Button from '../Button';
 import ComposePopupContainer from '../ComposePopup/ComposeContainer';
 import Tooltip from '../Tooltip/Tooltip';
@@ -18,6 +18,11 @@ const ViewMailSpace = () => {
   const [composeViewType, setComposeViewType] = useState(ComposeViewTypeEnum.POPUP);
   const [isShowComposePopup, setIsShowComposePopup] = useState(false);
   const [mailInbox, setMail] = useState<MailType>();
+  const [composeDraftList, setComposeDraftList] = useState<ComposeType[]>([]);
+
+  const handleShowCompose = (id: number, data: boolean) => {
+    composeDraftList[id].isShow = data;
+  };
 
   const { id } = useParams();
 
@@ -147,13 +152,14 @@ const ViewMailSpace = () => {
         )}
 
         <ComposePopupContainer
+          composeDraftList={composeDraftList}
+          handleShowCompose={handleShowCompose}
+          setComposeDraftList={setComposeDraftList}
           composeClassName="z-0"
           onClear={handleClear}
-          composeViewType={composeViewType}
-          setComposeViewType={setComposeViewType}
           fromMail={mailInbox}
+          viewType={composeViewType}
           isShowComposePopup={isShowComposePopup}
-          setIsShowComposePopup={setIsShowComposePopup}
           composePopupStyle={
             composeViewType === ComposeViewTypeEnum.REPLY || composeViewType === ComposeViewTypeEnum.FORWARD
               ? {

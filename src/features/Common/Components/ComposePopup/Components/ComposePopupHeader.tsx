@@ -22,7 +22,7 @@ const ComposePopupHeader = ({
 }: ComposePopupHeaderProps) => {
   const { t } = useTranslation();
   return (
-    <div className={twMerge('rounded-t-md bg-[#F2F6FC]', className)}>
+    <div className={twMerge('z-50  rounded-t-md bg-[#F2F6FC]', className)}>
       <div className="relative flex w-full justify-between p-2 px-2 py-2">
         <div className="line-clamp-1 w-[calc(100%-68px)] text-ellipsis break-all pl-2 text-sm font-semibold">
           {title || t('new_message')}

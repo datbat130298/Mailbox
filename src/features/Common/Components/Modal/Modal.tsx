@@ -65,7 +65,7 @@ const Modal = (
           ref={ref}
           open={isOpen}
           as="div"
-          className={twMerge(className, 'fixed inset-0 z-50 flex justify-center overflow-y-auto')}
+          className={twMerge(className, 'fixed inset-0 z-[70] flex justify-center overflow-y-auto')}
           onClose={onClose}
           data-is-overlay="true"
         >
