@@ -1,40 +1,70 @@
 import _ from 'lodash';
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
+import { MultiValue } from 'react-select';
 import { twMerge } from 'tailwind-merge';
 import { ComposeViewTypeEnum } from '../../../../app/Enums/commonEnums';
-import { ComposePopupStyleType, MailType } from '../../../../app/Types/commonTypes';
+import { ComposePopupStyleType, ComposeType, MailType } from '../../../../app/Types/commonTypes';
 import Modal from '../Modal/Modal';
 import ComposePopup from './Components/ComposePopup';
 import ComposePopupHeader from './Components/ComposePopupHeader';
+import { OptionLabel } from './Components/ComposePopupRecipient/ComposePopupSelectRecipients';
 
 interface ComposePopupContainerProps {
-  isShowComposePopup: boolean;
-  setIsShowComposePopup: Dispatch<SetStateAction<boolean>>;
+  compose?: ComposeType;
+  isShowComposePopup?: boolean;
   fromMail?: MailType;
   onClear?: () => void;
   composePopupStyle?: ComposePopupStyleType;
-  composeViewType: ComposeViewTypeEnum;
-  setComposeViewType: Dispatch<SetStateAction<ComposeViewTypeEnum>>;
   composeClassName?: string;
+  id?: number;
+  setComposeDraftList: Dispatch<SetStateAction<ComposeType[]>>;
+  handleShowCompose: (id: number, data: boolean) => void;
+  composeDraftList: ComposeType[];
+  handleClickCloseComposeItem?: (id: number) => void;
+  viewType?: ComposeViewTypeEnum;
 }
 
 const ComposePopupContainer = ({
+  handleClickCloseComposeItem,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  composeDraftList,
+  handleShowCompose,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  setComposeDraftList,
+  viewType,
+  compose,
+  id,
   isShowComposePopup,
-  setIsShowComposePopup,
   fromMail,
   onClear,
   composePopupStyle,
-  composeViewType,
-  setComposeViewType,
   composeClassName,
 }: ComposePopupContainerProps) => {
-  const [isZoomIn, setIsZoomIn] = useState<boolean>(false);
   const [subject, setSubject] = useState<string>('');
-  // const [receiver, setReceiver] = useState<string>('');
   const [debounceSubject, setDebounceSubject] = useState<string>('');
+  const [selectedRecipient, setSelectedRecipient] = useState<readonly OptionLabel[] | undefined>([]);
+  const [selectedCcRecipient, setSelectedCcRecipient] = useState<readonly OptionLabel[] | undefined>([]);
+  const [selectedBccRecipient, setSelectedBccRecipient] = useState<readonly OptionLabel[] | undefined>([]);
+  const [composeViewType, setComposeViewType] = useState(viewType || ComposeViewTypeEnum.POPUP);
+  const [isShowCompose, setIsShowCompose] = useState<boolean>(false);
+  const [content, setContent] = useState<string>(' ');
+  const [isZoomIn, setIsZoomIn] = useState<boolean>(false);
+
+  const handleOnChangeRecipient = (selectedOptions: MultiValue<OptionLabel>) =>
+    setSelectedRecipient(selectedOptions);
+  const handleOnChangeCcRecipient = (selectedOptions: MultiValue<OptionLabel>) =>
+    setSelectedCcRecipient(selectedOptions);
+  const handleOnChangeBccRecipient = (selectedOptions: MultiValue<OptionLabel>) =>
+    setSelectedBccRecipient(selectedOptions);
+  const handleChangeEditor = (value: string) => {
+    setContent(value);
+  };
 
   const handleClose = () => {
-    setIsShowComposePopup(false);
+    setIsShowCompose(false);
+    if (_.isFunction(handleClickCloseComposeItem)) {
+      handleClickCloseComposeItem(id || 0);
+    }
     if (onClear) {
       onClear();
     }
@@ -54,17 +84,43 @@ const ComposePopupContainer = ({
 
   const handleClickCollect = () => {
     if (!isZoomIn) {
+      handleShowCompose(id || 0, false);
       setIsZoomIn(true);
-      handleClose();
       return;
     }
     setIsZoomIn(false);
-    setIsShowComposePopup(true);
+    handleShowCompose(id || 0, true);
   };
 
   const handleChangeViewType = () => {
     setComposeViewType(ComposeViewTypeEnum.POPUP);
-    setIsShowComposePopup(true);
+    handleShowCompose(id || 0, true);
+  };
+
+  const handleClosePopup = () => {
+    if (_.isFunction(handleClickCloseComposeItem)) {
+      handleClickCloseComposeItem(id || 0);
+    }
+
+    setIsZoomIn(false);
+  };
+
+  useEffect(() => {
+    if (compose) {
+      setSelectedBccRecipient(compose?.recipientBcc);
+      setSelectedCcRecipient(compose?.recipientCc);
+      setSelectedRecipient(compose?.recipient);
+      setDebounceSubject('');
+      setContent('');
+      setSubject('');
+    }
+  }, [compose]);
+
+  const handleClosePopupDraftList = () => {
+    setIsShowCompose(false);
+    if (_.isFunction(handleClickCloseComposeItem)) {
+      handleClickCloseComposeItem(id || 0);
+    }
   };
 
   useEffect(() => {
@@ -74,35 +130,92 @@ const ComposePopupContainer = ({
     }
   }, [fromMail]);
 
+  useEffect(() => {
+    if (viewType) {
+      setComposeViewType(viewType);
+    }
+  }, [viewType]);
+
+  useEffect(() => {
+    setIsShowCompose(true);
+    if (localStorage.getItem('defaultFullScreen') && localStorage.getItem('defaultFullScreen') === 'true') {
+      setComposeViewType(ComposeViewTypeEnum.MODAL);
+    } else {
+      setComposeViewType(ComposeViewTypeEnum.POPUP);
+    }
+  }, []);
+
   return (
     <>
       {isShowComposePopup &&
-        (composeViewType === ComposeViewTypeEnum.POPUP ||
-          composeViewType === ComposeViewTypeEnum.REPLY ||
+        (composeViewType === ComposeViewTypeEnum.REPLY ||
           composeViewType === ComposeViewTypeEnum.FORWARD) && (
           <ComposePopup
+            content={content}
+            onChangeEditor={handleChangeEditor}
+            selectRecipient={selectedRecipient || undefined}
+            selectedCcRecipient={selectedCcRecipient || undefined}
+            selectedBccRecipient={selectedBccRecipient || undefined}
+            onChangeSelectRecipient={handleOnChangeRecipient}
+            onChangeSelectCcRecipient={handleOnChangeCcRecipient}
+            onChangeSelectBccRecipient={handleOnChangeBccRecipient}
             onChangeSubjectInput={onChangeSubjectInput}
             debounceSubject={debounceSubject}
             subject={subject}
             onCollect={handleClickCollect}
             viewType={composeViewType}
-            onClose={handleClose}
+            onClose={handleClosePopup}
             fromMail={fromMail}
             onClear={onClear}
             composePopupStyle={composePopupStyle}
             setViewType={setComposeViewType}
-            composeClassName={composeClassName}
+            composeClassName={composeClassName || ''}
           />
         )}
-      {isShowComposePopup && composeViewType === ComposeViewTypeEnum.MODAL && (
+      {((compose && compose.isShow) || isShowComposePopup) &&
+      isShowCompose &&
+      composeViewType === ComposeViewTypeEnum.POPUP ? (
+        <ComposePopup
+          content={content}
+          onChangeEditor={handleChangeEditor}
+          selectRecipient={selectedRecipient || undefined}
+          selectedCcRecipient={selectedCcRecipient || undefined}
+          selectedBccRecipient={selectedBccRecipient || undefined}
+          onChangeSelectRecipient={handleOnChangeRecipient}
+          onChangeSelectCcRecipient={handleOnChangeCcRecipient}
+          onChangeSelectBccRecipient={handleOnChangeBccRecipient}
+          onChangeSubjectInput={onChangeSubjectInput}
+          debounceSubject={debounceSubject}
+          subject={subject}
+          onCollect={handleClickCollect}
+          viewType={composeViewType}
+          onClose={handleClosePopupDraftList}
+          fromMail={fromMail}
+          onClear={onClear}
+          composePopupStyle={composePopupStyle}
+          setViewType={setComposeViewType}
+          composeClassName={composeClassName || ''}
+        />
+      ) : (
+        ''
+      )}
+      {compose && compose.isShow && isShowCompose && composeViewType === ComposeViewTypeEnum.MODAL && (
         <Modal
           isShowFooter={false}
           isShowHeader={false}
           onClose={handleClose}
-          isOpen={isShowComposePopup}
+          isOpen={compose?.isShow}
           contentContainerClassName="w-[80vw] h-[90vh] bg-white p-0 rounded-lg"
         >
           <ComposePopup
+            content={content}
+            onChangeEditor={handleChangeEditor}
+            selectRecipient={selectedRecipient}
+            selectedCcRecipient={selectedCcRecipient}
+            selectedBccRecipient={selectedBccRecipient}
+            onChangeSelectRecipient={handleOnChangeRecipient}
+            onChangeSelectCcRecipient={handleOnChangeCcRecipient}
+            onChangeSelectBccRecipient={handleOnChangeBccRecipient}
             onChangeSubjectInput={onChangeSubjectInput}
             debounceSubject={debounceSubject}
             subject={subject}
@@ -118,20 +231,13 @@ const ComposePopupContainer = ({
           />
         </Modal>
       )}
-      {!isShowComposePopup && isZoomIn && (
-        <div
-          className={twMerge(
-            'fixed bottom-0 right-12 z-50 h-fit w-[280px] rounded-t-md bg-white shadow-compose',
-          )}
-        >
+      {compose && !compose.isShow && isZoomIn && (
+        <div className={twMerge('z-50 h-fit min-w-[280px] rounded-t-md bg-white shadow-compose')}>
           <ComposePopupHeader
             className=" bg-[#F2F6FC]"
             onChangeViewType={handleChangeViewType}
             title={debounceSubject}
-            onClose={() => {
-              handleClose();
-              setIsZoomIn(false);
-            }}
+            onClose={handleClosePopup}
             onCollect={handleClickCollect}
           />
         </div>

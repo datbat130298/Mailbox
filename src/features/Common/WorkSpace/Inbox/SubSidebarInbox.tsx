@@ -1,26 +1,47 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { HiOutlinePencil } from 'react-icons/hi';
-import { ComposeViewTypeEnum } from '../../../../app/Enums/commonEnums';
+import { ComposeType } from '../../../../app/Types/commonTypes';
 import Button from '../../Components/Button';
-import ComposePopupContainer from '../../Components/ComposePopup/ComposeContainer';
+import ListOfMiniatureDrafts from '../../Components/ListOfMiniatureDrafts/ListOfMiniatureDrafts';
 
 const SubSidebarInbox = () => {
   const { t } = useTranslation();
-  const [isShowComposePopup, setIsShowComposePopup] = useState<boolean>(false);
-  const [composeViewType, setComposeViewType] = useState(ComposeViewTypeEnum.POPUP);
+  const [isShowComposePopup, setIsShowComposePopup] = useState<boolean>(true);
+  const [composeDraftList, setComposeDraftList] = useState<ComposeType[]>([]);
 
   const handleClickCompose = () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // draft?.setDraft((prev: any) => prev?.concat({ isShow: true }));
+    setComposeDraftList((prev) => prev.concat({ isShow: true, uuid: composeDraftList.length }));
     setIsShowComposePopup(true);
     if (!localStorage.getItem('defaultFullScreen')) {
       localStorage.setItem('defaultFullScreen', 'false');
     }
-    if (localStorage.getItem('defaultFullScreen') && localStorage.getItem('defaultFullScreen') === 'true') {
-      setComposeViewType(ComposeViewTypeEnum.MODAL);
-    } else {
-      setComposeViewType(ComposeViewTypeEnum.POPUP);
-    }
   };
+
+  const handleShowCompose = useCallback(
+    (id: number, data: boolean) => {
+      const array = composeDraftList;
+      array.forEach((item) => {
+        if (item.uuid === id) {
+          return Object.assign(item, { isShow: data });
+        }
+        return item;
+      });
+      setComposeDraftList(array);
+    },
+    [composeDraftList],
+  );
+
+  const handleClickCloseComposeItem = useCallback(
+    (id: number) => {
+      const array = composeDraftList;
+      array.filter((item) => item.uuid !== id);
+      setComposeDraftList(array);
+    },
+    [composeDraftList],
+  );
 
   return (
     <div className="h-full w-full">
@@ -34,13 +55,14 @@ const SubSidebarInbox = () => {
           <div className="h-full w-max px-4 leading-[15px]">{t('compose')}</div>
         </div>
       </Button>
-      <ComposePopupContainer
-        isShowComposePopup={isShowComposePopup}
-        setIsShowComposePopup={setIsShowComposePopup}
-        composeViewType={composeViewType}
-        setComposeViewType={setComposeViewType}
-        // composeClassName="z-[60]"
-      />
+      {isShowComposePopup && (
+        <ListOfMiniatureDrafts
+          handleClickCloseComposeItem={handleClickCloseComposeItem}
+          handleShowCompose={handleShowCompose}
+          setComposeDraftList={setComposeDraftList}
+          composeDraftList={composeDraftList}
+        />
+      )}
     </div>
   );
 };

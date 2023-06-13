@@ -1,6 +1,7 @@
 import { PaginationState } from '@tanstack/react-table';
 import { AxiosError, AxiosResponse } from 'axios';
 import { Dayjs } from 'dayjs';
+import { OptionLabel } from '../../features/Common/Components/ComposePopup/Components/ComposePopupRecipient/ComposePopupSelectRecipients';
 import { TableColumnFilterState } from './elementTypes';
 import { UserDataType } from './userTypes';
 
@@ -135,4 +136,14 @@ export interface ContactType {
   id: string;
   avatar: string;
   email: string;
+}
+
+export interface ComposeType {
+  uuid: number;
+  isShow: boolean;
+  recipient?: readonly OptionLabel[];
+  recipientCc?: readonly OptionLabel[];
+  recipientBcc?: readonly OptionLabel[];
+  subject?: string;
+  content?: string;
 }
