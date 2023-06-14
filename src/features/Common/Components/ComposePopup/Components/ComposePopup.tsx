@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CgFormatColor } from 'react-icons/cg';
 import { FaRegTrashAlt } from 'react-icons/fa';
@@ -11,6 +11,7 @@ import { MultiValue } from 'react-select';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import striptags from 'striptags';
 import { twMerge } from 'tailwind-merge';
+import ContextDraft from '../../../../../app/Context/Context';
 import { ComposeViewTypeEnum } from '../../../../../app/Enums/commonEnums';
 import { ComposePopupStyleType, MailType } from '../../../../../app/Types/commonTypes';
 import ComposePopupButtonMore from './ComposePopupButtonMore/ComposePopupButtonMore';
@@ -39,14 +40,17 @@ export interface ComposePopupProps {
   debounceSubject: string;
   fromMail?: MailType;
   composePopupStyle?: ComposePopupStyleType;
-  setViewType: Dispatch<SetStateAction<ComposeViewTypeEnum>>;
+  id?: number;
   onClose: () => void;
   onCollect: () => void;
   onChangeSubjectInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onClear?: () => void;
+  setComposeViewType?: Dispatch<SetStateAction<ComposeViewTypeEnum>>;
+  setIsModal?: Dispatch<SetStateAction<boolean>>;
 }
 
 const ComposePopup = ({
+  setComposeViewType,
   content,
   onChangeEditor,
   selectRecipient,
@@ -61,17 +65,20 @@ const ComposePopup = ({
   debounceSubject,
   fromMail,
   composePopupStyle,
-  setViewType,
+  id,
   onChangeSubjectInput,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onClose,
   onCollect,
   onClear,
+  setIsModal,
 }: ComposePopupProps) => {
   const [isVisibleToolbar, setIsVisibleToolbar] = useState<boolean>(false);
   const [isShowSelectTimeModal, setIsShowSelectTimeModal] = useState<boolean>(false);
   const [isShowOptionMore, setIsShowOptionMore] = useState<boolean>(false);
 
   const { t } = useTranslation();
+  const { handleChangeViewType, handleClickCloseComposeItem } = useContext(ContextDraft);
 
   const handleClickDeleteFooter = () => {
     // eslint-disable-next-line no-console
@@ -121,12 +128,14 @@ const ComposePopup = ({
     console.log('this is SubmitSchudule');
   };
 
-  const handleChangeViewType = () => {
+  const handleChangeViewTypeCompose = () => {
     if (viewType === ComposeViewTypeEnum.POPUP) {
-      setViewType(ComposeViewTypeEnum.MODAL);
+      setIsModal?.(true);
+      handleChangeViewType(id || 0, ComposeViewTypeEnum.MODAL);
       return;
     }
-    setViewType(ComposeViewTypeEnum.POPUP);
+    setIsModal?.(false);
+    handleChangeViewType(id || 0, ComposeViewTypeEnum.POPUP);
   };
 
   useEffect(() => {
@@ -148,7 +157,7 @@ const ComposePopup = ({
   };
 
   const handleClose = () => {
-    onClose();
+    handleClickCloseComposeItem(id || 0);
     if (_.isFunction(onClear)) {
       onClear();
     }
@@ -165,7 +174,7 @@ const ComposePopup = ({
     >
       {(viewType === ComposeViewTypeEnum.REPLY || viewType === ComposeViewTypeEnum.FORWARD) && (
         <ReplyAndForwardHeader
-          setViewType={setViewType}
+          setComposeViewType={setComposeViewType}
           type={viewType}
           toEmail={fromMail?.from_user?.email}
         />
@@ -175,7 +184,7 @@ const ComposePopup = ({
           title={!_.isEmpty(fromMail) ? `${t('reply')}: ${debounceSubject}` : debounceSubject}
           onClose={handleClose}
           onCollect={onCollect}
-          onChangeViewType={handleChangeViewType}
+          onChangeViewType={handleChangeViewTypeCompose}
         />
       )}
       <div

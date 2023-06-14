@@ -1,20 +1,23 @@
 import { createContext, Dispatch, SetStateAction } from 'react';
+import { ComposeViewTypeEnum } from '../Enums/commonEnums';
 import { ComposeType } from '../Types/commonTypes';
 
 interface ContextDraftType {
-  draft: ComposeType[];
-  setDraft: Dispatch<SetStateAction<ComposeType[]>>;
-  removeItem: (id: number) => void;
-  updateDraft: (id: number, data: ComposeType) => void;
-  setIsShowDraft: (id: number, data: boolean) => void;
+  composeDraftList: ComposeType[];
+  setComposeDraftList: Dispatch<SetStateAction<ComposeType[]>>;
+  handleClickCloseComposeItem: (id: number) => void;
+  handleShowCompose: (id: number, data: boolean) => void;
+  handleAddComposeDraft: (viewType: ComposeViewTypeEnum) => void;
+  handleChangeViewType: (id: number, data: ComposeViewTypeEnum) => void;
 }
 
 const ContextDraft = createContext<ContextDraftType>({
-  draft: [],
-  setDraft: () => {},
-  removeItem: () => {},
-  updateDraft: () => {},
-  setIsShowDraft: () => {},
+  composeDraftList: [],
+  setComposeDraftList: () => {},
+  handleClickCloseComposeItem: () => {},
+  handleShowCompose: () => {},
+  handleAddComposeDraft: () => {},
+  handleChangeViewType: () => {},
 });
 
 export default ContextDraft;
