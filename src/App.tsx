@@ -1,45 +1,69 @@
 /* eslint-disable react/jsx-no-constructed-context-values */
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useCallback, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import { Tooltip } from 'react-tooltip';
 import ContextDraft from './app/Context/Context';
+import { ComposeViewTypeEnum } from './app/Enums/commonEnums';
 import CommonRoutes from './app/Routes/CommonRoutes';
 import { ComposeType } from './app/Types/commonTypes';
 import Loading from './features/Common/Components/Loading/Loading';
 import DefaultLayout from './features/Common/Layout/DefaultLayout';
 
 const App = () => {
-  const [draft, setDraft] = useState<ComposeType[]>([]);
+  const [composeDraftList, setComposeDraftList] = useState<ComposeType[]>([]);
 
-  const updateDraft = (id: number, data: ComposeType) => {
-    const newDraft = Object.assign(draft[id], data);
-    draft?.splice(id, 1, newDraft);
-    setDraft(draft);
+  const handleAddComposeDraft = (viewType: ComposeViewTypeEnum) => {
+    setComposeDraftList((prev) => prev.concat({ isShow: true, uuid: composeDraftList.length, viewType }));
   };
 
-  useEffect(() => {
-    if (draft.length >= 3) {
-      draft.map((item, id) => {
-        if (id === draft.length - 1 || id === draft.length - 2) {
-          return updateDraft(id, { isShow: true, uuid: 1 });
+  const handleChangeViewType = useCallback(
+    async (id: number, data: ComposeViewTypeEnum) => {
+      const array = composeDraftList;
+      await array.forEach((item) => {
+        if (item.uuid === id) {
+          return Object.assign(item, { viewType: data });
         }
-        return updateDraft(id, { isShow: false, uuid: 1 });
+        return item;
       });
-    }
-  }, [draft]);
+      setComposeDraftList(array);
+    },
+    [composeDraftList],
+  );
 
-  const removeItem = (id: number) => {
-    draft?.splice(id, 1);
-    // setDraft(draft);
-  };
+  const handleClickCloseComposeItem = useCallback(
+    async (id: number) => {
+      const array = await composeDraftList.filter((item) => item.uuid !== id);
+      setComposeDraftList(array);
+    },
+    [composeDraftList],
+  );
 
-  const setIsShowDraft = (id: number, data: boolean) => {
-    draft[id].isShow = data;
-  };
+  const handleShowCompose = useCallback(
+    async (id: number, data: boolean) => {
+      const array = composeDraftList;
+      await array.forEach((item) => {
+        if (item.uuid === id) {
+          return Object.assign(item, { isShow: data });
+        }
+        return item;
+      });
+      setComposeDraftList(array);
+    },
+    [composeDraftList],
+  );
 
   return (
     <Suspense fallback={<Loading />}>
-      <ContextDraft.Provider value={{ draft, setDraft, removeItem, updateDraft, setIsShowDraft }}>
+      <ContextDraft.Provider
+        value={{
+          composeDraftList,
+          setComposeDraftList,
+          handleClickCloseComposeItem,
+          handleShowCompose,
+          handleAddComposeDraft,
+          handleChangeViewType,
+        }}
+      >
         <DefaultLayout>
           <CommonRoutes />
           <ToastContainer />

@@ -1,7 +1,9 @@
-import { Dispatch, SetStateAction } from 'react';
+import _ from 'lodash';
+import { Dispatch, SetStateAction, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CgMailForward, CgMailReply } from 'react-icons/cg';
 import { MdOpenInNew } from 'react-icons/md';
+import ContextDraft from '../../../../../app/Context/Context';
 import { ComposeViewTypeEnum } from '../../../../../app/Enums/commonEnums';
 import FilterDropdown from '../../FilterDropdown/FilterDropdown';
 import Tooltip from '../../Tooltip/Tooltip';
@@ -9,31 +11,37 @@ import Tooltip from '../../Tooltip/Tooltip';
 interface ReplyAndForwardHeaderProps {
   type?: string;
   toEmail?: string;
-  setViewType: Dispatch<SetStateAction<ComposeViewTypeEnum>>;
+  setComposeViewType?: Dispatch<SetStateAction<ComposeViewTypeEnum>>;
 }
 
-const ReplyAndForwardHeader = ({ type, toEmail, setViewType }: ReplyAndForwardHeaderProps) => {
+const ReplyAndForwardHeader = ({ type, toEmail, setComposeViewType }: ReplyAndForwardHeaderProps) => {
   const { t } = useTranslation();
+  const { handleAddComposeDraft } = useContext(ContextDraft);
   const replyAndForwardAction = [
     {
       uuid: 1,
       label: 'Reply',
       value: 'reply',
-      onClick: () => setViewType(ComposeViewTypeEnum.REPLY),
+      onClick: () => _.isFunction(setComposeViewType) && setComposeViewType(ComposeViewTypeEnum.REPLY),
     },
     {
       uuid: 2,
       label: 'Forward',
       value: 'forward',
-      onClick: () => setViewType(ComposeViewTypeEnum.FORWARD),
+      onClick: () => _.isFunction(setComposeViewType) && setComposeViewType(ComposeViewTypeEnum.FORWARD),
     },
     {
       uuid: 3,
       label: 'Edit subject',
       value: 'edit_subject',
-      onClick: () => setViewType(ComposeViewTypeEnum.POPUP),
+      onClick: () => _.isFunction(setComposeViewType) && setComposeViewType(ComposeViewTypeEnum.POPUP),
     },
   ];
+
+  const handleClickChangeViewTypeToPopup = () => {
+    handleAddComposeDraft(ComposeViewTypeEnum.POPUP);
+    if (_.isFunction(setComposeViewType)) setComposeViewType(ComposeViewTypeEnum.POPUP);
+  };
 
   return (
     <div className="flex h-8 w-full justify-between px-2 pt-1">
@@ -63,7 +71,7 @@ const ReplyAndForwardHeader = ({ type, toEmail, setViewType }: ReplyAndForwardHe
         <div
           role="button"
           tabIndex={0}
-          onClick={() => setViewType(ComposeViewTypeEnum.POPUP)}
+          onClick={handleClickChangeViewTypeToPopup}
           className="mr-1 mt-2 flex h-8 w-fit rounded-md px-2 hover:bg-gray-100 hover:text-primary-700"
         >
           <div className="flex-center h-full w-max">

@@ -2,6 +2,7 @@ import { PaginationState } from '@tanstack/react-table';
 import { AxiosError, AxiosResponse } from 'axios';
 import { Dayjs } from 'dayjs';
 import { OptionLabel } from '../../features/Common/Components/ComposePopup/Components/ComposePopupRecipient/ComposePopupSelectRecipients';
+import { ComposeViewTypeEnum } from '../Enums/commonEnums';
 import { TableColumnFilterState } from './elementTypes';
 import { UserDataType } from './userTypes';
 
@@ -146,4 +147,5 @@ export interface ComposeType {
   recipientBcc?: readonly OptionLabel[];
   subject?: string;
   content?: string;
+  viewType: ComposeViewTypeEnum;
 }
