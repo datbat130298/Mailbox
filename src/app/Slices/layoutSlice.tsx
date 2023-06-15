@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 const initialState = {
-  isShowSubSideBar: false,
+  isShowFullSidebar: false,
 
   itemMailStyle: 'grid',
 };
@@ -10,8 +10,8 @@ export const layoutSlice = createSlice({
   name: 'layout',
   initialState,
   reducers: {
-    setIsShowSubSidebar: (state, action: PayloadAction<boolean>) => {
-      state.isShowSubSideBar = action.payload;
+    setIsShowFullSidebar: (state, action: PayloadAction<boolean>) => {
+      state.isShowFullSidebar = action.payload;
     },
     setMailItemStyle: (state, action: PayloadAction<string>) => {
       state.itemMailStyle = action.payload;
@@ -21,6 +21,6 @@ export const layoutSlice = createSlice({
 
 const { actions, reducer: layoutReducer } = layoutSlice;
 
-export const { setIsShowSubSidebar, setMailItemStyle } = actions;
+export const { setIsShowFullSidebar, setMailItemStyle } = actions;
 
 export default layoutReducer;
