@@ -1,44 +1,72 @@
-import { useCallback } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AiOutlineMail, AiOutlineMenu } from 'react-icons/ai';
-import { BsChatLeftText, BsTrash } from 'react-icons/bs';
-import { MdOutlineDrafts } from 'react-icons/md';
-import { setIsShowSubSidebar } from '../../../../app/Slices/layoutSlice';
-import useDispatch from '../../../Hooks/useDispatch';
+import { FiTrash2 } from 'react-icons/fi';
+import { MdOutlineDrafts, MdOutlineScheduleSend } from 'react-icons/md';
+import { TbMail } from 'react-icons/tb';
+import { twMerge } from 'tailwind-merge';
 import useSelector from '../../../Hooks/useSelector';
+import ComposeButton from './ComposeButton';
 import SidebarItem from './SidebarItem';
 
 const Sidebar = () => {
-  const dispatch = useDispatch();
-  const isShowSubSideBar = useSelector((state) => state.layout.isShowSubSideBar);
   const { t } = useTranslation();
+  const isShowFullSidebar = useSelector((state) => state.layout.isShowFullSidebar);
+  const [isShowSidebar, setIsShowSidebar] = useState<boolean>(false);
 
-  const handleShowSubSidebar = useCallback(() => {
-    if (isShowSubSideBar) {
-      return dispatch(setIsShowSubSidebar(false));
-    }
-    return dispatch(setIsShowSubSidebar(true));
-  }, [isShowSubSideBar]);
+  const handleMouseMove = () => {
+    return setIsShowSidebar(true);
+  };
+
+  const handleMouseOver = () => {
+    return setIsShowSidebar(false);
+  };
+
+  const InboxUnread = 132;
+  const Draft = 123;
 
   return (
-    <div className="fixed left-0 top-0 z-50 h-screen w-[72px] bg-gray-200 px-1 py-6 shadow">
-      <div role="button" tabIndex={0} onClick={handleShowSubSidebar}>
-        <SidebarItem tooltipText="Menu" icon={<AiOutlineMenu size={20} />} className="mb-5" />
+    <div
+      className={twMerge(
+        'fixed left-0 top-0 z-[49] h-screen w-[72px] bg-slate-100 py-6 pt-20 ',
+        isShowFullSidebar && 'w-[255px]',
+        isShowSidebar && 'w-[279px]',
+      )}
+      onMouseMove={() => handleMouseMove()}
+      onMouseLeave={() => handleMouseOver()}
+    >
+      <ComposeButton isShowSidebar={isShowSidebar} />
+      <div className="pt-3">
+        <SidebarItem
+          to="/inbox"
+          title={t('inbox')}
+          tooltipText={t('inbox')}
+          icon={<TbMail size={22} />}
+          quantity={InboxUnread}
+          isShowSidebar={isShowSidebar}
+        />
+        <SidebarItem
+          to="/sent"
+          title={t('sent')}
+          tooltipText={t('sent')}
+          icon={<MdOutlineScheduleSend size={21} />}
+          isShowSidebar={isShowSidebar}
+        />
+        <SidebarItem
+          to="/drafts"
+          title={t('drafts')}
+          tooltipText={t('drafts')}
+          icon={<MdOutlineDrafts size={20} />}
+          quantity={Draft}
+          isShowSidebar={isShowSidebar}
+        />
+        <SidebarItem
+          to="/trash"
+          title={t('trash')}
+          tooltipText={t('trash')}
+          icon={<FiTrash2 size={18} />}
+          isShowSidebar={isShowSidebar}
+        />
       </div>
-      <SidebarItem
-        to="/inbox"
-        title={t('inbox')}
-        tooltipText={t('inbox')}
-        icon={<AiOutlineMail size={20} />}
-      />
-      <SidebarItem to="/sent" title={t('sent')} tooltipText={t('sent')} icon={<BsChatLeftText size={18} />} />
-      <SidebarItem
-        to="/drafts"
-        title={t('drafts')}
-        tooltipText={t('drafts')}
-        icon={<MdOutlineDrafts size={22} />}
-      />
-      <SidebarItem to="/trash" title={t('trash')} tooltipText={t('trash')} icon={<BsTrash size={20} />} />
     </div>
   );
 };

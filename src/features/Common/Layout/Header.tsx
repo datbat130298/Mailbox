@@ -1,14 +1,18 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { CgMenu } from 'react-icons/cg';
+import { useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 import { getLanguagesPage, setLanguagesPage } from '../../../app/Services/Language/LanguageService';
+import { setIsShowFullSidebar } from '../../../app/Slices/layoutSlice';
 import logoText from '../../../assets/image/logo_text.png';
 import useSelector from '../../Hooks/useSelector';
 import { triggerClickOutside } from '../../utils/helpers';
 import AdvancedSearch from '../Components/AdvancedSearch/AdvancedSearch';
 import Button from '../Components/Button';
 import ChooseLanguage from '../Components/ChooseLanguage/ChooseLanguage';
+import Tooltip from '../Components/Tooltip/Tooltip';
 import UserDropdown from '../Components/UserDropdown/UserDropdown';
 
 const Header = () => {
@@ -35,9 +39,31 @@ const Header = () => {
   useEffect(() => {
     triggerClickOutside(userTabRef, () => setUserTabVisible(false));
   }, [userTabRef]);
+
+  const dispatch = useDispatch();
+
+  const isShowFullSidebar = useSelector((state) => state.layout.isShowFullSidebar);
+
+  const handleShowFullSidebar = useCallback(() => {
+    if (isShowFullSidebar) {
+      return dispatch(setIsShowFullSidebar(false));
+    }
+    return dispatch(setIsShowFullSidebar(true));
+  }, [isShowFullSidebar]);
+
   return (
-    <div className="fixed right-0 top-0 z-50 flex h-20 w-[calc(100vw-72px)] justify-between bg-slate-100 pl-4 pr-2">
-      <div className="flex h-full w-max">
+    <div className="fixed right-0 top-0 z-50 flex h-20 w-full justify-between bg-slate-100 pl-6 pr-2">
+      <div className="flex h-full w-max items-center">
+        <Tooltip title="main-menu" position="bottom">
+          <div
+            role="button"
+            tabIndex={0}
+            onClick={handleShowFullSidebar}
+            className="mr-2 flex h-10 w-10 items-center rounded-full bg-slate-200"
+          >
+            <CgMenu size={20} className="mx-auto " />
+          </div>
+        </Tooltip>
         <div className="flex h-full w-52 flex-shrink-0 items-center justify-start">
           <img className="h-[28px] w-[120px]" src={logoText} alt="Workflow" />
         </div>

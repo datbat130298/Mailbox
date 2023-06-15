@@ -1,12 +1,10 @@
 import { useEffect } from 'react';
 import { twMerge } from 'tailwind-merge';
 import useSelector from '../../Hooks/useSelector';
-import SubSidebarContainer from '../Components/SubSidebar/SubSidebar';
-import SubSidebarInbox from './Inbox/SubSidebarInbox';
 import WorkSpaceRoutes from './WorkSpaceRoutes';
 
 const ContainerWorkSpace = () => {
-  const isShowSubSideBar = useSelector((state) => state.layout.isShowSubSideBar);
+  const isShowFullSidebar = useSelector((state) => state.layout.isShowFullSidebar);
 
   useEffect(() => {
     window.document.title = `Maibox - ${process.env.REACT_APP_WEBSITE_NAME}`;
@@ -17,16 +15,11 @@ const ContainerWorkSpace = () => {
   }, []);
 
   return (
-    <div className="flex h-full w-full justify-start overflow-x-hidden bg-slate-100 pl-4 pr-2">
-      {isShowSubSideBar && (
-        <SubSidebarContainer>
-          <SubSidebarInbox />
-        </SubSidebarContainer>
-      )}
+    <div className="flex h-full w-full justify-end overflow-x-hidden bg-slate-100 pl-4 pr-2">
       <div
         className={twMerge(
           'h-full w-full rounded-t-lg bg-white shadow-box',
-          isShowSubSideBar && 'w-[calc(100%-208px)]',
+          isShowFullSidebar && 'w-[calc(100%-193px)]',
         )}
       >
         <WorkSpaceRoutes />
