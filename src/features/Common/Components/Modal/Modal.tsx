@@ -1,6 +1,7 @@
 import { Dialog } from '@headlessui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { forwardRef } from 'react';
+import { RiCloseFill } from 'react-icons/ri';
 import { twMerge } from 'tailwind-merge';
 import Button from '../Button';
 
@@ -88,10 +89,22 @@ const Modal = (
                 <div className={twMerge('h-fit w-fit rounded-lg bg-white', isShowHeader && 'pt-7')}>
                   <div className="">
                     {isShowHeader && (
-                      <div>
-                        <div className="h-fit w-fit pb-2 text-lg font-semibold">{title}</div>
-                        {subTitle && <div className="h-fit w-fit pb-2 text-base font-normal">{subTitle}</div>}
-                        <div className="mt-2 h-1 w-16 rounded-md bg-gray-100" />
+                      <div className={twMerge('mx-8 flex justify-between')}>
+                        <div>
+                          <div className="h-fit w-fit pb-2 text-lg font-semibold">{title}</div>
+                          {subTitle && (
+                            <div className="h-fit w-fit pb-2 text-base font-normal">{subTitle}</div>
+                          )}
+                          <div className="mt-2 h-1 w-16 rounded-md bg-gray-100" />
+                        </div>
+                        <div
+                          role="button"
+                          tabIndex={0}
+                          onClick={onClose}
+                          className="h-fit rounded-full border-2 border-gray-100 bg-gray-50 p-1 text-slate-700 hover:cursor-pointer hover:border-gray-200 hover:bg-gray-100"
+                        >
+                          <RiCloseFill size={15} />
+                        </div>
                       </div>
                     )}
                     <div className={twMerge('w-[400px] pb-8 pt-8', contentContainerClassName)}>

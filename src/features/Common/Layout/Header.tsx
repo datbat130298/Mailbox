@@ -54,7 +54,7 @@ const Header = () => {
   return (
     <div className="fixed right-0 top-0 z-50 flex h-20 w-full justify-between bg-slate-100 pl-6 pr-2">
       <div className="flex h-full w-max items-center">
-        <Tooltip title="main-menu" position="bottom">
+        <Tooltip title={t('main-menu')} position="bottom">
           <div
             role="button"
             tabIndex={0}
