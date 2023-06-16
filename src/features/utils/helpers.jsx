@@ -14,15 +14,15 @@ const triggerClickOutside = (ref, callback) => {
   };
 };
 
-const triggerClickNext = (data, currentTarget, setNextItem) => {
+const triggerClickNext = (data, currentTarget) => {
   const currentIndex = data.findIndex((item) => item.uuid === currentTarget.uuid);
-  if (!_.isEmpty(data[currentIndex + 1])) return setNextItem(data[currentIndex + 1]);
+  if (!_.isEmpty(data[currentIndex + 1])) return data[currentIndex + 1];
   return false;
 };
 
-const triggerClickPrev = (data, currentTarget, setPrevItem) => {
+const triggerClickPrev = (data, currentTarget) => {
   const currentIndex = data.findIndex((item) => item.uuid === currentTarget.uuid);
-  if (!_.isEmpty(data[currentIndex - 1])) return setPrevItem(data[currentIndex - 1]);
+  if (!_.isEmpty(data[currentIndex - 1])) return data[currentIndex - 1];
   return false;
 };
 

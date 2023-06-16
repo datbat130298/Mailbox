@@ -207,9 +207,9 @@ const getInboxs = () => {
   });
 };
 
-const getInboxById = (id: number) => {
+const getMailById = (id: number) => {
   const data = datawithDay?.find((item) => item.uuid === id);
   return data;
 };
 
-export { getInboxs, getInboxById };
+export { getInboxs, getMailById };

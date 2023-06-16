@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import { getSents } from '../../../../app/Services/Sent/SentService';
 import { MailType } from '../../../../app/Types/commonTypes';
 import { triggerClickNext, triggerClickPrev } from '../../../utils/helpers';
@@ -17,6 +18,7 @@ const SentTable = () => {
   const [selectedMail, setSelectedMail] = useState({} as MailType);
   const [isLoading, setIsLoading] = useState(false);
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const isChecked = useMemo(() => {
     if (!_.isEmpty(selectRows)) return true;
@@ -59,11 +61,21 @@ const SentTable = () => {
   };
 
   const handleClickNextButton = () => {
-    return triggerClickNext(sentData, selectedMail, setSelectedMail);
+    const nextItem = triggerClickNext(sentData, selectedMail);
+    if (nextItem) {
+      setSelectedMail(nextItem);
+      return navigate(`/sent/${nextItem.uuid}`);
+    }
+    return false;
   };
 
   const handleClickPrevButton = () => {
-    return triggerClickPrev(sentData, selectedMail, setSelectedMail);
+    const prevItem = triggerClickPrev(sentData, selectedMail);
+    if (prevItem) {
+      setSelectedMail(prevItem);
+      return navigate(`/sent/${prevItem.uuid}`);
+    }
+    return false;
   };
 
   return (
@@ -81,20 +93,25 @@ const SentTable = () => {
           setSelectedMail({} as MailType);
         }}
       />
-      {!isShowViewMailSpace && (
-        <MailTable
-          data={sentData}
-          isLoading={isLoading}
-          onChangeShowShadow={setIsShowShadow}
-          onClickShowMail={handleSelectMail}
-          onChangeSelectRows={handleSelectRows}
-          selectRows={selectRows}
-          emptyComponent={
-            <EmptyData message={t('sent_empty_message')} desription={t('sent_empty_description')} />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <MailTable
+              data={sentData}
+              isLoading={isLoading}
+              onChangeShowShadow={setIsShowShadow}
+              onClickShowMail={handleSelectMail}
+              onChangeSelectRows={handleSelectRows}
+              selectRows={selectRows}
+              emptyComponent={
+                <EmptyData message={t('sent_empty_message')} desription={t('sent_empty_description')} />
+              }
+            />
           }
         />
-      )}
-      {isShowViewMailSpace && <ViewMailSpace />}
+        <Route path="/:uuid" element={<ViewMailSpace mailData={selectedMail} />} />
+      </Routes>
     </div>
   );
 };
