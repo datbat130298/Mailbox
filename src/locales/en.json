@@ -82,5 +82,9 @@
   "1_year": "1 year",
   "search": "Search",
   "create_filter": "Create Filter",
-  "has_attachment": "Has attachment"
+  "has_attachment": "Has attachment",
+  "spam": "Spam",
+  "important": "Important",
+  "schedules": "Schedules",
+  "chats": "Chats"
 }

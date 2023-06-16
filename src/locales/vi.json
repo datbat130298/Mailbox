@@ -82,5 +82,9 @@
   "1_year": "1 năm",
   "search": "Tìm kiếm",
   "create_filter": "Tạo bộ lọc",
-  "has_attachment": "Có tập tin đính kèm"
+  "has_attachment": "Có tập tin đính kèm",
+  "spam": "Spam",
+  "important": "Important",
+  "schedules": "Schedules",
+  "chats": "Chats"
 }
