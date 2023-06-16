@@ -35,7 +35,7 @@ const SidebarItem = ({
   }, [pathname, tooltipText, isShowFullSidebar, isShowSidebar]);
 
   return (
-    <Tooltip position="right" title={title || ''}>
+    <Tooltip position="right" title={tooltipText || ''}>
       <Link
         to={to || pathname}
         className={twMerge(
