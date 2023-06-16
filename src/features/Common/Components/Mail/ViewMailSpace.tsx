@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import _ from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CgMailForward, CgMailReply } from 'react-icons/cg';
@@ -6,30 +7,38 @@ import { MdArrowDropDown, MdOutlineMoreVert } from 'react-icons/md';
 import { useParams } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 import { ComposeViewTypeEnum } from '../../../../app/Enums/commonEnums';
-import { getInboxById } from '../../../../app/Services/Inbox/InboxService';
+import { getMailById } from '../../../../app/Services/Inbox/InboxService';
 import { MailType } from '../../../../app/Types/commonTypes';
 import Button from '../Button';
 import ComposePopupContainer from '../ComposePopup/ComposeContainer';
 import Tooltip from '../Tooltip/Tooltip';
 import MailTag from './MailTag';
 
-const ViewMailSpace = () => {
+interface ViewMailSpaceProps {
+  mailData?: MailType;
+}
+
+const ViewMailSpace = ({ mailData }: ViewMailSpaceProps) => {
   const { t } = useTranslation();
   const [composeViewType, setComposeViewType] = useState(ComposeViewTypeEnum.POPUP);
   const [isShowComposePopup, setIsShowComposePopup] = useState(false);
-  const [mailInbox, setMail] = useState<MailType>();
-  const { id } = useParams();
+  const [mail, setMail] = useState<MailType>();
+  const { uuid } = useParams();
 
-  const fetchDataMail = useCallback(() => {
-    const data = getInboxById(Number(id));
+  const fetchDataMail = useCallback((mailId: string | undefined) => {
+    const data = getMailById(Number(mailId));
     if (data) {
       setMail(data);
     }
-  }, [id]);
+  }, []);
 
   useEffect(() => {
-    fetchDataMail();
-  }, [id]);
+    if (!_.isEmpty(mailData)) {
+      setMail(mailData);
+    } else {
+      fetchDataMail(uuid);
+    }
+  }, [uuid, mailData, fetchDataMail]);
 
   const handleClickReply = () => {
     setComposeViewType(ComposeViewTypeEnum.REPLY);
@@ -49,7 +58,7 @@ const ViewMailSpace = () => {
   return (
     <div className="overflow-overlay -z-10 h-full w-full overflow-hidden overflow-y-auto  px-4">
       <div className="mt-2 flex min-h-[40px] w-full items-start justify-start gap-x-2 pl-16 text-xl">
-        <div className="flex-shink-0">{mailInbox?.subject}</div>
+        <div className="flex-shink-0">{mail?.subject}</div>
         <MailTag />
       </div>
       <div className="mb-4 flex h-12 w-full">
@@ -59,14 +68,14 @@ const ViewMailSpace = () => {
               'flex h-full w-12 flex-shrink-0  items-center justify-center rounded-full bg-cyan-500 drop-shadow',
             )}
           >
-            <p className="text-[20px] font-semibold">{mailInbox?.author.slice(0, 1)}</p>
+            <p className="text-[20px] font-semibold">{mail?.author.slice(0, 1)}</p>
           </div>
         </div>
         <div className="flex h-full w-[calc(100%-48px)] justify-between pl-4">
           <div>
             <div className="flex h-6 w-fit justify-start ">
-              <div className="text-sm font-semibold leading-6">{mailInbox?.author}</div>
-              <div className="px-1 text-xs leading-6 text-gray-700">{`<${mailInbox?.address}>`}</div>
+              <div className="text-sm font-semibold leading-6">{mail?.author}</div>
+              <div className="px-1 text-xs leading-6 text-gray-700">{`<${mail?.address}>`}</div>
             </div>
             <div className="flex h-6 w-fit gap-x-1 text-xs ">
               <div className="h-full  leading-[22px] text-gray-700">to me</div>
@@ -77,7 +86,7 @@ const ViewMailSpace = () => {
           </div>
           <div className="flex h-full w-fit justify-end text-gray-700">
             <div className="h-full w-fit pr-2 text-xs leading-[48px]">
-              {dayjs(mailInbox?.time).format('MMMM D, YYYY HH:mm A')}
+              {dayjs(mail?.time).format('MMMM D, YYYY HH:mm A')}
             </div>
             <Tooltip title={t('reply')} position="bottom">
               <div role="button" tabIndex={0} onClick={handleClickReply} className="flex-center h-full w-fit">
@@ -97,7 +106,7 @@ const ViewMailSpace = () => {
         </div>
       </div>
       <div className="h-fit pl-16">
-        <div className="h-fit w-full text-left">{mailInbox?.content}</div>
+        <div className="h-fit w-full text-left">{mail?.content}</div>
         {composeViewType === ComposeViewTypeEnum.POPUP && (
           <div className="mt-8 flex h-fit w-full justify-start gap-x-3 pb-8">
             <Button
@@ -140,7 +149,7 @@ const ViewMailSpace = () => {
                   'flex h-full w-12 flex-shrink-0  items-center justify-center rounded-full bg-purple-700 drop-shadow',
                 )}
               >
-                <p className="text-[20px] font-semibold text-white">{mailInbox?.author.slice(0, 1)}</p>
+                <p className="text-[20px] font-semibold text-white">{mail?.author?.slice(0, 1)}</p>
               </div>
             </div>
           </div>
@@ -150,7 +159,7 @@ const ViewMailSpace = () => {
           setComposeViewType={setComposeViewType}
           composeClassName="z-0"
           onClear={handleClear}
-          fromMail={mailInbox}
+          fromMail={mail}
           composeViewType={composeViewType}
           isShowComposePopup={isShowComposePopup}
           composePopupStyle={

@@ -64,7 +64,7 @@ const Header = () => {
             <CgMenu size={20} className="mx-auto " />
           </div>
         </Tooltip>
-        <div className="flex h-full w-52 flex-shrink-0 items-center justify-start">
+        <div className="flex h-full w-72 flex-shrink-0 items-center justify-start pl-4">
           <img className="h-[28px] w-[120px]" src={logoText} alt="Workflow" />
         </div>
         <AdvancedSearch />

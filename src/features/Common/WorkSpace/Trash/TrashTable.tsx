@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import { getTrashs } from '../../../../app/Services/Trash/TrashService';
 import { MailType } from '../../../../app/Types/commonTypes';
 import { triggerClickNext, triggerClickPrev } from '../../../utils/helpers';
@@ -16,8 +17,9 @@ const TrashTable = () => {
   const [isShowViewMailSpace, setIsShowViewMailSpace] = useState(false);
   const [selectedMail, setSelectedMail] = useState({} as MailType);
   const [isLoading, setIsLoading] = useState(false);
-
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
   const isChecked = useMemo(() => {
     if (!_.isEmpty(selectRows)) return true;
     return false;
@@ -59,11 +61,21 @@ const TrashTable = () => {
   };
 
   const handleClickNextButton = () => {
-    return triggerClickNext(trashData, selectedMail, setSelectedMail);
+    const nextItem = triggerClickNext(trashData, selectedMail);
+    if (nextItem) {
+      setSelectedMail(nextItem);
+      return navigate(`/trash/${nextItem.uuid}`);
+    }
+    return false;
   };
 
   const handleClickPrevButton = () => {
-    return triggerClickPrev(trashData, selectedMail, setSelectedMail);
+    const prevItem = triggerClickPrev(trashData, selectedMail);
+    if (prevItem) {
+      setSelectedMail(prevItem);
+      return navigate(`/trash/${prevItem.uuid}`);
+    }
+    return false;
   };
 
   return (
@@ -81,20 +93,25 @@ const TrashTable = () => {
           setSelectedMail({} as MailType);
         }}
       />
-      {!isShowViewMailSpace && (
-        <MailTable
-          data={trashData}
-          isLoading={isLoading}
-          onChangeShowShadow={setIsShowShadow}
-          onChangeSelectRows={handleSelectRows}
-          onClickShowMail={handleSelectMail}
-          selectRows={selectRows}
-          emptyComponent={
-            <EmptyData message={t('trash_empty_message')} desription={t('trash_empty_description')} />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <MailTable
+              data={trashData}
+              isLoading={isLoading}
+              onChangeShowShadow={setIsShowShadow}
+              onChangeSelectRows={handleSelectRows}
+              onClickShowMail={handleSelectMail}
+              selectRows={selectRows}
+              emptyComponent={
+                <EmptyData message={t('trash_empty_message')} desription={t('trash_empty_description')} />
+              }
+            />
           }
         />
-      )}
-      {isShowViewMailSpace && <ViewMailSpace />}
+        <Route path="/:uuid" element={<ViewMailSpace mailData={selectedMail} />} />
+      </Routes>
     </div>
   );
 };

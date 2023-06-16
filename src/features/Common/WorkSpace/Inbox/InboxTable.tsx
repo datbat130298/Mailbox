@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import { getInboxs } from '../../../../app/Services/Inbox/InboxService';
 import { MailType } from '../../../../app/Types/commonTypes';
 import { triggerClickNext, triggerClickPrev } from '../../../utils/helpers';
@@ -16,7 +17,7 @@ const InboxTable = () => {
   const [isShowViewMailSpace, setIsShowViewMailSpace] = useState(false);
   const [selectedMail, setSelectedMail] = useState({} as MailType);
   const [isLoading, setIsLoading] = useState(false);
-
+  const navigate = useNavigate();
   const { t } = useTranslation();
 
   const isChecked = useMemo(() => {
@@ -56,15 +57,26 @@ const InboxTable = () => {
 
   const handleSelectMail = (mail: MailType) => {
     setSelectedMail(mail);
+    navigate(`/inbox/${mail.uuid}`);
     setIsShowViewMailSpace(true);
   };
 
   const handleClickNextButton = () => {
-    return triggerClickNext(inboxData, selectedMail, setSelectedMail);
+    const nextItem = triggerClickNext(inboxData, selectedMail);
+    if (nextItem) {
+      setSelectedMail(nextItem);
+      return navigate(`/inbox/${nextItem.uuid}`);
+    }
+    return false;
   };
 
   const handleClickPrevButton = () => {
-    return triggerClickPrev(inboxData, selectedMail, setSelectedMail);
+    const prevItem = triggerClickPrev(inboxData, selectedMail);
+    if (prevItem) {
+      setSelectedMail(prevItem);
+      return navigate(`/inbox/${prevItem.uuid}`);
+    }
+    return false;
   };
 
   return (
@@ -80,22 +92,28 @@ const InboxTable = () => {
         onCloseViewMailSpace={() => {
           setIsShowViewMailSpace(false);
           setSelectedMail({} as MailType);
+          navigate('/inbox');
         }}
       />
-      {!isShowViewMailSpace && (
-        <MailTable
-          data={inboxData}
-          isLoading={isLoading}
-          onChangeShowShadow={setIsShowShadow}
-          onChangeSelectRows={handleSelectRows}
-          onClickShowMail={handleSelectMail}
-          selectRows={selectRows}
-          emptyComponent={
-            <EmptyData message={t('inbox_empty_message')} desription={t('inbox_empty_description')} />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <MailTable
+              data={inboxData}
+              isLoading={isLoading}
+              onChangeShowShadow={setIsShowShadow}
+              onChangeSelectRows={handleSelectRows}
+              onClickShowMail={handleSelectMail}
+              selectRows={selectRows}
+              emptyComponent={
+                <EmptyData message={t('inbox_empty_message')} desription={t('inbox_empty_description')} />
+              }
+            />
           }
         />
-      )}
-      {isShowViewMailSpace && <ViewMailSpace />}
+        <Route path="/:uuid" element={<ViewMailSpace mailData={selectedMail} />} />
+      </Routes>
     </div>
   );
 };

@@ -17,8 +17,8 @@ interface HeaderMailTableProps {
   isShowCheckboxHeader: boolean;
   onClickSelectAll: (e: boolean) => void;
   onCloseViewMailSpace: () => void;
-  onClickNextButton: () => boolean;
-  onClickPrevButton: () => boolean;
+  onClickNextButton: () => false | void;
+  onClickPrevButton: () => false | void;
 }
 
 const HeaderMailTable = ({

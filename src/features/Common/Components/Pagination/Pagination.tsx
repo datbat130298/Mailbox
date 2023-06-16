@@ -3,8 +3,8 @@ import { MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from 'react-i
 import { twMerge } from 'tailwind-merge';
 
 interface PaginationProps {
-  onClickNextButton: () => boolean;
-  onClickPrevButton: () => boolean;
+  onClickNextButton: () => false | void;
+  onClickPrevButton: () => false | void;
   isHiddenRange: boolean;
 }
 
