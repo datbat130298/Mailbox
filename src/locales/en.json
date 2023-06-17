@@ -86,5 +86,7 @@
   "spam": "Spam",
   "important": "Important",
   "schedules": "Schedules",
-  "chats": "Chats"
+  "chats": "Chats",
+  "new_label": "New label",
+  "main-menu": "Main menu"
 }

@@ -12,6 +12,7 @@ import { RiSpam2Line } from 'react-icons/ri';
 import { TbMail } from 'react-icons/tb';
 import { twMerge } from 'tailwind-merge';
 import useSelector from '../../../Hooks/useSelector';
+import ButtonAddLabel from '../Labels/ButtonAddLabel';
 import ComposeButton from './ComposeButton';
 import SidebarGroup from './SidebarGroup';
 import SidebarItem from './SidebarItem';
@@ -58,7 +59,7 @@ const Sidebar = () => {
       onMouseLeave={() => handleMouseOver()}
     >
       <ComposeButton isShowSidebar={isShowSidebar} />
-      <div className="pt-3">
+      <div className="py-3">
         <SidebarItem
           to="/inbox"
           title={t('inbox')}
@@ -126,6 +127,7 @@ const Sidebar = () => {
           />
         </SidebarGroup>
       </div>
+      <ButtonAddLabel isShowSidebar={isShowSidebar} />
     </div>
   );
 };
