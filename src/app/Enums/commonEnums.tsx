@@ -11,3 +11,9 @@ export enum ComposeViewTypeEnum {
   REPLY = 'reply',
   FORWARD = 'forward',
 }
+
+export enum ValueTableLabelEnum {
+  SHOW = 'show',
+  HIDE = 'hide',
+  SHOW_IF_UNREAD = 'show_if_unread',
+}
