@@ -8,7 +8,7 @@ import {
   MdOutlineScheduleSend,
   MdScheduleSend,
 } from 'react-icons/md';
-import { RiSpam2Line } from 'react-icons/ri';
+import { RiSettings3Line, RiSpam2Line } from 'react-icons/ri';
 import { TbMail } from 'react-icons/tb';
 import { twMerge } from 'tailwind-merge';
 import useSelector from '../../../Hooks/useSelector';
@@ -123,6 +123,13 @@ const Sidebar = () => {
             title={t('chats')}
             tooltipText={t('chats')}
             icon={<BsChatLeftText size={16} />}
+            isShowSidebar={isShowSidebar}
+          />
+          <SidebarItem
+            to="/settings"
+            title={t('manage_label')}
+            tooltipText={t('manage_label')}
+            icon={<RiSettings3Line size={18} />}
             isShowSidebar={isShowSidebar}
           />
         </SidebarGroup>
