@@ -99,5 +99,6 @@
   "show": "Show",
   "hide": "Hide",
   "show_if_unread": "Show if unread",
-  "manage_label": "Manage labels"
+  "manage_label": "Manage labels",
+  "category": "Category"
 }

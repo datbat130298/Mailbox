@@ -1,101 +1,167 @@
-import { useCallback, useEffect, useState } from 'react';
+import { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
-import { twMerge } from 'tailwind-merge';
-import { ValueTableLabelEnum } from '../../../../app/Enums/commonEnums';
+import { TbMail } from 'react-icons/tb';
+import { updateLabelDisplay } from '../../../../app/Slices/labelSlice';
+import useDispatch from '../../../Hooks/useDispatch';
+import useSelector from '../../../Hooks/useSelector';
+import Table from './Table';
 
-interface ValueLabelTable {
+export interface DisplayLabel {
+  hide?: boolean;
+  show?: boolean;
+  showIfUnread?: boolean;
+}
+export interface ValueLabelTable {
   id: number;
+  to?: string;
   name: string;
-  value?: ValueTableLabelEnum;
+  icon: ReactElement;
+  display: DisplayLabel[] | [];
+  quantity?: number;
 }
 
-interface TitleLabelTable {
+export interface TitleLabelTable {
   id: number;
   title: string;
 }
 
-interface LabelTableProps {
-  titles: TitleLabelTable[];
-  values: ValueLabelTable[];
-}
-
-const LabelTable = ({ titles, values }: LabelTableProps) => {
-  const [valueArray, setValueArray] = useState<ValueLabelTable[]>([]);
-
+const LabelTable = () => {
   const { t } = useTranslation();
-  const displayValue = [
+
+  const { labelSystem: systemLabels } = useSelector((state) => state.labelSidebar);
+
+  const dispatch = useDispatch();
+
+  const titleLabels = [
     {
       id: 1,
-      value: ValueTableLabelEnum.SHOW,
-      name: t('show'),
+      title: t('system_label'),
     },
     {
       id: 2,
-      value: ValueTableLabelEnum.HIDE,
-      name: t('hide'),
-    },
-    {
-      id: 3,
-      value: ValueTableLabelEnum.SHOW_IF_UNREAD,
-      name: t('show_if_unread'),
+      title: t('show_in_label_list'),
     },
   ];
 
-  useEffect(() => {
-    if (values) {
-      setValueArray(values);
-    }
-  }, [values]);
-
-  const handleClickDisplay = useCallback(
-    async (index: number, value: ValueTableLabelEnum) => {
-      const newArr = await valueArray.map((item, i) => {
-        if (i === index) {
-          const newItem = Object.assign(item, { value });
-          return newItem;
-        }
-        return item;
-      });
-      setValueArray(newArr);
+  const categorySystem = [
+    {
+      id: 1,
+      title: t('category'),
     },
-    [valueArray],
-  );
+    {
+      id: 2,
+      title: t('show_in_label_list'),
+    },
+  ];
+
+  const valueCategory = [
+    {
+      id: 2,
+      name: 'starred',
+      icon: <TbMail size={22} />,
+      display: [
+        {
+          hide: true,
+        },
+        {
+          show: false,
+        },
+      ],
+    },
+    {
+      id: 3,
+      name: 'snoozed',
+      icon: <TbMail size={22} />,
+      display: [
+        {
+          hide: true,
+        },
+        {
+          show: false,
+        },
+      ],
+    },
+    {
+      id: 4,
+      name: 'important',
+      icon: <TbMail size={22} />,
+      display: [
+        {
+          hide: true,
+        },
+        {
+          show: false,
+        },
+        {
+          showIfUnread: false,
+        },
+      ],
+    },
+  ];
+
+  // const valueTest = [
+  //   {
+  //     id: 2,
+  //     name: 'starred',
+  //     icon: <TbMail size={22} />,
+  //     display: [
+  //       {
+  //         hide: true,
+  //       },
+  //       {
+  //         show: false,
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     id: 3,
+  //     name: 'snoozed',
+  //     icon: <TbMail size={22} />,
+  //     display: [
+  //       {
+  //         hide: true,
+  //       },
+  //       {
+  //         show: false,
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     id: 4,
+  //     name: 'important',
+  //     icon: <TbMail size={22} />,
+  //     display: [
+  //       {
+  //         hide: true,
+  //       },
+  //       {
+  //         show: false,
+  //       },
+  //       {
+  //         showIfUnread: false,
+  //       },
+  //     ],
+  //   },
+  // ];
+
+  const handleChangeLabel = (arr: ValueLabelTable[]) => {
+    dispatch(updateLabelDisplay(arr));
+  };
+
+  const handleChangeCategory = (arr: ValueLabelTable[]) => {
+    // eslint-disable-next-line no-console
+    console.log(arr);
+  };
 
   return (
-    <div className="h-full w-3/4 border-b border-gray-200 pb-5 pt-3">
-      <table className="w-full">
-        <thead className="w-1/4">
-          {titles.map((item) => (
-            <th className=" px-6 py-2 text-left text-base font-medium text-slate-900">{item.title}</th>
-          ))}
-        </thead>
-        {valueArray.map((item, index) => (
-          <tr className="hover:bg-gray-100">
-            <td className="py-2.5 pl-6 text-sm text-slate-600">{item.name}</td>
-            <td className={twMerge('py-1.5 pl-6 text-base')}>
-              {item.value && (
-                <div className="flex w-fit rounded-md border border-gray-300 text-sm">
-                  {displayValue.map((value) => (
-                    <div
-                      className={twMerge(
-                        'm-0.5 w-28 cursor-text rounded-md bg-blue-500 py-1 text-center text-sm font-normal lowercase text-white transition duration-300',
-                        item.value !== value.value &&
-                          'cursor-pointer bg-inherit font-normal text-slate-700 hover:bg-gray-200',
-                      )}
-                      role="button"
-                      tabIndex={0}
-                      onClick={() => handleClickDisplay(index, value.value)}
-                    >
-                      {value.name}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </td>
-          </tr>
-        ))}
-      </table>
-    </div>
+    <>
+      <div className="h-fit w-3/4 border-b border-gray-200 pb-2 pt-0.5">
+        <Table titles={titleLabels} values={systemLabels} handleChange={handleChangeLabel} />
+      </div>
+      <div className="h-fit w-3/4 border-b border-gray-200 pb-2 pt-0.5">
+        <Table titles={categorySystem} values={valueCategory} handleChange={handleChangeCategory} />
+      </div>
+    </>
   );
 };
 
