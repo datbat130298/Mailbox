@@ -1,15 +1,80 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { BsChatLeftText, BsMailbox } from 'react-icons/bs';
+import { BsChatLeftText, BsMailbox, BsPersonLinesFill } from 'react-icons/bs';
 import { FiTrash2 } from 'react-icons/fi';
 import {
   MdLabelImportantOutline,
+  MdOutlineContactMail,
+  MdOutlineDiscount,
   MdOutlineScheduleSend,
   MdOutlineStarBorder,
+  MdOutlineSystemUpdateAlt,
   MdOutlineWatchLater,
 } from 'react-icons/md';
 import { RiSpam2Line } from 'react-icons/ri';
 import { TbMail } from 'react-icons/tb';
 import { ValueLabelTable } from '../../features/Common/WorkSpace/Settings/LabelTable';
+
+const categoryLabel = [
+  {
+    id: 1,
+    to: 'forums',
+    name: 'forums',
+    icon: <MdOutlineContactMail size={18} />,
+    display: [
+      {
+        hide: true,
+      },
+      {
+        show: false,
+      },
+    ],
+  },
+  {
+    id: 2,
+    name: 'social',
+    to: 'social',
+    icon: <BsPersonLinesFill size={18} />,
+    display: [
+      {
+        hide: true,
+      },
+      {
+        show: false,
+      },
+    ],
+  },
+  {
+    id: 3,
+    to: 'updates',
+    name: 'updates',
+    icon: <MdOutlineSystemUpdateAlt size={18} />,
+    display: [
+      {
+        hide: true,
+      },
+      {
+        show: false,
+      },
+    ],
+  },
+  {
+    id: 4,
+    to: 'promotions',
+    name: 'promotions',
+    icon: <MdOutlineDiscount size={18} />,
+    display: [
+      {
+        hide: false,
+      },
+      {
+        show: true,
+      },
+      {
+        showIfUnread: false,
+      },
+    ],
+  },
+];
 
 const systemLabels = [
   {
@@ -119,6 +184,7 @@ const systemLabels = [
       },
     ],
   },
+
   {
     id: 9,
     to: '/all_mail',
@@ -140,24 +206,33 @@ const systemLabels = [
 
 interface InitProp {
   labelSystem: ValueLabelTable[];
+  categoryLabel: ValueLabelTable[];
+  isShowCategory: boolean;
+  isShowMore: boolean;
 }
 
 const initialState: InitProp = {
   labelSystem: systemLabels,
+  categoryLabel,
+  isShowCategory: false,
+  isShowMore: true,
 };
 
 export const labelSlice = createSlice({
   name: 'label',
   initialState,
   reducers: {
-    updateLabelDisplay: (state, action: PayloadAction<ValueLabelTable[]>) => {
+    updateLabelSystemDisplay: (state, action: PayloadAction<ValueLabelTable[]>) => {
       state.labelSystem = action.payload;
+    },
+    updateCategoryLabelDisplay: (state, action: PayloadAction<ValueLabelTable[]>) => {
+      state.categoryLabel = action.payload;
     },
   },
 });
 
 const { actions, reducer: labelReducer } = labelSlice;
 
-export const { updateLabelDisplay } = actions;
+export const { updateLabelSystemDisplay, updateCategoryLabelDisplay } = actions;
 
 export default labelReducer;

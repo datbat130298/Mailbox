@@ -100,5 +100,9 @@
   "hide": "Hide",
   "show_if_unread": "Show if unread",
   "manage_label": "Manage labels",
-  "category": "Category"
+  "category": "Category",
+  "social": "Social",
+  "promotions": "Promotions",
+  "forums": "Forums",
+  "updates": "Updates"
 }

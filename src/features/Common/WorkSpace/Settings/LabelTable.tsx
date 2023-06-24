@@ -1,7 +1,6 @@
 import { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
-import { TbMail } from 'react-icons/tb';
-import { updateLabelDisplay } from '../../../../app/Slices/labelSlice';
+import { updateCategoryLabelDisplay, updateLabelSystemDisplay } from '../../../../app/Slices/labelSlice';
 import useDispatch from '../../../Hooks/useDispatch';
 import useSelector from '../../../Hooks/useSelector';
 import Table from './Table';
@@ -16,6 +15,7 @@ export interface ValueLabelTable {
   to?: string;
   name: string;
   icon: ReactElement;
+  categoryLabelItem?: ValueLabelTable[];
   display: DisplayLabel[] | [];
   quantity?: number;
 }
@@ -29,6 +29,8 @@ const LabelTable = () => {
   const { t } = useTranslation();
 
   const { labelSystem: systemLabels } = useSelector((state) => state.labelSidebar);
+
+  const { categoryLabel } = useSelector((state) => state.labelSidebar);
 
   const dispatch = useDispatch();
 
@@ -54,103 +56,12 @@ const LabelTable = () => {
     },
   ];
 
-  const valueCategory = [
-    {
-      id: 2,
-      name: 'starred',
-      icon: <TbMail size={22} />,
-      display: [
-        {
-          hide: true,
-        },
-        {
-          show: false,
-        },
-      ],
-    },
-    {
-      id: 3,
-      name: 'snoozed',
-      icon: <TbMail size={22} />,
-      display: [
-        {
-          hide: true,
-        },
-        {
-          show: false,
-        },
-      ],
-    },
-    {
-      id: 4,
-      name: 'important',
-      icon: <TbMail size={22} />,
-      display: [
-        {
-          hide: true,
-        },
-        {
-          show: false,
-        },
-        {
-          showIfUnread: false,
-        },
-      ],
-    },
-  ];
-
-  // const valueTest = [
-  //   {
-  //     id: 2,
-  //     name: 'starred',
-  //     icon: <TbMail size={22} />,
-  //     display: [
-  //       {
-  //         hide: true,
-  //       },
-  //       {
-  //         show: false,
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     id: 3,
-  //     name: 'snoozed',
-  //     icon: <TbMail size={22} />,
-  //     display: [
-  //       {
-  //         hide: true,
-  //       },
-  //       {
-  //         show: false,
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     id: 4,
-  //     name: 'important',
-  //     icon: <TbMail size={22} />,
-  //     display: [
-  //       {
-  //         hide: true,
-  //       },
-  //       {
-  //         show: false,
-  //       },
-  //       {
-  //         showIfUnread: false,
-  //       },
-  //     ],
-  //   },
-  // ];
-
   const handleChangeLabel = (arr: ValueLabelTable[]) => {
-    dispatch(updateLabelDisplay(arr));
+    dispatch(updateLabelSystemDisplay(arr));
   };
 
   const handleChangeCategory = (arr: ValueLabelTable[]) => {
-    // eslint-disable-next-line no-console
-    console.log(arr);
+    dispatch(updateCategoryLabelDisplay(arr));
   };
 
   return (
@@ -159,7 +70,7 @@ const LabelTable = () => {
         <Table titles={titleLabels} values={systemLabels} handleChange={handleChangeLabel} />
       </div>
       <div className="h-fit w-3/4 border-b border-gray-200 pb-2 pt-0.5">
-        <Table titles={categorySystem} values={valueCategory} handleChange={handleChangeCategory} />
+        <Table titles={categorySystem} values={categoryLabel} handleChange={handleChangeCategory} />
       </div>
     </>
   );

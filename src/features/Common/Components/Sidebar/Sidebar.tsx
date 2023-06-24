@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RiSettings3Line } from 'react-icons/ri';
 import { twMerge } from 'tailwind-merge';
@@ -14,33 +14,23 @@ const Sidebar = () => {
   const { t } = useTranslation();
   const isShowFullSidebar = useSelector((state) => state.layout.isShowFullSidebar);
   const [isShowSidebar, setIsShowSidebar] = useState<boolean>(false);
-  const [openingSidebarGroup, setOpeningSidebarGroup] = useState(['saleCRM']);
-  const sidebarItem = useSelector((state) => state.labelSidebar);
+  const { labelSystem } = useSelector((state) => state.labelSidebar);
+  const { categoryLabel } = useSelector((state) => state.labelSidebar);
 
-  const visibleSide = sidebarItem.labelSystem.filter((item) => {
+  const categoryItemDisplay = categoryLabel.filter((item) =>
+    item.display.find((displayItem) => displayItem.show === true),
+  );
+
+  const visibleSide = labelSystem.filter((item) => {
     if (_.isEmpty(item.display)) {
       return item;
     }
     return (item.display as DisplayLabel[]).find((displayItem: DisplayLabel) => displayItem.show === true);
   });
 
-  const hiddenSidebar = sidebarItem.labelSystem.filter((item) =>
+  const hiddenSidebar = labelSystem.filter((item) =>
     (item.display as DisplayLabel[]).find((displayItem: DisplayLabel) => displayItem.show === false),
   );
-
-  const handleOpenSidebarGroup = useCallback((id: string, autoCollapse = true) => {
-    setOpeningSidebarGroup((prev) => {
-      if (!autoCollapse) {
-        return [id];
-      }
-
-      if (prev.includes(id)) {
-        return prev.filter((item) => item !== id);
-      }
-
-      return [id];
-    });
-  }, []);
 
   const handleMouseMove = () => {
     return setIsShowSidebar(true);
@@ -53,9 +43,9 @@ const Sidebar = () => {
   return (
     <div
       className={twMerge(
-        'fixed left-0 top-0 z-[49] h-screen w-[72px] bg-slate-100 py-6 pt-20',
-        isShowFullSidebar && 'w-[255px]',
-        isShowSidebar && 'w-[279px]',
+        'fixed left-0 top-0 z-[49] h-screen w-20 bg-slate-100 py-6 pt-20',
+        isShowFullSidebar && 'w-72',
+        isShowSidebar && 'w-72',
       )}
       onMouseMove={() => handleMouseMove()}
       onMouseLeave={() => handleMouseOver()}
@@ -73,13 +63,21 @@ const Sidebar = () => {
               isShowSidebar={isShowSidebar}
             />
           ))}
-        <SidebarGroup
-          id="more"
-          title={t('more')}
-          openingIds={openingSidebarGroup}
-          onOpen={handleOpenSidebarGroup}
-          isShowSidebar={isShowSidebar}
-        >
+
+        <SidebarGroup id="category" title={t('category')} isShowSidebar={isShowSidebar}>
+          {categoryItemDisplay.map((category) => (
+            <SidebarItem
+              to={category.to}
+              title={t(category.name)}
+              tooltipText={t(category.name)}
+              icon={category.icon}
+              quantity={category.quantity}
+              isShowSidebar={isShowSidebar}
+            />
+          ))}
+        </SidebarGroup>
+
+        <SidebarGroup id="more" title={t('more')} isShowSidebar={isShowSidebar}>
           {hiddenSidebar.map((hiddenSidebarItem) => (
             <SidebarItem
               to={hiddenSidebarItem.to}

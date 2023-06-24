@@ -45,14 +45,14 @@ const SidebarItem = ({
       >
         <div
           className={twMerge(
-            'ml-4 flex w-12 items-center justify-between gap-2 rounded-full py-1 pl-1 hover:bg-slate-200',
-            (isShowFullSidebar || isShowSidebar) && 'ml-0 w-full rounded-l-none rounded-r-full pl-6',
+            'ml-2 flex w-12 items-center justify-between gap-2 rounded-full py-1 pl-1 hover:bg-slate-200',
+            (isShowFullSidebar || isShowSidebar) && 'ml-0 mr-6 w-full rounded-l-none rounded-r-full pl-6',
+            isActivated && !isShowFullSidebar && 'ml-2 bg-slate-300 text-primary-700',
             isActivated &&
               (isShowFullSidebar || isShowSidebar) &&
-              'bg-slate-300 font-semibold text-primary-700',
-            isActivated && !isShowFullSidebar && 'ml-4 bg-slate-300 text-primary-700',
+              'ml-0 bg-slate-300 font-semibold text-primary-700',
             quantity && (isShowFullSidebar || isShowSidebar) && 'font-semibold text-primary-700',
-            isShowSidebar && 'ml-0 mr-6',
+            // isShowSidebar && 'ml-0 mr-6',
           )}
         >
           <div className="flex h-full w-full items-center gap-3">
