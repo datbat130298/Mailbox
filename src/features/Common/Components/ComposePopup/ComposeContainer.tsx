@@ -11,6 +11,7 @@ import ComposePopupHeader from './Components/ComposePopupHeader';
 import { OptionLabel } from './Components/ComposePopupRecipient/ComposePopupSelectRecipients';
 
 interface ComposePopupContainerProps {
+  contentInbox?: string;
   compose?: ComposeType;
   isShowComposePopup?: boolean;
   fromMail?: MailType;
@@ -22,6 +23,7 @@ interface ComposePopupContainerProps {
 }
 
 const ComposePopupContainer = ({
+  contentInbox,
   setComposeViewType,
   composeViewType,
   compose,
@@ -130,12 +132,18 @@ const ComposePopupContainer = ({
     }
   }, []);
 
+  const handleClickInsertContent = (contentText: string) => {
+    setContent(contentText);
+  };
+
   return (
     <>
       {isShowComposePopup &&
         (composeViewType === ComposeViewTypeEnum.REPLY ||
           composeViewType === ComposeViewTypeEnum.FORWARD) && (
           <ComposePopup
+            contentInbox={contentInbox}
+            handleClickInsertContent={handleClickInsertContent}
             content={content}
             onChangeEditor={handleChangeEditor}
             selectRecipient={selectedRecipient || undefined}

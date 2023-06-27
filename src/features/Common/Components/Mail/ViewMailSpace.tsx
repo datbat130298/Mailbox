@@ -156,6 +156,7 @@ const ViewMailSpace = ({ mailData }: ViewMailSpaceProps) => {
         )}
 
         <ComposePopupContainer
+          contentInbox={mail?.content}
           setComposeViewType={setComposeViewType}
           composeClassName="z-0"
           onClear={handleClear}

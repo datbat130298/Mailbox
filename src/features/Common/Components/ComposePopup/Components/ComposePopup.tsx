@@ -1,12 +1,12 @@
 import _ from 'lodash';
-import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CgFormatColor } from 'react-icons/cg';
 import { FaRegTrashAlt } from 'react-icons/fa';
 import { FiLink2, FiMoreVertical } from 'react-icons/fi';
 import { IoMdAttach } from 'react-icons/io';
 import { IoImageOutline } from 'react-icons/io5';
-import { MdTagFaces } from 'react-icons/md';
+import { MdOutlineContentCopy, MdTagFaces } from 'react-icons/md';
 import { MultiValue } from 'react-select';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import striptags from 'striptags';
@@ -47,9 +47,12 @@ export interface ComposePopupProps {
   onClear?: () => void;
   setComposeViewType?: Dispatch<SetStateAction<ComposeViewTypeEnum>>;
   setIsModal?: Dispatch<SetStateAction<boolean>>;
+  contentInbox?: string;
+  handleClickInsertContent?: (text: string) => void;
 }
 
 const ComposePopup = ({
+  handleClickInsertContent,
   setComposeViewType,
   content,
   onChangeEditor,
@@ -72,10 +75,12 @@ const ComposePopup = ({
   onCollect,
   onClear,
   setIsModal,
+  contentInbox,
 }: ComposePopupProps) => {
   const [isVisibleToolbar, setIsVisibleToolbar] = useState<boolean>(false);
   const [isShowSelectTimeModal, setIsShowSelectTimeModal] = useState<boolean>(false);
   const [isShowOptionMore, setIsShowOptionMore] = useState<boolean>(false);
+  const [isShowButtonInsertContent, setIsShowButtonInsertContent] = useState<boolean>(false);
 
   const { t } = useTranslation();
   const { handleChangeViewType, handleClickCloseComposeItem } = useContext(ContextDraft);
@@ -87,6 +92,12 @@ const ComposePopup = ({
       onClear();
     }
   };
+
+  useEffect(() => {
+    if (contentInbox) {
+      setIsShowButtonInsertContent(true);
+    }
+  }, [contentInbox]);
 
   useEffect(() => {
     const toolbar = document.querySelector<HTMLElement>('.ck.ck-toolbar');
@@ -137,6 +148,13 @@ const ComposePopup = ({
     setIsModal?.(false);
     handleChangeViewType(id || 0, ComposeViewTypeEnum.POPUP);
   };
+
+  const handleClickButtonInsertContent = useCallback(() => {
+    if (contentInbox && _.isFunction(handleClickInsertContent)) {
+      handleClickInsertContent(contentInbox);
+      setIsShowButtonInsertContent(false);
+    }
+  }, [contentInbox]);
 
   useEffect(() => {
     const delayVisibleToolbar = setTimeout(() => {
@@ -196,14 +214,16 @@ const ComposePopup = ({
         )}
       >
         <div className="mt-0.5 px-2">
-          <ComposePopupRecipient
-            selectRecipient={selectRecipient}
-            selectedCcRecipient={selectedCcRecipient}
-            selectedBccRecipient={selectedBccRecipient}
-            onChangeSelectRecipient={onChangeSelectRecipient}
-            onChangeSelectCcRecipient={onChangeSelectCcRecipient}
-            onChangeSelectBccRecipient={onChangeSelectBccRecipient}
-          />
+          {viewType !== ComposeViewTypeEnum.REPLY && (
+            <ComposePopupRecipient
+              selectRecipient={selectRecipient}
+              selectedCcRecipient={selectedCcRecipient}
+              selectedBccRecipient={selectedBccRecipient}
+              onChangeSelectRecipient={onChangeSelectRecipient}
+              onChangeSelectCcRecipient={onChangeSelectCcRecipient}
+              onChangeSelectBccRecipient={onChangeSelectBccRecipient}
+            />
+          )}
           <ComposePopupInput placeholder={t('subject')} value={subject} onChange={onChangeSubjectInput} />
         </div>
         <div
@@ -263,6 +283,13 @@ const ComposePopup = ({
                 icon={<IoImageOutline size={19} />}
                 onClick={handleClickFormat}
               />
+              {contentInbox && _.isFunction(handleClickInsertContent) && isShowButtonInsertContent && (
+                <ComposePopupToolbarItem
+                  title={t('insert_content')}
+                  icon={<MdOutlineContentCopy size={17} />}
+                  onClick={handleClickButtonInsertContent}
+                />
+              )}
               <ComposePopupButtonMore
                 content={content}
                 onClickFormat={handleFormat}
