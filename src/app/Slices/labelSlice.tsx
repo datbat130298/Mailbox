@@ -17,7 +17,7 @@ import { ValueLabelTable } from '../../features/Common/WorkSpace/Settings/LabelT
 const categoryLabel = [
   {
     id: 1,
-    to: 'forums',
+    to: '/forums',
     name: 'forums',
     icon: <MdOutlineContactMail size={18} />,
     display: [
@@ -32,7 +32,7 @@ const categoryLabel = [
   {
     id: 2,
     name: 'social',
-    to: 'social',
+    to: '/social',
     icon: <BsPersonLinesFill size={18} />,
     display: [
       {
@@ -45,7 +45,7 @@ const categoryLabel = [
   },
   {
     id: 3,
-    to: 'updates',
+    to: '/updates',
     name: 'updates',
     icon: <MdOutlineSystemUpdateAlt size={18} />,
     display: [
@@ -59,7 +59,7 @@ const categoryLabel = [
   },
   {
     id: 4,
-    to: 'promotions',
+    to: '/promotions',
     name: 'promotions',
     icon: <MdOutlineDiscount size={18} />,
     display: [

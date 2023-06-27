@@ -37,6 +37,7 @@ const SidebarItem = ({
   return (
     <Tooltip position="right" title={tooltipText || ''}>
       <Link
+        onClick={(e: React.MouseEvent) => e.stopPropagation()}
         to={to || pathname}
         className={twMerge(
           'group flex h-fit w-full flex-shrink-0 items-center justify-center text-gray-700',
@@ -52,7 +53,6 @@ const SidebarItem = ({
               (isShowFullSidebar || isShowSidebar) &&
               'ml-0 bg-slate-300 font-semibold text-primary-700',
             quantity && (isShowFullSidebar || isShowSidebar) && 'font-semibold text-primary-700',
-            // isShowSidebar && 'ml-0 mr-6',
           )}
         >
           <div className="flex h-full w-full items-center gap-3">
