@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RiSettings3Line } from 'react-icons/ri';
 import { twMerge } from 'tailwind-merge';
@@ -21,16 +21,20 @@ const Sidebar = () => {
     item.display.find((displayItem) => displayItem.show === true),
   );
 
-  const visibleSide = labelSystem.filter((item) => {
-    if (_.isEmpty(item.display)) {
-      return item;
-    }
-    return (item.display as DisplayLabel[]).find((displayItem: DisplayLabel) => displayItem.show === true);
-  });
+  const visibleSide = useMemo(() => {
+    return labelSystem.filter((item) => {
+      if (_.isEmpty(item.display)) {
+        return item;
+      }
+      return (item.display as DisplayLabel[]).find((displayItem: DisplayLabel) => displayItem.show === true);
+    });
+  }, [labelSystem]);
 
-  const hiddenSidebar = labelSystem.filter((item) =>
-    (item.display as DisplayLabel[]).find((displayItem: DisplayLabel) => displayItem.show === false),
-  );
+  const hiddenSidebar = useMemo(() => {
+    return labelSystem.filter((item) =>
+      (item.display as DisplayLabel[]).find((displayItem: DisplayLabel) => displayItem.show === false),
+    );
+  }, [labelSystem]);
 
   const handleMouseMove = () => {
     return setIsShowSidebar(true);
