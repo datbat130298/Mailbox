@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import React, { ForwardedRef, forwardRef, useEffect, useState } from 'react';
+import React, { ForwardedRef, forwardRef, useCallback, useEffect, useState } from 'react';
+import { FaEyeSlash } from 'react-icons/fa';
 import { twMerge } from 'tailwind-merge';
 
 export type InputSizeType = 'xs' | 'sm' | 'normal';
@@ -13,12 +14,14 @@ export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
   isShowLabelWhenFocusing?: boolean;
   inputClassName?: string;
   isShowPlacehoder?: boolean;
+  type?: string;
 }
 
 const Input = (
   {
     label,
     id,
+    type,
     className,
     value,
     disabled,
@@ -38,6 +41,13 @@ const Input = (
   ref: ForwardedRef<HTMLInputElement>,
 ) => {
   const [isFocusing, setIsFocusing] = useState(false);
+  const [typeInput, setTypeInput] = useState('');
+
+  useEffect(() => {
+    if (type) {
+      setTypeInput(type);
+    }
+  }, [type]);
 
   const handleFocus = () => {
     setIsFocusing(true);
@@ -100,6 +110,18 @@ const Input = (
     }
   }, [disabled]);
 
+  const handleMouseMoveEyes = useCallback(() => {
+    if (type === 'password') {
+      setTypeInput('');
+    }
+  }, [type]);
+
+  const handleMoveOutEyes = useCallback(() => {
+    if (type === 'password') {
+      setTypeInput('password');
+    }
+  }, [type]);
+
   return (
     <div>
       <label
@@ -148,6 +170,7 @@ const Input = (
         >
           {children}
           <input
+            type={typeInput}
             id={id}
             className={twMerge(
               'w-full border-none bg-inherit outline-none transition-none',
@@ -161,6 +184,20 @@ const Input = (
             onBlur={handleBlur}
             {...props}
           />
+          {type === 'password' && (
+            <div
+              className={twMerge(
+                'absolute right-0 top-[15px] text-slate-500',
+                typeInput === '' && 'text-black',
+              )}
+              role="button"
+              tabIndex={0}
+              onMouseDown={handleMouseMoveEyes}
+              onMouseUp={handleMoveOutEyes}
+            >
+              <FaEyeSlash size={20} />
+            </div>
+          )}
         </div>
       </label>
       {!inlineError && error && <div className="-mb-1.5 mt-1.5 text-sm text-red-500">{error}</div>}

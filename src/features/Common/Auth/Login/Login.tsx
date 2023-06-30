@@ -96,7 +96,7 @@ const Login = () => {
   };
   return (
     <div className="flex sm:pb-10 sm:pt-16">
-      <div className="w-full max-w-screen-sm rounded-2xl border-gray-100 bg-white px-3 py-6 xs:px-4 sm:m-auto sm:border-2 sm:px-20 sm:py-12 sm:shadow-md">
+      <div className="w-full max-w-screen-sm rounded-2xl border-gray-100 bg-white px-2 py-6 xs:px-4 sm:m-auto sm:border-2 sm:px-20 sm:py-12 sm:shadow-md">
         <Logo imageClassName="mx-auto mb-8 hidden h-14 md:block" />
 
         <div className="mt-4 md:text-center">
