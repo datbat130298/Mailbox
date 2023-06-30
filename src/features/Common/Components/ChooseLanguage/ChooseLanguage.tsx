@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
+import { SelectPositionEnum } from '../../../../app/Enums/commonEnums';
 import { LanguageService } from '../../../../app/Services';
 import { FlagType } from '../../../../app/Types/commonTypes';
 import { OptionOP, SelectOP } from '../Select';
@@ -36,20 +37,21 @@ const ChooseLanguage = ({ language, onChangeLanguage }: ChooseLanguageProps) => 
 
   return (
     <SelectOP
-      customPostLabel="ml-0.5"
+      position={SelectPositionEnum.BOTTOM_RIGHT}
+      customPostLabel="ml-1.5"
       defaultValue={language}
       className={twMerge('border-none')}
       onChange={onChangeLanguage}
     >
       {languageList.map((item) => (
         <OptionOP key={item.code} value={item.code} className="flex w-full">
-          <div className="flex w-fit">
+          <div className="flex w-fit gap-2">
             <img
               src={LanguageService.getFlagURL(item.flag_image)}
               alt={item.name}
               className="mr-px w-6 sm:mr-1"
             />
-            <div className="hidden w-max text-sm uppercase sm:block">{item.name.slice(0, 2)}</div>
+            <div className="hidden w-max text-sm uppercase sm:block">{item.name}</div>
           </div>
         </OptionOP>
       ))}

@@ -52,7 +52,7 @@ const Header = () => {
   }, [isShowFullSidebar]);
 
   return (
-    <div className="fixed right-0 top-0 z-50 flex h-20 w-full justify-between bg-slate-100 pl-6 pr-2">
+    <div className="fixed right-0 top-0 z-50 flex h-20 w-full justify-between bg-slate-100 pl-6 pr-4">
       <div className="flex h-full w-max items-center">
         <Tooltip title={t('main-menu')} position="bottom">
           <div
@@ -80,7 +80,9 @@ const Header = () => {
           </div>
         ) : (
           <>
-            <ChooseLanguage language={language} onChangeLanguage={handChangeLanguage} />
+            <div className="mr-1 border-r-2 border-gray-200 pr-4">
+              <ChooseLanguage language={language} onChangeLanguage={handChangeLanguage} />
+            </div>
             <div className="ml-4 flex h-full w-fit flex-shrink-0 items-center justify-center">
               <div className="relative h-11 w-11 cursor-pointer rounded-full" ref={userTabRef}>
                 <div
