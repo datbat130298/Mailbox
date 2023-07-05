@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RiSettings3Line } from 'react-icons/ri';
 import { twMerge } from 'tailwind-merge';
@@ -16,6 +16,7 @@ const Sidebar = () => {
   const [isShowSidebar, setIsShowSidebar] = useState<boolean>(false);
   const { labelSystem } = useSelector((state) => state.labelSidebar);
   const { categoryLabel } = useSelector((state) => state.labelSidebar);
+  const sidebarElement = useRef<HTMLDivElement>(null);
 
   const categoryItemDisplay = categoryLabel.filter((item) =>
     item.display.find((displayItem) => displayItem.show === true),
@@ -48,11 +49,13 @@ const Sidebar = () => {
     <div
       className={twMerge(
         'fixed left-0 top-0 z-[49] h-screen w-20 bg-slate-100 py-6 pt-20',
-        isShowFullSidebar && 'w-72',
-        isShowSidebar && 'w-72',
+        (isShowFullSidebar || isShowSidebar) && 'w-72 ',
       )}
+      style={{ transition: '.2s ease-in-out' }}
       onMouseMove={() => handleMouseMove()}
       onMouseLeave={() => handleMouseOver()}
+      ref={sidebarElement}
+      id="sidebar"
     >
       <ComposeButton isShowSidebar={isShowSidebar} />
       <div className="py-3">
@@ -68,7 +71,7 @@ const Sidebar = () => {
             />
           ))}
 
-        <SidebarGroup id="category" title={t('category')} isShowSidebar={isShowSidebar}>
+        <SidebarGroup title={t('category')} isShowSidebar={isShowSidebar}>
           {categoryItemDisplay.map((category) => (
             <SidebarItem
               to={category.to}
@@ -81,7 +84,7 @@ const Sidebar = () => {
           ))}
         </SidebarGroup>
 
-        <SidebarGroup id="more" title={t('more')} isShowSidebar={isShowSidebar}>
+        <SidebarGroup title={t('more')} isShowSidebar={isShowSidebar}>
           {hiddenSidebar.map((hiddenSidebarItem) => (
             <SidebarItem
               to={hiddenSidebarItem.to}

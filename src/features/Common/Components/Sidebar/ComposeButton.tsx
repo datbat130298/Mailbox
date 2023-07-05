@@ -31,20 +31,30 @@ const ComposeButton = ({ isShowSidebar }: ComposeButtonProp) => {
     <div className="">
       <Button
         className={twMerge(
-          'mb-2 ml-3 h-13 w-10 border-0 bg-gray-300 text-gray-700 shadow-none ring-1 hover:bg-gray-300 hover:text-primary-700 hover:drop-shadow-md',
+          'group mb-2 ml-3 h-13 w-10 border-0 bg-gray-200 text-gray-700 shadow-none ring-1 hover:bg-gray-300 hover:text-primary-700 hover:drop-shadow-md',
           (isShowFullSidebar || isShowSidebar) && 'h-13 w-40',
         )}
         color="light"
         onClick={handleClickCompose}
+        style={{ transition: '.3s' }}
       >
         <div
           className={twMerge(
-            'flex h-full justify-center transition-none',
-            (isShowFullSidebar || isShowSidebar) && 'ml-1',
+            '-ml-7 flex h-full w-full items-center justify-start',
+            (isShowFullSidebar || isShowSidebar) && '',
           )}
         >
-          <MdOutlineEdit size={26} className="mt-[1px] leading-10" />
-          {(isShowFullSidebar || isShowSidebar) && <div className="h-full w-max px-4">{t('compose')}</div>}
+          <div>
+            <MdOutlineEdit size={26} className="" />
+          </div>
+          <div
+            className={twMerge(
+              'h-full px-4 opacity-0 transition-[.4s] delay-[.05s]',
+              (isShowFullSidebar || isShowSidebar) && 'opacity-100',
+            )}
+          >
+            {t('compose')}
+          </div>
         </div>
       </Button>
       {isShowComposePopupList && <ListOfMiniatureDrafts />}

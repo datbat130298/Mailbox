@@ -29,17 +29,18 @@ const ButtonAddLabel = ({ isShowSidebar }: ButtonAddLabelProp) => {
           'flex  items-center justify-between rounded-r-full ',
           (isShowSidebar || isShowFullSidebar) && 'w-[255px]',
         )}
+        style={{ transition: '.4s', transitionDelay: '.05s' }}
       >
         {(isShowFullSidebar || isShowSidebar) && (
           <div className="">
-            <div className="pl-9 text-base font-semibold text-gray-700">Labels</div>
+            <div className="pl-9 text-base font-semibold text-gray-700 duration-300">Labels</div>
           </div>
         )}
         <div
           role="button"
           tabIndex={0}
           onClick={handleClickAdd}
-          className={twMerge('rounded-full p-2 text-gray-500 hover:bg-slate-200', !isShowSidebar && 'pl-8')}
+          className={twMerge('rounded-full p-2 text-gray-500 hover:bg-slate-200', !isShowSidebar && 'ml-5')}
         >
           <GrFormAdd size={24} />
         </div>
