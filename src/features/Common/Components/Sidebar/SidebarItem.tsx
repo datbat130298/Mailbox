@@ -23,7 +23,7 @@ const SidebarItem = ({
   className,
   tooltipText,
   quantity,
-  isShowSidebar,
+  isShowSidebar = true,
 }: SidebarItemProps) => {
   const { pathname } = useLocation();
   const isShowFullSidebar = useSelector((state) => state.layout.isShowFullSidebar);
@@ -40,51 +40,39 @@ const SidebarItem = ({
         onClick={(e: React.MouseEvent) => e.stopPropagation()}
         to={to || pathname}
         className={twMerge(
-          'group flex h-fit w-full flex-shrink-0 items-center justify-center text-gray-700',
+          'relative mx-3 my-0.5 flex w-[60px] items-center justify-between rounded-md py-[11px] pl-5 text-gray-700 transition-width  duration-300 before:absolute before:left-0 before:top-1/2 before:h-2/3 before:w-1 before:-translate-y-1/2 before:rounded-sm before:bg-primary-800 hover:bg-slate-200',
+          (isShowFullSidebar || isShowSidebar) && 'w-64',
+          isActivated
+            ? 'bg-slate-200 font-semibold text-primary-600 before:block'
+            : 'text-slate-700 before:hidden',
           className,
         )}
       >
+        <div className="relative flex flex-shrink-0 items-center justify-center text-slate-800">
+          {cloneElement(icon, {
+            className: twMerge('flex-shrink-0 w-max '),
+          })}
+          {quantity && !isShowFullSidebar && (
+            <div className="absolute -top-3 left-[9px] text-primary-600">
+              <RxDotFilled size={25} />
+            </div>
+          )}
+          <div
+            className={twMerge(
+              'pl-4 text-sm opacity-0 transition-[.4s] delay-[.05s]',
+              (isShowFullSidebar || isShowSidebar) && 'opacity-100',
+            )}
+          >
+            {title}
+          </div>
+        </div>
         <div
           className={twMerge(
-            'ml-2 flex w-12 items-center justify-between gap-2 rounded-full py-1 pl-1 hover:bg-slate-200',
-            (isShowFullSidebar || isShowSidebar) && 'ml-0 mr-6 w-full rounded-l-none rounded-r-full pl-6',
-            isActivated && !isShowFullSidebar && 'ml-2 bg-slate-300 text-primary-700',
-            isActivated &&
-              (isShowFullSidebar || isShowSidebar) &&
-              'ml-0 bg-slate-300 font-semibold text-primary-700',
-            quantity && (isShowFullSidebar || isShowSidebar) && 'font-semibold text-primary-700',
+            'pr-4 text-xs text-gray-500 opacity-0 transition-[.4s] delay-[.05s]',
+            (isShowFullSidebar || isShowSidebar) && 'font-semibold text-primary-700 opacity-100',
           )}
         >
-          <div className="flex h-full w-full items-center gap-3">
-            <div className={twMerge('relative flex h-8 w-8 items-center rounded-full')}>
-              <div className="ml-[3px] flex h-full w-full flex-shrink-0 items-center justify-center">
-                {cloneElement(icon, {
-                  className: twMerge('flex-shrink-0 w-max '),
-                })}
-                {quantity && !isShowFullSidebar && (
-                  <div className="absolute -right-[13px] -top-1.5 text-primary-600">
-                    <RxDotFilled size={25} />
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {title && (isShowFullSidebar || isShowSidebar) && (
-              <div className={twMerge('-mt-[2px] line-clamp-1 text-ellipsis break-all text-center text-sm ')}>
-                {title}
-              </div>
-            )}
-          </div>
-          {quantity && (isShowFullSidebar || isShowSidebar) && (
-            <div
-              className={twMerge(
-                'pr-5 text-xs text-gray-500',
-                (isShowFullSidebar || isShowSidebar) && isActivated && 'font-semibold text-primary-700',
-              )}
-            >
-              {quantity}
-            </div>
-          )}
+          {quantity || ''}
         </div>
       </Link>
     </Tooltip>
