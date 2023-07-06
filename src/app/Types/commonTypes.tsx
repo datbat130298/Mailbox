@@ -131,6 +131,8 @@ export interface FlagType {
 export interface ComposePopupStyleType {
   containerClassName: string;
   composeClassName: string;
+  composeContent?: string;
+  composeToolbarStyle?: string;
 }
 
 export interface ContactType {
@@ -140,8 +142,8 @@ export interface ContactType {
 }
 
 export interface ComposeType {
-  uuid: number;
-  isShow: boolean;
+  uuid?: number;
+  isShow?: boolean;
   recipient?: readonly OptionLabel[];
   recipientCc?: readonly OptionLabel[];
   recipientBcc?: readonly OptionLabel[];

@@ -38,7 +38,7 @@ const Sidebar = () => {
   }, [labelSystem]);
 
   const handleMouseMove = () => {
-    return setIsShowSidebar(true);
+    return setIsShowSidebar(false);
   };
 
   const handleMouseOver = () => {
@@ -49,7 +49,7 @@ const Sidebar = () => {
     <div
       className={twMerge(
         'fixed left-0 top-0 z-[49] h-screen w-20 bg-slate-100 py-6 pt-20',
-        (isShowFullSidebar || isShowSidebar) && 'w-72 ',
+        (isShowFullSidebar || isShowSidebar) && 'w-64 ',
       )}
       style={{ transition: '.2s ease-in-out' }}
       onMouseMove={() => handleMouseMove()}

@@ -83,7 +83,8 @@ const ComposePopup = ({
   const [isShowButtonInsertContent, setIsShowButtonInsertContent] = useState<boolean>(false);
 
   const { t } = useTranslation();
-  const { handleChangeViewType, handleClickCloseComposeItem } = useContext(ContextDraft);
+  const { handleChangeViewType, handleClickCloseComposeItem, handleAddComposeDraft } =
+    useContext(ContextDraft);
 
   const handleClickDeleteFooter = () => {
     // eslint-disable-next-line no-console
@@ -94,10 +95,12 @@ const ComposePopup = ({
   };
 
   useEffect(() => {
-    if (contentInbox) {
+    if (contentInbox && viewType === ComposeViewTypeEnum.REPLY) {
       setIsShowButtonInsertContent(true);
+      return;
     }
-  }, [contentInbox]);
+    setIsShowButtonInsertContent(false);
+  }, [contentInbox, viewType]);
 
   useEffect(() => {
     const toolbar = document.querySelector<HTMLElement>('.ck.ck-toolbar');
@@ -181,10 +184,21 @@ const ComposePopup = ({
     }
   };
 
+  const handleAddComposePopupDraft = () => {
+    handleAddComposeDraft({
+      recipient: selectRecipient,
+      recipientBcc: selectedBccRecipient,
+      recipientCc: selectedCcRecipient,
+      content,
+      subject,
+      viewType: ComposeViewTypeEnum.POPUP,
+    });
+  };
+
   return (
     <div
       className={twMerge(
-        'z-50 h-[610px] min-w-[540px] rounded-t-md bg-white shadow-compose',
+        'z-50 h-[610px] w-[540px] rounded-t-md bg-white shadow-compose',
         composePopupStyle?.containerClassName,
         viewType === ComposeViewTypeEnum.MODAL && 'rounded-md',
         composeClassName,
@@ -195,6 +209,7 @@ const ComposePopup = ({
           setComposeViewType={setComposeViewType}
           type={viewType}
           toEmail={fromMail?.from_user?.email}
+          handleAddComposePopupDraft={handleAddComposePopupDraft}
         />
       )}
       {(viewType === ComposeViewTypeEnum.MODAL || viewType === ComposeViewTypeEnum.POPUP) && (
@@ -209,8 +224,7 @@ const ComposePopup = ({
         className={twMerge(
           'h-full w-full overflow-auto',
           viewType === ComposeViewTypeEnum.POPUP && 'h-[550px]',
-          viewType === ComposeViewTypeEnum.REPLY && 'h-[400px]',
-          viewType === ComposeViewTypeEnum.FORWARD && 'h-[400px]',
+          composePopupStyle?.composeContent,
         )}
       >
         <div className="mt-0.5 px-2">
@@ -228,7 +242,7 @@ const ComposePopup = ({
         </div>
         <div
           className={twMerge(
-            'mx-2 h-[450px] overflow-auto',
+            'w- mx-2 h-[430px] overflow-auto',
             viewType === ComposeViewTypeEnum.MODAL && 'h-[73vh]',
             composePopupStyle?.composeClassName,
           )}
@@ -246,7 +260,7 @@ const ComposePopup = ({
             'fixed bottom-3 flex w-[540px] items-center justify-between px-4 ',
             viewType === ComposeViewTypeEnum.MODAL && 'w-[80vw]',
             (viewType === ComposeViewTypeEnum.REPLY || viewType === ComposeViewTypeEnum.FORWARD) &&
-              'relative bottom-0 w-full',
+              'relative bottom-3 w-full',
           )}
         >
           <div className="flex justify-start gap-4">

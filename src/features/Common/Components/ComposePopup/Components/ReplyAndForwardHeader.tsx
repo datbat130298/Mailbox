@@ -1,9 +1,8 @@
 import _ from 'lodash';
-import { Dispatch, SetStateAction, useContext } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CgMailForward, CgMailReply } from 'react-icons/cg';
 import { MdOpenInNew } from 'react-icons/md';
-import ContextDraft from '../../../../../app/Context/Context';
 import { ComposeViewTypeEnum } from '../../../../../app/Enums/commonEnums';
 import FilterDropdown from '../../FilterDropdown/FilterDropdown';
 import Tooltip from '../../Tooltip/Tooltip';
@@ -12,11 +11,16 @@ interface ReplyAndForwardHeaderProps {
   type?: string;
   toEmail?: string;
   setComposeViewType?: Dispatch<SetStateAction<ComposeViewTypeEnum>>;
+  handleAddComposePopupDraft: () => void;
 }
 
-const ReplyAndForwardHeader = ({ type, toEmail, setComposeViewType }: ReplyAndForwardHeaderProps) => {
+const ReplyAndForwardHeader = ({
+  type,
+  toEmail,
+  setComposeViewType,
+  handleAddComposePopupDraft,
+}: ReplyAndForwardHeaderProps) => {
   const { t } = useTranslation();
-  const { handleAddComposeDraft } = useContext(ContextDraft);
   const replyAndForwardAction = [
     {
       uuid: 1,
@@ -39,7 +43,7 @@ const ReplyAndForwardHeader = ({ type, toEmail, setComposeViewType }: ReplyAndFo
   ];
 
   const handleClickChangeViewTypeToPopup = () => {
-    handleAddComposeDraft(ComposeViewTypeEnum.POPUP);
+    handleAddComposePopupDraft();
     if (_.isFunction(setComposeViewType)) setComposeViewType(ComposeViewTypeEnum.POPUP);
   };
 
@@ -59,11 +63,6 @@ const ReplyAndForwardHeader = ({ type, toEmail, setComposeViewType }: ReplyAndFo
         {type === ComposeViewTypeEnum.REPLY && (
           <div className="line-clamp-1 h-full w-5/6 text-ellipsis break-all pl-2 text-left text-sm leading-8 underline">
             {toEmail}
-          </div>
-        )}
-        {type === ComposeViewTypeEnum.FORWARD && (
-          <div className="line-clamp-1 h-full w-5/6 text-ellipsis break-all pl-2 text-left text-sm leading-8">
-            To
           </div>
         )}
       </div>

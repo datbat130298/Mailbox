@@ -7,7 +7,7 @@ interface ContextDraftType {
   setComposeDraftList: Dispatch<SetStateAction<ComposeType[]>>;
   handleClickCloseComposeItem: (id: number) => void;
   handleShowCompose: (id: number, data: boolean) => void;
-  handleAddComposeDraft: (viewType: ComposeViewTypeEnum) => void;
+  handleAddComposeDraft: (data: ComposeType) => void;
   handleChangeViewType: (id: number, data: ComposeViewTypeEnum) => void;
 }
 

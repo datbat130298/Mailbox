@@ -12,8 +12,19 @@ import DefaultLayout from './features/Common/Layout/DefaultLayout';
 const App = () => {
   const [composeDraftList, setComposeDraftList] = useState<ComposeType[]>([]);
 
-  const handleAddComposeDraft = (viewType: ComposeViewTypeEnum) => {
-    setComposeDraftList((prev) => prev.concat({ isShow: true, uuid: composeDraftList.length, viewType }));
+  const handleAddComposeDraft = (data: ComposeType) => {
+    setComposeDraftList((prev) =>
+      prev.concat({
+        isShow: true,
+        uuid: composeDraftList.length,
+        viewType: data.viewType,
+        recipient: data?.recipient,
+        recipientBcc: data.recipientBcc,
+        recipientCc: data.recipientCc,
+        subject: data.subject,
+        content: data.content,
+      }),
+    );
   };
 
   const handleChangeViewType = useCallback(

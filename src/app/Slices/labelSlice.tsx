@@ -5,6 +5,7 @@ import {
   MdLabelImportantOutline,
   MdOutlineContactMail,
   MdOutlineDiscount,
+  MdOutlineDrafts,
   MdOutlineScheduleSend,
   MdOutlineStarBorder,
   MdOutlineSystemUpdateAlt,
@@ -199,6 +200,20 @@ const systemLabels = [
       },
       {
         showIfUnread: false,
+      },
+    ],
+  },
+  {
+    id: 10,
+    to: '/drafts',
+    name: 'drafts',
+    icon: <MdOutlineDrafts size={20} />,
+    display: [
+      {
+        hide: false,
+      },
+      {
+        show: true,
       },
     ],
   },

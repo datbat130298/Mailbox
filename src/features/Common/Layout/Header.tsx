@@ -59,7 +59,10 @@ const Header = () => {
             role="button"
             tabIndex={0}
             onClick={handleShowFullSidebar}
-            className="mr-2 flex h-10 w-10 items-center rounded-full bg-slate-200"
+            className={twMerge(
+              'mr-2 flex h-10 w-10 items-center rounded-full',
+              isShowFullSidebar && 'bg-gray-200',
+            )}
           >
             <CgMenu size={20} className="mx-auto " />
           </div>

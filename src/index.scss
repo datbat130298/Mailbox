@@ -8,6 +8,10 @@
   @apply flex flex-shrink-0 items-center justify-center;
 }
 
+body {
+  @apply overflow-hidden;
+}
+
 input.compose[type='date']::-webkit-inner-spin-button,
 input.compose[type='date']::-webkit-calendar-picker-indicator {
   @apply hidden;
@@ -16,4 +20,14 @@ input.compose[type='date']::-webkit-calendar-picker-indicator {
 input.compose-time[type='time']::-webkit-inner-spin-button,
 input.compose-time[type='time']::-webkit-calendar-picker-indicator {
   @apply opacity-0;
+}
+
+*:not(.normal-scrollbar) {
+  ::-webkit-scrollbar {
+    @apply w-4 bg-gray-50;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full border-4 border-solid border-gray-100 bg-black bg-opacity-40 hover:bg-opacity-20;
+  }
 }
