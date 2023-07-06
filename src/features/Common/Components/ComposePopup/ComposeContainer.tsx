@@ -13,7 +13,7 @@ import { OptionLabel } from './Components/ComposePopupRecipient/ComposePopupSele
 interface ComposePopupContainerProps {
   contentInbox?: string;
   compose?: ComposeType;
-  isShowComposePopup?: boolean;
+  isShowComposeReplyOrForward?: boolean;
   fromMail?: MailType;
   onClear?: () => void;
   composePopupStyle?: ComposePopupStyleType;
@@ -27,7 +27,7 @@ const ComposePopupContainer = ({
   setComposeViewType,
   composeViewType,
   compose,
-  isShowComposePopup,
+  isShowComposeReplyOrForward,
   fromMail,
   onClear,
   composePopupStyle,
@@ -39,7 +39,10 @@ const ComposePopupContainer = ({
   const [selectedCcRecipient, setSelectedCcRecipient] = useState<readonly OptionLabel[] | undefined>([]);
   const [selectedBccRecipient, setSelectedBccRecipient] = useState<readonly OptionLabel[] | undefined>([]);
   const [isShowCompose, setIsShowCompose] = useState<boolean>(false);
-  const [content, setContent] = useState<string>(' ');
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [content, setContent] = useState<any>(
+    composeViewType === ComposeViewTypeEnum.FORWARD ? contentInbox : ' ',
+  );
   const [isZoomIn, setIsZoomIn] = useState<boolean>(false);
   const [isModal, setIsModal] = useState<boolean>(false);
 
@@ -47,10 +50,13 @@ const ComposePopupContainer = ({
 
   const handleOnChangeRecipient = (selectedOptions: MultiValue<OptionLabel>) =>
     setSelectedRecipient(selectedOptions);
+
   const handleOnChangeCcRecipient = (selectedOptions: MultiValue<OptionLabel>) =>
     setSelectedCcRecipient(selectedOptions);
+
   const handleOnChangeBccRecipient = (selectedOptions: MultiValue<OptionLabel>) =>
     setSelectedBccRecipient(selectedOptions);
+
   const handleChangeEditor = (value: string) => {
     setContent(value);
   };
@@ -110,9 +116,9 @@ const ComposePopupContainer = ({
       setSelectedBccRecipient(compose?.recipientBcc);
       setSelectedCcRecipient(compose?.recipientCc);
       setSelectedRecipient(compose?.recipient);
-      setDebounceSubject('');
-      setContent('');
-      setSubject('');
+      setDebounceSubject(compose.subject || '');
+      setContent(compose.content || ' ');
+      setSubject(compose.subject || '');
     }
   }, [compose]);
 
@@ -135,10 +141,14 @@ const ComposePopupContainer = ({
   const handleClickInsertContent = (contentText: string) => {
     setContent(contentText);
   };
-
+  useEffect(() => {
+    if (composeViewType === ComposeViewTypeEnum.FORWARD) {
+      setContent(contentInbox);
+    }
+  }, [composeViewType]);
   return (
     <>
-      {isShowComposePopup &&
+      {isShowComposeReplyOrForward &&
         (composeViewType === ComposeViewTypeEnum.REPLY ||
           composeViewType === ComposeViewTypeEnum.FORWARD) && (
           <ComposePopup

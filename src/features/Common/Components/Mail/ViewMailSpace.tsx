@@ -9,6 +9,7 @@ import { twMerge } from 'tailwind-merge';
 import { ComposeViewTypeEnum } from '../../../../app/Enums/commonEnums';
 import { getMailById } from '../../../../app/Services/Inbox/InboxService';
 import { MailType } from '../../../../app/Types/commonTypes';
+import useSelector from '../../../Hooks/useSelector';
 import Button from '../Button';
 import ComposePopupContainer from '../ComposePopup/ComposeContainer';
 import Tooltip from '../Tooltip/Tooltip';
@@ -21,9 +22,11 @@ interface ViewMailSpaceProps {
 const ViewMailSpace = ({ mailData }: ViewMailSpaceProps) => {
   const { t } = useTranslation();
   const [composeViewType, setComposeViewType] = useState(ComposeViewTypeEnum.POPUP);
-  const [isShowComposePopup, setIsShowComposePopup] = useState(false);
+  const [isShowCompose, setIsShowCompose] = useState(false);
   const [mail, setMail] = useState<MailType>();
   const { uuid } = useParams();
+
+  const emailUser = useSelector((state) => state.user.email);
 
   const fetchDataMail = useCallback((mailId: string | undefined) => {
     const data = getMailById(Number(mailId));
@@ -42,21 +45,24 @@ const ViewMailSpace = ({ mailData }: ViewMailSpaceProps) => {
 
   const handleClickReply = () => {
     setComposeViewType(ComposeViewTypeEnum.REPLY);
-    setIsShowComposePopup(true);
+    setIsShowCompose(true);
   };
 
   const handleClickForward = () => {
     setComposeViewType(ComposeViewTypeEnum.FORWARD);
-    setIsShowComposePopup(true);
+    setIsShowCompose(true);
   };
 
   const handleClear = () => {
     setComposeViewType(ComposeViewTypeEnum.POPUP);
-    setIsShowComposePopup(false);
+    setIsShowCompose(false);
   };
 
+  const contentDefaultForward = `<br><br><p>---------- Forwarded message -------- <br> From: ${mailData?.from_user?.email} <br>Date: ${mailData?.time}<br>Subject: ${mailData?.subject}<br>To: ${emailUser}</p>`;
+  const contentForward = `${contentDefaultForward} <br><br> ${mailData?.content}`;
+
   return (
-    <div className="overflow-overlay -z-10 h-full w-full overflow-hidden overflow-y-auto  px-4">
+    <div className="overflow-overlay -z-10 h-full w-full overflow-hidden overflow-y-auto px-4">
       <div className="mt-2 flex min-h-[40px] w-full items-start justify-start gap-x-2 pl-16 text-xl">
         <div className="flex-shink-0">{mail?.subject}</div>
         <MailTag />
@@ -68,7 +74,7 @@ const ViewMailSpace = ({ mailData }: ViewMailSpaceProps) => {
               'flex h-full w-12 flex-shrink-0  items-center justify-center rounded-full bg-cyan-500 drop-shadow',
             )}
           >
-            <p className="text-[20px] font-semibold">{mail?.author.slice(0, 1)}</p>
+            <p className="text-xl font-semibold">{mail?.author.slice(0, 1)}</p>
           </div>
         </div>
         <div className="flex h-full w-[calc(100%-48px)] justify-between pl-4">
@@ -106,7 +112,12 @@ const ViewMailSpace = ({ mailData }: ViewMailSpaceProps) => {
         </div>
       </div>
       <div className="h-fit pl-16">
-        <div className="h-fit w-full text-left">{mail?.content}</div>
+        <div className="h-fit w-full text-left">
+          <div
+            // eslint-disable-next-line react/no-danger
+            dangerouslySetInnerHTML={{ __html: mailData ? mailData.content : ' ' }}
+          />
+        </div>
         {composeViewType === ComposeViewTypeEnum.POPUP && (
           <div className="mt-8 flex h-fit w-full justify-start gap-x-3 pb-8">
             <Button
@@ -155,27 +166,32 @@ const ViewMailSpace = ({ mailData }: ViewMailSpaceProps) => {
           </div>
         )}
 
-        <ComposePopupContainer
-          contentInbox={mail?.content}
-          setComposeViewType={setComposeViewType}
-          composeClassName="z-0"
-          onClear={handleClear}
-          fromMail={mail}
-          composeViewType={composeViewType}
-          isShowComposePopup={isShowComposePopup}
-          composePopupStyle={
-            composeViewType === ComposeViewTypeEnum.REPLY || composeViewType === ComposeViewTypeEnum.FORWARD
-              ? {
-                  containerClassName:
-                    'absolute right-0 top-0 h-[444px] w-[calc(100%-64px)] rounded-2xl overflow-auto',
-                  composeClassName: 'h-[258px]',
-                }
-              : {
-                  containerClassName: '',
-                  composeClassName: '',
-                }
-          }
-        />
+        {isShowCompose && (
+          <ComposePopupContainer
+            contentInbox={
+              composeViewType === ComposeViewTypeEnum.FORWARD ? contentForward : mailData?.content
+            }
+            setComposeViewType={setComposeViewType}
+            composeClassName="z-0"
+            onClear={handleClear}
+            fromMail={mail}
+            composeViewType={composeViewType}
+            isShowComposeReplyOrForward={isShowCompose}
+            composePopupStyle={
+              composeViewType === ComposeViewTypeEnum.REPLY || composeViewType === ComposeViewTypeEnum.FORWARD
+                ? {
+                    containerClassName:
+                      'absolute right-0 top-0 w-[calc(100%-64px)] rounded-2xl overflow-hidden h-fit',
+                    composeClassName: 'min-h-[300px] h-fit',
+                    composeContent: 'overflow-hidden',
+                  }
+                : {
+                    containerClassName: '',
+                    composeClassName: '',
+                  }
+            }
+          />
+        )}
       </div>
     </div>
   );

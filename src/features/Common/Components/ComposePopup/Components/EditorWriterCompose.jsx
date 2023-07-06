@@ -59,6 +59,7 @@ const editorConfiguration = {
       },
     ],
     previewsInData: true,
+    forceVisible: false,
   },
 };
 

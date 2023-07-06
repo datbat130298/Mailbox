@@ -57,6 +57,7 @@ const TrashTable = () => {
 
   const handleSelectMail = (mail: MailType) => {
     setSelectedMail(mail);
+    navigate(`/trash/${mail.uuid}`);
     setIsShowViewMailSpace(true);
   };
 

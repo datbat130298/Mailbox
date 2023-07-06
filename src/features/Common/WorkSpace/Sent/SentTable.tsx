@@ -57,6 +57,7 @@ const SentTable = () => {
 
   const handleSelectMail = (e: MailType) => {
     setSelectedMail(e);
+    navigate(`/sent/${e.uuid}`);
     setIsShowViewMailSpace(true);
   };
 
@@ -81,7 +82,7 @@ const SentTable = () => {
   return (
     <div className="relative h-full w-full pt-14">
       <HeaderMailTable
-        actionArray={['datetime']}
+        actionArray={['view', 'datetime']}
         isShowShadow={isShowShadow}
         isShowCheckboxHeader={isShowViewMailSpace}
         isChecked={isChecked}
@@ -91,6 +92,7 @@ const SentTable = () => {
         onCloseViewMailSpace={() => {
           setIsShowViewMailSpace(false);
           setSelectedMail({} as MailType);
+          navigate('/sent');
         }}
       />
       <Routes>
