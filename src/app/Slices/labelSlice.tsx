@@ -218,12 +218,17 @@ const systemLabels = [
     ],
   },
 ];
+export interface SearchTermType {
+  key: string;
+  value: string;
+}
 
 interface InitProp {
   labelSystem: ValueLabelTable[];
   categoryLabel: ValueLabelTable[];
   isShowCategory: boolean;
   isShowMore: boolean;
+  searchTerm: SearchTermType | null;
 }
 
 const initialState: InitProp = {
@@ -231,6 +236,7 @@ const initialState: InitProp = {
   categoryLabel,
   isShowCategory: false,
   isShowMore: true,
+  searchTerm: null,
 };
 
 export const labelSlice = createSlice({
@@ -243,11 +249,14 @@ export const labelSlice = createSlice({
     updateCategoryLabelDisplay: (state, action: PayloadAction<ValueLabelTable[]>) => {
       state.categoryLabel = action.payload;
     },
+    addSearchTerm: (state, action: PayloadAction<SearchTermType>) => {
+      state.searchTerm = action.payload;
+    },
   },
 });
 
 const { actions, reducer: labelReducer } = labelSlice;
 
-export const { updateLabelSystemDisplay, updateCategoryLabelDisplay } = actions;
+export const { updateLabelSystemDisplay, updateCategoryLabelDisplay, addSearchTerm } = actions;
 
 export default labelReducer;

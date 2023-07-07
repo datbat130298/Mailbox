@@ -68,7 +68,7 @@ const SidebarItem = ({
         </div>
         <div
           className={twMerge(
-            'pr-4 text-xs text-gray-500 opacity-0 transition-[.4s] delay-[.05s]',
+            'pr-6 text-xs text-gray-500 opacity-0 transition-[.4s] delay-[.05s]',
             (isShowFullSidebar || isShowSidebar) && 'font-semibold text-primary-700 opacity-100',
           )}
         >

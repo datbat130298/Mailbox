@@ -7,7 +7,7 @@ import useSelector from '../../../Hooks/useSelector';
 interface SidebarGroupProp {
   children: ReactNode;
   title: string;
-  isShowSidebar: boolean;
+  isShowSidebar?: boolean;
 }
 
 const SidebarGroup = ({ children, title, isShowSidebar }: SidebarGroupProp) => {
