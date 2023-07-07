@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { HiOutlineSearch } from 'react-icons/hi';
 import { IoOptionsSharp } from 'react-icons/io5';
 import { twMerge } from 'tailwind-merge';
+import useSelector from '../../../Hooks/useSelector';
 import { triggerClickOutside } from '../../../utils/helpers';
 import Button from '../Button';
 import Checkbox from '../Form/Checkbox';
@@ -36,6 +37,14 @@ const AdvancedSearch = () => {
     setTypeKeyWork('all');
     setDateKeyWork(new Date().toString());
   };
+
+  const searchTerm = useSelector((state) => state.labelSidebar.searchTerm);
+
+  useEffect(() => {
+    if (searchTerm !== null) {
+      setSearchTearm(`${searchTerm.key}:${searchTerm.value}`);
+    }
+  }, [searchTerm]);
 
   useEffect(() => {
     triggerClickOutside(dropdownSearchTabRef, () => {

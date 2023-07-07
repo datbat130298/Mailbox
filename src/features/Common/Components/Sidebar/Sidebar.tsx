@@ -7,6 +7,7 @@ import useSelector from '../../../Hooks/useSelector';
 import { DisplayLabel } from '../../WorkSpace/Settings/LabelTable';
 import ButtonAddLabel from '../Labels/ButtonAddLabel';
 import ComposeButton from './ComposeButton';
+import LabelManagement from './Labels/LabelManagement';
 import SidebarGroup from './SidebarGroup';
 import SidebarItem from './SidebarItem';
 
@@ -49,7 +50,7 @@ const Sidebar = () => {
     <div
       className={twMerge(
         'fixed left-0 top-0 z-[49] h-screen w-20 bg-slate-100 py-6 pt-20',
-        (isShowFullSidebar || isShowSidebar) && 'w-64 ',
+        (isShowFullSidebar || isShowSidebar) && 'w-72',
       )}
       style={{ transition: '.2s ease-in-out' }}
       onMouseMove={() => handleMouseMove()}
@@ -58,7 +59,7 @@ const Sidebar = () => {
       id="sidebar"
     >
       <ComposeButton isShowSidebar={isShowSidebar} />
-      <div className="py-3">
+      <div className="h-[95%] overflow-auto py-3">
         {visibleSide &&
           visibleSide.map((visibleSideItem) => (
             <SidebarItem
@@ -70,19 +71,6 @@ const Sidebar = () => {
               isShowSidebar={isShowSidebar}
             />
           ))}
-
-        <SidebarGroup title={t('category')} isShowSidebar={isShowSidebar}>
-          {categoryItemDisplay.map((category) => (
-            <SidebarItem
-              to={category.to}
-              title={t(category.name)}
-              tooltipText={t(category.name)}
-              icon={category.icon}
-              quantity={category.quantity}
-              isShowSidebar={isShowSidebar}
-            />
-          ))}
-        </SidebarGroup>
 
         <SidebarGroup title={t('more')} isShowSidebar={isShowSidebar}>
           {hiddenSidebar.map((hiddenSidebarItem) => (
@@ -103,8 +91,21 @@ const Sidebar = () => {
             isShowSidebar={isShowSidebar}
           />
         </SidebarGroup>
+        <SidebarGroup title={t('category')} isShowSidebar={isShowSidebar}>
+          {categoryItemDisplay.map((category) => (
+            <SidebarItem
+              to={category.to}
+              title={t(category.name)}
+              tooltipText={t(category.name)}
+              icon={category.icon}
+              quantity={category.quantity}
+              isShowSidebar={isShowSidebar}
+            />
+          ))}
+        </SidebarGroup>
+        <ButtonAddLabel isShowSidebar={isShowSidebar} />
+        <LabelManagement />
       </div>
-      <ButtonAddLabel isShowSidebar={isShowSidebar} />
     </div>
   );
 };

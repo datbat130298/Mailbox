@@ -19,7 +19,7 @@ const ContainerWorkSpace = () => {
       <div
         className={twMerge(
           'h-full w-full rounded-t-lg bg-white shadow-box',
-          isShowFullSidebar && 'w-[calc(100%-193px)]',
+          isShowFullSidebar && 'w-[calc(100%-200px)]',
         )}
       >
         <WorkSpaceRoutes />
