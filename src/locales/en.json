@@ -104,5 +104,9 @@
   "social": "Social",
   "promotions": "Promotions",
   "forums": "Forums",
-  "updates": "Updates"
+  "updates": "Updates",
+  "remove_color": "Remove color",
+  "edit": "Edit",
+  "remove_label": "Remove label",
+  "add_label": "Add label"
 }

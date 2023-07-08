@@ -8,6 +8,7 @@ import { addSearchTerm } from '../../../../../app/Slices/labelSlice';
 import useDispatch from '../../../../Hooks/useDispatch';
 import useSelector from '../../../../Hooks/useSelector';
 import Tooltip from '../../Tooltip/Tooltip';
+import LabelCustomPopup from './LabelCustomPopup';
 import LabelItem, { LabelItemProps } from './LabelItem';
 
 interface GroupLabelProp {
@@ -20,6 +21,8 @@ interface GroupLabelProp {
 
 const LabelGroup = ({ label, id, childrenLabel, className, to }: GroupLabelProp) => {
   const [isShowChildren, setIsShowChildren] = useState<boolean>(false);
+  const [isShowLabelCustomPopup, setIsShowLabelCustomPopup] = useState<boolean>(false);
+  const [colorPicker, setColorPicker] = useState<string>('');
 
   const dispatch = useDispatch();
   const { pathname } = useLocation();
@@ -41,14 +44,20 @@ const LabelGroup = ({ label, id, childrenLabel, className, to }: GroupLabelProp)
     dispatch(addSearchTerm({ key: 'label', value: label }));
   };
 
+  const handleClickLabelCustom = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setIsShowLabelCustomPopup(true);
+  };
+
   return (
-    <>
+    <div className="relative">
       <Tooltip position="right" title={label}>
         <Link
           onClick={(e) => handleClick(e)}
           to={to || pathname}
           className={twMerge(
-            'group relative mx-3 my-0.5 flex w-[60px] items-center justify-between overflow-hidden rounded-md py-1.5 pl-4 text-gray-700 transition-width  duration-300 before:absolute before:left-0 before:top-1/2 before:h-2/3 before:w-1 before:-translate-y-1/2 before:rounded-sm before:bg-primary-800 hover:bg-slate-200',
+            'group relative mx-3 my-0.5 flex w-[60px] items-center justify-between overflow-hidden rounded-md py-1.5 pl-3.5 text-gray-700 transition-width  duration-300 before:absolute before:left-0 before:top-1/2 before:h-2/3 before:w-1 before:-translate-y-1/2 before:rounded-sm before:bg-primary-800 hover:bg-slate-200',
             isShowFullSidebar && 'w-64',
             isActivated
               ? 'bg-slate-200 font-semibold text-primary-600 before:block'
@@ -66,15 +75,21 @@ const LabelGroup = ({ label, id, childrenLabel, className, to }: GroupLabelProp)
                   'rounded-full p-1.5 duration-200',
                   isShowChildren && 'rotate-90',
                   _.isEmpty(childrenLabel) && '',
-                  isShowFullSidebar && !_.isEmpty(childrenLabel) && 'group-hover:bg-slate-300',
+                  isShowFullSidebar && !_.isEmpty(childrenLabel) && 'group-hover:opacity-90',
+                  `bg-[${colorPicker}]`,
                 )}
               >
                 <BiLabel size={18} />
               </div>
-              <p className="w-3/4 truncate text-sm">{label}</p>
+              <p className={twMerge('w-3/4 truncate text-sm', `text-[${colorPicker}]`)}>{label}</p>
             </div>
           </div>
-          <div className="mr-5 rounded-full p-1 hover:bg-slate-300">
+          <div
+            className="mr-5 rounded-full p-1 hover:bg-slate-300"
+            onClick={(e) => handleClickLabelCustom(e)}
+            tabIndex={0}
+            role="button"
+          >
             <MdMoreVert size={20} />
           </div>
         </Link>
@@ -82,7 +97,15 @@ const LabelGroup = ({ label, id, childrenLabel, className, to }: GroupLabelProp)
       {isShowChildren &&
         !_.isEmpty(childrenLabel) &&
         childrenLabel.map((chil) => <LabelItem key={chil.id} label={chil.label} id={chil.id} to={chil.to} />)}
-    </>
+      {isShowLabelCustomPopup && (
+        <LabelCustomPopup
+          setIsShow={setIsShowLabelCustomPopup}
+          label={label}
+          id={id}
+          setColorPicker={setColorPicker}
+        />
+      )}
+    </div>
   );
 };
 

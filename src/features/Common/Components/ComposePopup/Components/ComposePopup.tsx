@@ -248,6 +248,7 @@ const ComposePopup = ({
           )}
         >
           <WriterCompose
+            id={id}
             data={content}
             handleChangeEditor={onChangeEditor}
             handleChangeBlur={undefined}

@@ -101,6 +101,7 @@ const CKEditor5 = ({
     return (
       <div className={twMerge('relative h-full w-full')}>
         <CKEditor
+          id="test"
           editor={DecoupledEditor}
           data={data}
           config={config}
