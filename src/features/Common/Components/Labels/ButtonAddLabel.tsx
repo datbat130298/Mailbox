@@ -40,7 +40,10 @@ const ButtonAddLabel = ({ isShowSidebar }: ButtonAddLabelProp) => {
           role="button"
           tabIndex={0}
           onClick={handleClickAdd}
-          className={twMerge('rounded-full p-2 text-gray-500 hover:bg-slate-200', !isShowSidebar && 'ml-5')}
+          className={twMerge(
+            'rounded-full p-2 text-gray-500 hover:bg-slate-200',
+            !isShowSidebar && 'ml-[22px]',
+          )}
         >
           <GrFormAdd size={24} />
         </div>

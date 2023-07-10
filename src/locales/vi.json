@@ -104,5 +104,9 @@
   "social": "Social",
   "promotions": "Promotions",
   "forums": "Forums",
-  "updates": "Updates"
+  "updates": "Updates",
+  "remove_color": "Xoá màu",
+  "edit": "Sửa",
+  "remove_label": "Xoá label",
+  "add_label": "Thêm label"
 }

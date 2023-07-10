@@ -20,6 +20,7 @@ interface ComposePopupContainerProps {
   composeClassName?: string;
   composeViewType?: ComposeViewTypeEnum;
   setComposeViewType?: Dispatch<SetStateAction<ComposeViewTypeEnum>>;
+  id?: number;
 }
 
 const ComposePopupContainer = ({
@@ -32,6 +33,7 @@ const ComposePopupContainer = ({
   onClear,
   composePopupStyle,
   composeClassName,
+  id,
 }: ComposePopupContainerProps) => {
   const [subject, setSubject] = useState<string>('');
   const [debounceSubject, setDebounceSubject] = useState<string>('');
@@ -152,6 +154,7 @@ const ComposePopupContainer = ({
         (composeViewType === ComposeViewTypeEnum.REPLY ||
           composeViewType === ComposeViewTypeEnum.FORWARD) && (
           <ComposePopup
+            id={id}
             contentInbox={contentInbox}
             handleClickInsertContent={handleClickInsertContent}
             content={content}
@@ -181,6 +184,7 @@ const ComposePopupContainer = ({
         isShowCompose &&
         compose.viewType === ComposeViewTypeEnum.POPUP && (
           <ComposePopup
+            id={id}
             content={content}
             onChangeEditor={handleChangeEditor}
             selectRecipient={selectedRecipient || undefined}
@@ -198,7 +202,6 @@ const ComposePopupContainer = ({
             fromMail={fromMail}
             onClear={onClear}
             composePopupStyle={composePopupStyle}
-            id={compose.uuid}
             composeClassName={composeClassName || ''}
             setIsModal={setIsModal}
           />
@@ -227,7 +230,6 @@ const ComposePopupContainer = ({
             onClose={handleCloseModal}
             onClear={onClear}
             viewType={compose.viewType}
-            id={compose.uuid}
             setIsModal={setIsModal}
             composePopupStyle={{
               containerClassName: 'absolute left-0 top-0 w-full h-full',

@@ -63,10 +63,10 @@ const editorConfiguration = {
   },
 };
 
-const WriterCompose = ({ data, handleChangeEditor, handleChangeBlur, isLoading, isDisabled }) => {
+const WriterCompose = ({ data, handleChangeEditor, handleChangeBlur, isLoading, isDisabled, id }) => {
   const render = useMemo(() => {
     return (
-      <div className="h-full w-full text-sm">
+      <div className="h-full w-full text-sm" id={id}>
         <CKEditor5
           config={editorConfiguration}
           data={data}
