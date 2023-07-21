@@ -10,6 +10,7 @@ export enum ComposeViewTypeEnum {
   MODAL = 'modal',
   REPLY = 'reply',
   FORWARD = 'forward',
+  ZOOM_OUT = 'zoom_out',
 }
 
 export enum ValueTableLabelEnum {

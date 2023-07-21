@@ -3,24 +3,38 @@ import { Dispatch, SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CgMailForward, CgMailReply } from 'react-icons/cg';
 import { MdOpenInNew } from 'react-icons/md';
+import { DraftActionEnum, useDraftsDispatch } from '../../../../../app/Context/DraftContext';
 import { ComposeViewTypeEnum } from '../../../../../app/Enums/commonEnums';
 import FilterDropdown from '../../FilterDropdown/FilterDropdown';
 import Tooltip from '../../Tooltip/Tooltip';
+import { OptionLabel } from './ComposePopupRecipient/ComposePopupSelectRecipients';
 
 interface ReplyAndForwardHeaderProps {
   type?: string;
   toEmail?: string;
   setComposeViewType?: Dispatch<SetStateAction<ComposeViewTypeEnum>>;
   handleAddComposePopupDraft: () => void;
+  content: string;
+  selectRecipient: readonly OptionLabel[] | undefined;
+  selectedCcRecipient: readonly OptionLabel[] | undefined;
+  selectedBccRecipient: readonly OptionLabel[] | undefined;
+  subject: string;
 }
 
 const ReplyAndForwardHeader = ({
   type,
   toEmail,
   setComposeViewType,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   handleAddComposePopupDraft,
+  content,
+  selectRecipient,
+  selectedCcRecipient,
+  selectedBccRecipient,
+  subject,
 }: ReplyAndForwardHeaderProps) => {
   const { t } = useTranslation();
+  const dispatch = useDraftsDispatch();
   const replyAndForwardAction = [
     {
       uuid: 1,
@@ -43,7 +57,15 @@ const ReplyAndForwardHeader = ({
   ];
 
   const handleClickChangeViewTypeToPopup = () => {
-    handleAddComposePopupDraft();
+    dispatch({
+      type: DraftActionEnum.ADD_COMPOSE,
+      viewType: ComposeViewTypeEnum.POPUP,
+      content,
+      recipientBcc: selectedBccRecipient,
+      recipient: selectRecipient,
+      recipientCc: selectedCcRecipient,
+      subject,
+    });
     if (_.isFunction(setComposeViewType)) setComposeViewType(ComposeViewTypeEnum.POPUP);
   };
 
