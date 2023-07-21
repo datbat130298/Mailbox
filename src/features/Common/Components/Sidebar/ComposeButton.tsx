@@ -1,8 +1,7 @@
-import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdOutlineEdit } from 'react-icons/md';
 import { twMerge } from 'tailwind-merge';
-import ContextDraft from '../../../../app/Context/Context';
+import { DraftActionEnum, useDraftsDispatch } from '../../../../app/Context/DraftContext';
 import { ComposeViewTypeEnum } from '../../../../app/Enums/commonEnums';
 import useSelector from '../../../Hooks/useSelector';
 import Button from '../Button';
@@ -14,14 +13,12 @@ interface ComposeButtonProp {
 
 const ComposeButton = ({ isShowSidebar }: ComposeButtonProp) => {
   const { t } = useTranslation();
-  const [isShowComposePopupList, setIsShowComposePopupList] = useState<boolean>(true);
   const isShowFullSidebar = useSelector((state) => state.layout.isShowFullSidebar);
 
-  const { handleAddComposeDraft } = useContext(ContextDraft);
+  const dispatch = useDraftsDispatch();
 
   const handleClickCompose = () => {
-    handleAddComposeDraft({ viewType: ComposeViewTypeEnum.POPUP });
-    setIsShowComposePopupList(true);
+    dispatch({ type: DraftActionEnum.ADD_COMPOSE, viewType: ComposeViewTypeEnum.POPUP });
     if (!localStorage.getItem('defaultFullScreen')) {
       localStorage.setItem('defaultFullScreen', 'false');
     }
@@ -57,7 +54,7 @@ const ComposeButton = ({ isShowSidebar }: ComposeButtonProp) => {
           </div>
         </div>
       </Button>
-      {isShowComposePopupList && <ListOfMiniatureDrafts />}
+      <ListOfMiniatureDrafts />
     </div>
   );
 };

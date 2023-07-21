@@ -1,15 +1,19 @@
-import { useContext } from 'react';
-import ContextDraft from '../../../../app/Context/Context';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useDrafts } from '../../../../app/Context/DraftContext';
 import ComposePopupContainer from '../ComposePopup/ComposeContainer';
 
 const ListOfMiniatureDrafts = () => {
-  const { composeDraftList } = useContext(ContextDraft);
-
+  const draftList = useDrafts();
   return (
     <div id="listOf" className="fixed bottom-0 right-8 z-[60] max-w-[90vw] overflow-hidden p-3 pb-0">
       <div className="flex items-end justify-end gap-2">
-        {composeDraftList.map((compose) => (
-          <ComposePopupContainer id={compose.uuid} compose={compose} composeClassName="z-[60]" />
+        {draftList.map((compose: any) => (
+          <ComposePopupContainer
+            key={compose.uuid}
+            id={compose.uuid}
+            compose={compose}
+            composeClassName="z-[60]"
+          />
         ))}
       </div>
     </div>

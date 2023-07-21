@@ -8,7 +8,7 @@ import Tooltip from '../../Tooltip/Tooltip';
 interface ComposePopupHeaderProps {
   onClose: () => void;
   onChangeViewType: () => void;
-  onCollect: () => void;
+  onZoom: () => void;
   title?: string;
   className?: string;
 }
@@ -17,7 +17,7 @@ const ComposePopupHeader = ({
   className,
   onClose,
   onChangeViewType,
-  onCollect,
+  onZoom,
   title,
 }: ComposePopupHeaderProps) => {
   const { t } = useTranslation();
@@ -29,12 +29,7 @@ const ComposePopupHeader = ({
         </div>
         <div className="absolute right-3 top-[8px] flex items-center gap-x-1">
           <Tooltip title={t('minimize')} position="left">
-            <div
-              className="h-[15px] w-[18px] hover:bg-slate-200"
-              role="button"
-              tabIndex={0}
-              onClick={onCollect}
-            >
+            <div className="h-[15px] w-[18px] hover:bg-slate-200" role="button" tabIndex={0} onClick={onZoom}>
               <MdMinimize size={18} className="absolute -bottom-[1px]" />
             </div>
           </Tooltip>

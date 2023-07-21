@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { Dispatch, SetStateAction, useCallback, useContext, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CgFormatColor } from 'react-icons/cg';
 import { FaRegTrashAlt } from 'react-icons/fa';
@@ -11,7 +11,7 @@ import { MultiValue } from 'react-select';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import striptags from 'striptags';
 import { twMerge } from 'tailwind-merge';
-import ContextDraft from '../../../../../app/Context/Context';
+import { DraftActionEnum, useDraftsDispatch } from '../../../../../app/Context/DraftContext';
 import { ComposeViewTypeEnum } from '../../../../../app/Enums/commonEnums';
 import { ComposePopupStyleType, MailType } from '../../../../../app/Types/commonTypes';
 import ComposePopupButtonMore from './ComposePopupButtonMore/ComposePopupButtonMore';
@@ -40,13 +40,12 @@ export interface ComposePopupProps {
   debounceSubject: string;
   fromMail?: MailType;
   composePopupStyle?: ComposePopupStyleType;
-  id?: number;
-  onClose: () => void;
-  onCollect: () => void;
+  id?: string;
+  onClose?: () => void;
+  onZoom: () => void;
   onChangeSubjectInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onClear?: () => void;
   setComposeViewType?: Dispatch<SetStateAction<ComposeViewTypeEnum>>;
-  setIsModal?: Dispatch<SetStateAction<boolean>>;
   contentInbox?: string;
   handleClickInsertContent?: (text: string) => void;
 }
@@ -72,9 +71,8 @@ const ComposePopup = ({
   onChangeSubjectInput,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onClose,
-  onCollect,
+  onZoom,
   onClear,
-  setIsModal,
   contentInbox,
 }: ComposePopupProps) => {
   const [isVisibleToolbar, setIsVisibleToolbar] = useState<boolean>(false);
@@ -83,12 +81,11 @@ const ComposePopup = ({
   const [isShowButtonInsertContent, setIsShowButtonInsertContent] = useState<boolean>(false);
 
   const { t } = useTranslation();
-  const { handleChangeViewType, handleClickCloseComposeItem, handleAddComposeDraft } =
-    useContext(ContextDraft);
+
+  const dispatch = useDraftsDispatch();
 
   const handleClickDeleteFooter = () => {
     // eslint-disable-next-line no-console
-    console.log('this is click delete');
     if (onClear) {
       onClear();
     }
@@ -144,12 +141,28 @@ const ComposePopup = ({
 
   const handleChangeViewTypeCompose = () => {
     if (viewType === ComposeViewTypeEnum.POPUP) {
-      setIsModal?.(true);
-      handleChangeViewType(id || 0, ComposeViewTypeEnum.MODAL);
+      dispatch({
+        type: DraftActionEnum.CHANGE_VIEW,
+        uuid: id,
+        viewType: ComposeViewTypeEnum.MODAL,
+        content,
+        recipientBcc: selectedBccRecipient,
+        recipient: selectRecipient,
+        recipientCc: selectedCcRecipient,
+        subject,
+      });
       return;
     }
-    setIsModal?.(false);
-    handleChangeViewType(id || 0, ComposeViewTypeEnum.POPUP);
+    dispatch({
+      type: DraftActionEnum.CHANGE_VIEW,
+      uuid: id,
+      viewType: ComposeViewTypeEnum.POPUP,
+      content,
+      recipientBcc: selectedBccRecipient,
+      recipient: selectRecipient,
+      recipientCc: selectedCcRecipient,
+      subject,
+    });
   };
 
   const handleClickButtonInsertContent = useCallback(() => {
@@ -178,20 +191,21 @@ const ComposePopup = ({
   };
 
   const handleClose = () => {
-    handleClickCloseComposeItem(id || 0);
+    // handleClickCloseComposeItem(id || 0);
+    dispatch({ type: DraftActionEnum.DELETE, viewType: ComposeViewTypeEnum.POPUP, uuid: id });
     if (_.isFunction(onClear)) {
       onClear();
     }
   };
-
   const handleAddComposePopupDraft = () => {
-    handleAddComposeDraft({
-      recipient: selectRecipient,
-      recipientBcc: selectedBccRecipient,
-      recipientCc: selectedCcRecipient,
-      content,
-      subject,
+    dispatch({
+      type: DraftActionEnum.ADD_COMPOSE,
       viewType: ComposeViewTypeEnum.POPUP,
+      content,
+      recipientBcc: selectedBccRecipient,
+      recipient: selectRecipient,
+      recipientCc: selectedCcRecipient,
+      subject,
     });
   };
 
@@ -210,13 +224,18 @@ const ComposePopup = ({
           type={viewType}
           toEmail={fromMail?.from_user?.email}
           handleAddComposePopupDraft={handleAddComposePopupDraft}
+          content={content}
+          selectRecipient={selectRecipient || undefined}
+          selectedCcRecipient={selectedCcRecipient || undefined}
+          selectedBccRecipient={selectedBccRecipient || undefined}
+          subject={subject}
         />
       )}
       {(viewType === ComposeViewTypeEnum.MODAL || viewType === ComposeViewTypeEnum.POPUP) && (
         <ComposePopupHeader
           title={!_.isEmpty(fromMail) ? `${t('reply')}: ${debounceSubject}` : debounceSubject}
           onClose={handleClose}
-          onCollect={onCollect}
+          onZoom={onZoom}
           onChangeViewType={handleChangeViewTypeCompose}
         />
       )}

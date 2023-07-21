@@ -142,7 +142,7 @@ export interface ContactType {
 }
 
 export interface ComposeType {
-  uuid?: number;
+  uuid?: string;
   isShow?: boolean;
   recipient?: readonly OptionLabel[];
   recipientCc?: readonly OptionLabel[];
