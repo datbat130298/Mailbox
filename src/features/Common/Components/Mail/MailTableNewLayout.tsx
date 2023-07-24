@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import { Dispatch, SetStateAction, useLayoutEffect, useRef } from 'react';
 import { useInViewport } from 'react-in-viewport';
-import { twMerge } from 'tailwind-merge';
 import { MailType } from '../../../../app/Types/commonTypes';
 import MailItem from './MailItem';
 import MailItemSleleton from './MailItemSkeleton';
@@ -13,10 +12,10 @@ interface MailTableProps {
   onChangeShowShadow?: Dispatch<SetStateAction<boolean>>;
   onChangeSelectRows: (idRows: number, checked: boolean) => void;
   selectRows: Array<number>;
-  onClickShowMail?: (mail: MailType) => void;
+  onClickShowMail: (mail: MailType) => void;
 }
 
-const MailTable = ({
+const MailTableNewLayout = ({
   data,
   isLoading,
   emptyComponent,
@@ -27,6 +26,7 @@ const MailTable = ({
 }: MailTableProps) => {
   const detectLoadingRef = useRef<HTMLDivElement>(null);
   const { inViewport } = useInViewport(detectLoadingRef);
+
   useLayoutEffect(() => {
     if (!_.isFunction(onChangeShowShadow)) return;
     if (inViewport) {
@@ -35,10 +35,9 @@ const MailTable = ({
       onChangeShowShadow(true);
     }
   }, [inViewport, onChangeShowShadow]);
+
   return (
-    <div
-      className={twMerge('overflow-overlay -z-10 h-full w-full gap-y-4  overflow-hidden overflow-y-auto ')}
-    >
+    <div className="overflow-overlay -z-10 h-full w-full gap-y-4  overflow-hidden overflow-y-auto ">
       <div className="h-fit w-full">
         <div className="h-[1px] w-full" ref={detectLoadingRef} />
         {_.isEmpty(data) &&
@@ -55,7 +54,7 @@ const MailTable = ({
               mail={item}
               selected={_.includes(selectRows, item.uuid)}
               onChangeSelectRows={onChangeSelectRows}
-              onClickShowMail={onClickShowMail || (() => null)}
+              onClickShowMail={onClickShowMail}
             />
           ))}
         {_.isEmpty(data) && !isLoading && emptyComponent}
@@ -71,4 +70,4 @@ const MailTable = ({
     </div>
   );
 };
-export default MailTable;
+export default MailTableNewLayout;

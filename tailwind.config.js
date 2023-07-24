@@ -77,6 +77,7 @@ module.exports = {
         box: '0px 0px 5px 0px rgba(0, 0, 0, 0.1), 0px 0px 1px 0px rgba(0, 0, 0, 0.1) ',
         bottom: '0 10px 20px -5px rgba(0, 0, 0, 0.1)',
         compose: '0px 0px 3px 2px rgba(0,0,0,0.15)',
+        shadowLeft: '-3px -1px 5px 0px rgba(0, 0, 0, 0.3)',
       },
       keyframes: {
         blink: {

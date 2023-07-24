@@ -64,7 +64,7 @@ const ViewMailSpace = ({ mailData }: ViewMailSpaceProps) => {
   return (
     <div className="overflow-overlay -z-10 h-full w-full overflow-hidden overflow-y-auto px-4">
       <div className="mt-2 flex min-h-[40px] w-full items-start justify-start gap-x-2 pl-16 text-xl">
-        <div className="flex-shink-0">{mail?.subject}</div>
+        <div className="flex-shrink-0">{mail?.subject}</div>
         <MailTag />
       </div>
       <div className="mb-4 flex h-12 w-full">
