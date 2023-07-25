@@ -18,7 +18,7 @@ const ContainerWorkSpace = () => {
     <div className="flex h-full w-full justify-end overflow-x-hidden bg-slate-100 pl-4 pr-2">
       <div
         className={twMerge(
-          'h-full w-full rounded-t-lg bg-white shadow-box',
+          'h-full w-full overflow-hidden rounded-t-lg bg-white shadow-box',
           isShowFullSidebar && 'w-[calc(100%-200px)]',
         )}
       >

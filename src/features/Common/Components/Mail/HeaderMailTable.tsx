@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import React, { ForwardedRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FiFilter } from 'react-icons/fi';
 import { IoArrowBackOutline } from 'react-icons/io5';
@@ -19,18 +20,25 @@ interface HeaderMailTableProps {
   onCloseViewMailSpace: () => void;
   onClickNextButton: () => false | void;
   onClickPrevButton: () => false | void;
+  widthHeader?: string;
+  isShowViewMailSpace?: boolean;
 }
 
-const HeaderMailTable = ({
-  actionArray,
-  isShowShadow,
-  isChecked,
-  isShowCheckboxHeader,
-  onClickSelectAll,
-  onCloseViewMailSpace,
-  onClickNextButton,
-  onClickPrevButton,
-}: HeaderMailTableProps) => {
+const HeaderMailTable = (
+  {
+    widthHeader,
+    actionArray,
+    isShowShadow,
+    isChecked,
+    isShowCheckboxHeader,
+    onClickSelectAll,
+    onCloseViewMailSpace,
+    onClickNextButton,
+    onClickPrevButton,
+    isShowViewMailSpace,
+  }: HeaderMailTableProps,
+  ref: ForwardedRef<HTMLDivElement>,
+) => {
   const { t } = useTranslation();
   const filterCheckboxData = [
     {
@@ -78,7 +86,10 @@ const HeaderMailTable = ({
       className={twMerge(
         'absolute left-0 top-0 z-40 flex h-14 w-full justify-between rounded-t-lg px-2 text-gray-700 ',
         isShowShadow ? 'shadow-bottom' : 'border-b-[0.5px]',
+        isShowViewMailSpace && 'w-1/2',
+        widthHeader && widthHeader,
       )}
+      ref={ref}
     >
       {!isShowCheckboxHeader && (
         <div className="flex h-full w-fit gap-x-0.5">
@@ -144,4 +155,4 @@ const HeaderMailTable = ({
   );
 };
 
-export default HeaderMailTable;
+export default React.forwardRef(HeaderMailTable);
