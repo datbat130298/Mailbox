@@ -20,13 +20,11 @@ interface HeaderMailTableProps {
   onCloseViewMailSpace: () => void;
   onClickNextButton: () => false | void;
   onClickPrevButton: () => false | void;
-  widthHeader?: string;
   isShowViewMailSpace?: boolean;
 }
 
 const HeaderMailTable = (
   {
-    widthHeader,
     actionArray,
     isShowShadow,
     isChecked,
@@ -87,7 +85,6 @@ const HeaderMailTable = (
         'absolute left-0 top-0 z-40 flex h-14 w-full justify-between rounded-t-lg px-2 text-gray-700 ',
         isShowShadow ? 'shadow-bottom' : 'border-b-[0.5px]',
         isShowViewMailSpace && 'w-1/2',
-        widthHeader && widthHeader,
       )}
       ref={ref}
     >

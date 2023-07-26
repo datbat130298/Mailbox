@@ -77,7 +77,7 @@ const datawithDay = dataInbox?.map((item) => ({
   address: 'khoi.tran@techupcorp.com',
 }));
 
-const getTrashs = () => {
+const getTrash = () => {
   return new Promise<MailType[]>((resolve) => {
     setTimeout(() => {
       resolve(datawithDay);
@@ -85,4 +85,4 @@ const getTrashs = () => {
   });
 };
 
-export { getTrashs };
+export { getTrash };

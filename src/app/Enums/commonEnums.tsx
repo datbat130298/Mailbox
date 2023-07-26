@@ -18,3 +18,10 @@ export enum ValueTableLabelEnum {
   HIDE = 'hide',
   SHOW_IF_UNREAD = 'show_if_unread',
 }
+
+export enum TypeChat {
+  INBOX = 'inbox',
+  SENT = 'sent',
+  DRAFT = 'draft',
+  TRASH = 'trash',
+}

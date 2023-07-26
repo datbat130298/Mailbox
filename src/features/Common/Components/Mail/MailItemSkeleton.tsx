@@ -1,4 +1,4 @@
-const MailItemSleleton = () => {
+const MailItemSkeleton = () => {
   return (
     <div className="flex h-13 w-full justify-between px-4 py-[17px]">
       <div className="h-full w-[18px] animate-pulse rounded-lg bg-gray-200" />
@@ -9,4 +9,4 @@ const MailItemSleleton = () => {
     </div>
   );
 };
-export default MailItemSleleton;
+export default MailItemSkeleton;

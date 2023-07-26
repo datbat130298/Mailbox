@@ -118,8 +118,10 @@ export interface MailType {
   content: string;
   time: string;
   address: string;
-  readed?: boolean;
+  read?: boolean;
+  type?: string;
   from_user?: UserDataType;
+  inbox?: Array<MailType>;
 }
 
 export interface FlagType {

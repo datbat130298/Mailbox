@@ -108,5 +108,10 @@
   "remove_color": "Xoá màu",
   "edit": "Sửa",
   "remove_label": "Xoá label",
-  "add_label": "Thêm label"
+  "add_label": "Thêm label",
+  "reply_all": "Trả lời tất cả",
+  "edit_as_new": "Sửa thành mới",
+  "share_email": "Chia sẻ Email",
+  "close": "Đóng",
+  "popup": "Nhảy ra"
 }

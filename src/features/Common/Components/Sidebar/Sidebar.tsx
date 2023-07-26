@@ -63,6 +63,7 @@ const Sidebar = () => {
         {visibleSide &&
           visibleSide.map((visibleSideItem) => (
             <SidebarItem
+              key={visibleSideItem.id}
               to={visibleSideItem.to}
               title={t(visibleSideItem.name)}
               tooltipText={t(visibleSideItem.name)}
@@ -75,6 +76,7 @@ const Sidebar = () => {
         <SidebarGroup title={t('more')} isShowSidebar={isShowSidebar}>
           {hiddenSidebar.map((hiddenSidebarItem) => (
             <SidebarItem
+              key={hiddenSidebarItem.id}
               to={hiddenSidebarItem.to}
               title={t(hiddenSidebarItem.name)}
               tooltipText={t(hiddenSidebarItem.name)}
@@ -94,6 +96,7 @@ const Sidebar = () => {
         <SidebarGroup title={t('category')} isShowSidebar={isShowSidebar}>
           {categoryItemDisplay.map((category) => (
             <SidebarItem
+              key={category.id}
               to={category.to}
               title={t(category.name)}
               tooltipText={t(category.name)}
