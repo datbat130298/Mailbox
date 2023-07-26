@@ -1,8 +1,10 @@
+import { TypeChat } from '../../Enums/commonEnums';
 import { MailType } from '../../Types/commonTypes';
 
 const dataInbox = [
   {
     uuid: 5,
+    type: TypeChat.SENT,
     author: 'Khoi Tran',
     subject: 'Phasellus libero nibh, suscipit et neque quis, bibendum fermentum mi.',
     content:
@@ -10,6 +12,7 @@ const dataInbox = [
   },
   {
     uuid: 6,
+    type: TypeChat.SENT,
     author: 'Khoi Tran',
     subject: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     content:
@@ -17,6 +20,7 @@ const dataInbox = [
   },
   {
     uuid: 7,
+    type: TypeChat.SENT,
     author: 'Khoi Tran 1',
     subject: 'Lorem ipsum',
     content: 'Lorem ipsum dolor sit amet',
@@ -24,18 +28,21 @@ const dataInbox = [
   {
     uuid: 1,
     author: 'Khoi Tran 5',
+    type: TypeChat.SENT,
     subject: 'Hello from KhoiTran',
     content: 'I just assign task for you. Please check at https:// and feedback for me.',
   },
   {
     uuid: 2,
     author: 'Khoi Tran 8',
+    type: TypeChat.SENT,
     subject: 'Hello from KhoiTran',
     content: 'I just assign task for you. Please check at https:// and feedback for me.',
   },
   {
     uuid: 3,
     author: 'Khoi Tran',
+    type: TypeChat.SENT,
     subject: 'Lorem ipsum dolor sit amet',
     content:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus libero nibh, suscipit et neque quis, bibendum fermentum mi. Quisque in placerat lorem. Cras mattis massa sed mi porta, nec pellentesque risus feugiat. Sed non lectus sodales arcu ultrices feugiat. Etiam nec scelerisque enim. Ut at placerat lorem. Maecenas id orci at dolor vulputate viverra. Sed ultricies dignissim lorem quis sodales. Cras vitae scelerisque ex.',
@@ -43,6 +50,7 @@ const dataInbox = [
   {
     uuid: 4,
     author: 'Khoi Tran',
+    type: TypeChat.SENT,
     subject: 'Cras vitae scelerisque ex.',
     content:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus libero nibh, suscipit et neque quis, bibendum fermentum mi. Quisque in placerat lorem. Cras mattis massa sed mi porta, nec pellentesque risus feugiat. Sed non lectus sodales arcu ultrices feugiat. Etiam nec scelerisque enim. Ut at placerat lorem. Maecenas id orci at dolor vulputate viverra. Sed ultricies dignissim lorem quis sodales. Cras vitae scelerisque ex.',
@@ -50,12 +58,14 @@ const dataInbox = [
 
   {
     uuid: 8,
+    type: TypeChat.SENT,
     author: 'Khoi Tran',
     subject: 'Bibendum fermentum mi. Quisque in placerat lorem.',
     content:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus libero nibh, suscipit et neque quis, bibendum fermentum mi. Quisque in placerat lorem. Cras mattis massa sed mi porta, nec pellentesque risus feugiat. Sed non lectus sodales arcu ultrices feugiat. Etiam nec scelerisque enim. Ut at placerat lorem. Maecenas id orci at dolor vulputate viverra. Sed ultricies dignissim lorem quis sodales. Cras vitae scelerisque ex.',
   },
   {
+    type: TypeChat.SENT,
     uuid: 9,
     author: 'Khoi Tran',
     subject:
@@ -65,12 +75,14 @@ const dataInbox = [
   },
   {
     uuid: 10,
+    type: TypeChat.SENT,
     author: 'Khoi Tran',
     subject: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
   },
   {
     uuid: 11,
+    type: TypeChat.SENT,
     author: 'Khoi Tran',
     subject:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus libero nibh, suscipit et neque quis, bibendum fermentum mi. Quisque in placerat lorem. Cras mattis massa sed mi porta, nec pellentesque risus feugiat. Sed non lectus sodales arcu ultrices feugiat. Etiam nec scelerisque enim. Ut at placerat lorem. Maecenas id orci at dolor vulputate viverra. Sed ultricies dignissim lorem quis sodales. Cras vitae scelerisque ex.',
@@ -78,6 +90,7 @@ const dataInbox = [
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus libero nibh, suscipit et neque quis, bibendum fermentum mi. Quisque in placerat lorem. Cras mattis massa sed mi porta, nec pellentesque risus feugiat. Sed non lectus sodales arcu ultrices feugiat. Etiam nec scelerisque enim. Ut at placerat lorem. Maecenas id orci at dolor vulputate viverra. Sed ultricies dignissim lorem quis sodales. Cras vitae scelerisque ex.',
   },
   {
+    type: TypeChat.SENT,
     uuid: 12,
     author: 'Khoi Tran',
     subject: 'Bibendum fermentum mi. Quisque in placerat lorem.',
@@ -86,6 +99,7 @@ const dataInbox = [
   },
   {
     uuid: 13,
+    type: TypeChat.SENT,
     author: 'Khoi Tran',
     subject:
       'Bibendum fermentum mi. Quisque in placerat lorem. Cras mattis massa sed mi porta, nec pellentesque risus feugiat. Sed non lectus sodales arcu ultrices feugiat. Etiam nec scelerisque enim. Ut at placerat lorem. Maecenas id orci at dolor vulputate viverra. Sed ultricies dignissim lorem quis sodales. Cras vitae scelerisque ex.',
@@ -95,6 +109,7 @@ const dataInbox = [
   {
     uuid: 14,
     author: 'Khoi Tran',
+    type: TypeChat.SENT,
     subject:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus libero nibh, suscipit et neque quis, bibendum fermentum mi. Quisque in placerat lorem. Cras mattis massa sed mi porta, nec pellentesque risus feugiat. Sed non lectus sodales arcu ultrices feugiat. Etiam nec scelerisque enim. Ut at placerat lorem. Maecenas id orci at dolor vulputate viverra. Sed ultricies dignissim lorem quis sodales. Cras vitae scelerisque ex.',
     content:
@@ -103,6 +118,7 @@ const dataInbox = [
   {
     uuid: 15,
     author: 'Khoi Tran',
+    type: TypeChat.SENT,
     subject:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus libero nibh, suscipit et neque quis, bibendum fermentum mi. Quisque in placerat lorem. Cras mattis massa sed mi porta, nec pellentesque risus feugiat. Sed non lectus sodales arcu ultrices feugiat. Etiam nec scelerisque enim. Ut at placerat lorem. Maecenas id orci at dolor vulputate viverra. Sed ultricies dignissim lorem quis sodales. Cras vitae scelerisque ex.',
     content:
@@ -111,6 +127,7 @@ const dataInbox = [
   {
     uuid: 16,
     author: 'Khoi Tran',
+    type: TypeChat.SENT,
     subject:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus libero nibh, suscipit et neque quis, bibendum fermentum mi. Quisque in placerat lorem. Cras mattis massa sed mi porta, nec pellentesque risus feugiat. Sed non lectus sodales arcu ultrices feugiat. Etiam nec scelerisque enim. Ut at placerat lorem. Maecenas id orci at dolor vulputate viverra. Sed ultricies dignissim lorem quis sodales. Cras vitae scelerisque ex.',
     content:
@@ -118,6 +135,7 @@ const dataInbox = [
   },
   {
     uuid: 17,
+    type: TypeChat.SENT,
     author: 'Khoi Tran',
     subject:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus libero nibh, suscipit et neque quis, bibendum fermentum mi. Quisque in placerat lorem. Cras mattis massa sed mi porta, nec pellentesque risus feugiat. Sed non lectus sodales arcu ultrices feugiat. Etiam nec scelerisque enim. Ut at placerat lorem. Maecenas id orci at dolor vulputate viverra. Sed ultricies dignissim lorem quis sodales. Cras vitae scelerisque ex.',
@@ -126,6 +144,7 @@ const dataInbox = [
   },
   {
     uuid: 18,
+    type: TypeChat.SENT,
     author: 'Khoi Tran',
     subject:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus libero nibh, suscipit et neque quis, bibendum fermentum mi. Quisque in placerat lorem. Cras mattis massa sed mi porta, nec pellentesque risus feugiat. Sed non lectus sodales arcu ultrices feugiat. Etiam nec scelerisque enim. Ut at placerat lorem. Maecenas id orci at dolor vulputate viverra. Sed ultricies dignissim lorem quis sodales. Cras vitae scelerisque ex.',
@@ -134,6 +153,7 @@ const dataInbox = [
   },
   {
     uuid: 19,
+    type: TypeChat.SENT,
     author: 'Khoi Tran',
     subject:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus libero nibh, suscipit et neque quis, bibendum fermentum mi. Quisque in placerat lorem. Cras mattis massa sed mi porta, nec pellentesque risus feugiat. Sed non lectus sodales arcu ultrices feugiat. Etiam nec scelerisque enim. Ut at placerat lorem. Maecenas id orci at dolor vulputate viverra. Sed ultricies dignissim lorem quis sodales. Cras vitae scelerisque ex.',
@@ -142,6 +162,7 @@ const dataInbox = [
   },
   {
     uuid: 20,
+    type: TypeChat.SENT,
     author: 'Khoi Tran',
     subject:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus libero nibh, suscipit et neque quis, bibendum fermentum mi. Quisque in placerat lorem. Cras mattis massa sed mi porta, nec pellentesque risus feugiat. Sed non lectus sodales arcu ultrices feugiat. Etiam nec scelerisque enim. Ut at placerat lorem. Maecenas id orci at dolor vulputate viverra. Sed ultricies dignissim lorem quis sodales. Cras vitae scelerisque ex.',
@@ -150,6 +171,7 @@ const dataInbox = [
   },
   {
     uuid: 21,
+    type: TypeChat.SENT,
     author: 'Khoi Tran',
     subject:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus libero nibh, suscipit et neque quis, bibendum fermentum mi. Quisque in placerat lorem. Cras mattis massa sed mi porta, nec pellentesque risus feugiat. Sed non lectus sodales arcu ultrices feugiat. Etiam nec scelerisque enim. Ut at placerat lorem. Maecenas id orci at dolor vulputate viverra. Sed ultricies dignissim lorem quis sodales. Cras vitae scelerisque ex.',
@@ -164,7 +186,7 @@ const datawithDay = dataInbox?.map((item) => ({
   address: 'khoi.tran@techupcorp.com',
 }));
 
-const getSents = () => {
+const getSends = () => {
   return new Promise<MailType[]>((resolve) => {
     setTimeout(() => {
       resolve(datawithDay);
@@ -172,4 +194,4 @@ const getSents = () => {
   });
 };
 
-export { getSents };
+export { getSends };

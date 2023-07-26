@@ -1,36 +1,50 @@
 import dayjs from 'dayjs';
+import _ from 'lodash';
+import { useEffect, useState } from 'react';
 import { BsCameraVideo, BsChatLeftText } from 'react-icons/bs';
 import { GoDotFill } from 'react-icons/go';
 import { IoCallOutline, IoSearchOutline } from 'react-icons/io5';
 import { twMerge } from 'tailwind-merge';
+import { TypeChat } from '../../../../../../app/Enums/commonEnums';
 import { MailType } from '../../../../../../app/Types/commonTypes';
-import ViewMailSpaceGroupButtonFooter from '../ViewMailSpaceGroupButtonFooter';
+import useSelector from '../../../../../Hooks/useSelector';
+import ViewMailSpaceGroupButtonFooter from '../ViewMailSpace/ViewMailSpaceGroupButtonFooter';
 import ViewMailSpaceItemInfoCollapse from './ViewMailSpaceItemInfoCollapse';
 
 interface ViewMailSpaceItemProp {
   mail: MailType | null;
   isActive: boolean;
-  isOpen: boolean;
-  onClickViewMailHeader: () => void;
-  handleScroll: (e: React.UIEvent<HTMLElement>) => void;
+  isArray?: boolean;
+  handleSelectMail?: (mail: MailType) => void;
 }
 
-const ViewMailSpaceItem = ({
-  mail,
-  isActive,
-  isOpen,
-  onClickViewMailHeader,
-  handleScroll,
-}: ViewMailSpaceItemProp) => {
+const ViewMailSpaceItem = ({ mail, isActive, isArray, handleSelectMail }: ViewMailSpaceItemProp) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const userEmail = useSelector((state) => state.user.email);
+
   const dateMail = dayjs();
   const dateCurrent = dayjs(mail?.time);
+
+  const handleClickHeaderMailItem = (mailCurrent: MailType) => {
+    if (!isArray) return;
+    setIsOpen((prev) => !prev);
+    if (_.isFunction(handleSelectMail)) {
+      handleSelectMail(mailCurrent);
+    }
+  };
+
+  useEffect(() => {
+    if (_.isEmpty(mail?.inbox) && !isArray) {
+      setIsOpen(true);
+    }
+  }, [mail]);
+
   return (
     <div
       className={twMerge(
-        'h-[750px] flex-col items-center justify-start overflow-y-scroll border-b-[0.5px]',
-        isActive && '',
+        'mr-4 h-fit flex-col items-center justify-start border-b-[0.5px]',
+        isActive && 'border-l-2 border-l-blue-500',
       )}
-      onScroll={(e) => handleScroll(e)}
     >
       <div
         className={twMerge(
@@ -39,16 +53,23 @@ const ViewMailSpaceItem = ({
         )}
         tabIndex={0}
         role="button"
-        onClick={onClickViewMailHeader}
+        onClick={() => handleClickHeaderMailItem(mail || ({} as MailType))}
       >
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-cyan-500">
-          <p className="text-lg font-semibold">{mail?.author.slice(0, 1)}</p>
+        <div
+          className={twMerge(
+            'ml-1 flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-cyan-500',
+            userEmail === mail?.from_user?.email && 'bg-sky-300 italic opacity-40',
+          )}
+        >
+          <p className="text-lg font-semibold">
+            {userEmail === mail?.from_user?.email ? 'ME' : mail?.author.slice(0, 1)}
+          </p>
         </div>
-        {!isOpen && <ViewMailSpaceItemInfoCollapse mail={mail} />}
+        {!isOpen && <ViewMailSpaceItemInfoCollapse isArray={isArray} mail={mail} />}
         {isOpen && (
-          <div className="mx-2 flex flex-col gap-1">
+          <div className="mx-4 flex flex-col gap-1">
             <div className="flex items-center justify-start gap-4">
-              <p>{mail?.author}</p>
+              <p>{userEmail === mail?.from_user?.email ? 'Me' : mail?.author}</p>
               <div className="flex items-center gap-0.5">
                 <GoDotFill size={10} className="mx-1 mt-0.5 text-gray-300" />
                 <div className="flex h-7 w-7 items-center justify-center rounded-md hover:bg-gray-100">
@@ -71,9 +92,14 @@ const ViewMailSpaceItem = ({
                   ? dayjs(mail?.time).format('ddd, MMM D, YYYY h:mm A')
                   : dayjs(mail?.time).format('h:mm A')}
               </p>
-              <p className="flex items-center  text-xs uppercase text-gray-600">
-                {' '}
-                <GoDotFill size={10} className="mx-1.5 mt-0.5 text-gray-300" /> SENT
+              <p
+                className={twMerge(
+                  'flex items-center  text-xs uppercase text-gray-600',
+                  mail?.type === TypeChat.SENT && isArray && 'text-orange-500',
+                )}
+              >
+                <GoDotFill size={10} className="mx-1.5 mt-0.5 text-gray-300" />
+                {mail?.type}
               </p>
             </div>
           </div>
@@ -81,7 +107,7 @@ const ViewMailSpaceItem = ({
       </div>
       {isOpen && (
         <>
-          <div className="mx-3 mt-3 break-all border-y-[0.5px] pb-8 pt-5 text-left text-base">
+          <div className="mx-3 mt-3 break-all border-y-[0.5px] py-5 text-left text-base">
             {/* eslint-disable-next-line react/no-danger */}
             <div dangerouslySetInnerHTML={{ __html: mail?.content ? mail.content : ' ' }} />
           </div>

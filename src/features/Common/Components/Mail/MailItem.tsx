@@ -12,10 +12,11 @@ interface MailItemProps {
   onChangeSelectRows: (idRows: number, checked: boolean) => void;
   onClickShowMail: (mail: MailType) => void;
   selected: boolean;
+  selectedMail: MailType | null;
 }
 
-const MailItem = ({ mail, onChangeSelectRows, onClickShowMail, selected }: MailItemProps) => {
-  const isReaded = mail?.readed;
+const MailItem = ({ mail, onChangeSelectRows, onClickShowMail, selected, selectedMail }: MailItemProps) => {
+  const isRead = mail?.read;
   const { itemMailStyle } = useSelector((state) => state.layout);
 
   const style = useMemo(() => {
@@ -38,9 +39,10 @@ const MailItem = ({ mail, onChangeSelectRows, onClickShowMail, selected }: MailI
     <div className="group relative h-fit w-full">
       <div
         className={twMerge(
-          'shadow-bottom-2 flex  w-full overflow-hidden border-b-[0.5px] px-2 text-sm group-hover:bg-gray-200',
+          'shadow-bottom-2 flex  w-full overflow-hidden border-b-[0.5px] px-2 text-sm group-hover:bg-gray-100',
           selected && 'bg-gray-200',
-          isReaded && 'bg-gray-100',
+          isRead && 'bg-gray-50',
+          selectedMail?.uuid === mail.uuid && 'bg-sky-50',
           style?.height,
         )}
       >
@@ -65,7 +67,7 @@ const MailItem = ({ mail, onChangeSelectRows, onClickShowMail, selected }: MailI
             <div
               className={twMerge(
                 'line-clamp-1 flex h-full w-48 flex-shrink-0  text-ellipsis break-all font-semibold  text-gray-700',
-                isReaded && 'font-normal',
+                isRead && 'font-normal',
                 style?.height_top,
               )}
             >
@@ -75,7 +77,7 @@ const MailItem = ({ mail, onChangeSelectRows, onClickShowMail, selected }: MailI
               <div
                 className={twMerge(
                   'flex h-full max-w-[calc(100%-192px)] flex-shrink-0 text-ellipsis  font-semibold ',
-                  isReaded && 'font-normal',
+                  isRead && 'font-normal',
                 )}
               >
                 <div className="line-clamp-1 break-all">{mail?.subject}</div>
@@ -87,9 +89,7 @@ const MailItem = ({ mail, onChangeSelectRows, onClickShowMail, selected }: MailI
           </div>
           <div
             className={twMerge(
-              'z-5 absolute right-0 top-0 line-clamp-1 flex h-full w-24 justify-end text-ellipsis break-all bg-white pr-4  text-center text-xs font-semibold leading-[52px] text-gray-700 group-hover:bg-gray-200',
-              selected && 'bg-gray-200',
-              isReaded && 'bg-gray-100',
+              'z-5 absolute right-0 top-0 line-clamp-1 flex h-full w-24 justify-end text-ellipsis break-all  pr-4  text-center text-xs font-semibold leading-[52px] text-gray-700',
               style?.height,
             )}
           >

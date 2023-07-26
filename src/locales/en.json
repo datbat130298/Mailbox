@@ -108,5 +108,10 @@
   "remove_color": "Remove color",
   "edit": "Edit",
   "remove_label": "Remove label",
-  "add_label": "Add label"
+  "add_label": "Add label",
+  "reply_all": "Reply All",
+  "edit_as_new": "Edit As New",
+  "share_email": "Share Email",
+  "close": "Close",
+  "popup": "Popup"
 }

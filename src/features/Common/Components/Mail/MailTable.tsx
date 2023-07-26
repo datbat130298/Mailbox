@@ -4,7 +4,7 @@ import { useInViewport } from 'react-in-viewport';
 import { twMerge } from 'tailwind-merge';
 import { MailType } from '../../../../app/Types/commonTypes';
 import MailItem from './MailItem';
-import MailItemSleleton from './MailItemSkeleton';
+import MailItemSkeleton from './MailItemSkeleton';
 
 interface MailTableProps {
   data: Array<MailType>;
@@ -14,6 +14,7 @@ interface MailTableProps {
   onChangeSelectRows: (idRows: number, checked: boolean) => void;
   selectRows: Array<number>;
   onClickShowMail?: (mail: MailType) => void;
+  selectedMail: MailType | null;
 }
 
 const MailTable = ({
@@ -24,6 +25,7 @@ const MailTable = ({
   onChangeSelectRows,
   onClickShowMail,
   selectRows,
+  selectedMail,
 }: MailTableProps) => {
   const detectLoadingRef = useRef<HTMLDivElement>(null);
   const { inViewport } = useInViewport(detectLoadingRef);
@@ -45,12 +47,13 @@ const MailTable = ({
           isLoading &&
           Array.from({ length: 17 }).map((_1, index) => (
             // eslint-disable-next-line react/no-array-index-key
-            <MailItemSleleton key={index} />
+            <MailItemSkeleton key={index} />
           ))}
         {!_.isEmpty(data) &&
           !isLoading &&
           data?.map((item) => (
             <MailItem
+              selectedMail={selectedMail}
               key={item.uuid}
               mail={item}
               selected={_.includes(selectRows, item.uuid)}
