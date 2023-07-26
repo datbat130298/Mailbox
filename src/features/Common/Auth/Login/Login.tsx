@@ -70,7 +70,7 @@ const Login = () => {
           // } else {
           //   from = searchParams.get('redirect') || '/my';
           // }
-          from = '/auth/login-success';
+          from = '/inbox';
           navigate(from, {
             replace: true,
           });

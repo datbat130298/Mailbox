@@ -58,7 +58,7 @@ const LabelGroup = ({ label, id, childrenLabel, className, to }: GroupLabelProp)
           to={to || pathname}
           className={twMerge(
             'group relative mx-3 my-0.5 flex w-[60px] items-center justify-between overflow-hidden rounded-md py-1.5 pl-3.5 text-gray-700 transition-width  duration-300 before:absolute before:left-0 before:top-1/2 before:h-2/3 before:w-1 before:-translate-y-1/2 before:rounded-sm before:bg-primary-800 hover:bg-slate-200',
-            isShowFullSidebar && 'w-64',
+            isShowFullSidebar && 'w-60',
             isActivated
               ? 'bg-slate-200 font-semibold text-primary-600 before:block'
               : 'text-slate-700 before:hidden',

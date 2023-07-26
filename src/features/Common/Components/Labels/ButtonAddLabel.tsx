@@ -27,7 +27,7 @@ const ButtonAddLabel = ({ isShowSidebar }: ButtonAddLabelProp) => {
       <div
         className={twMerge(
           'flex  items-center justify-between rounded-r-full ',
-          (isShowSidebar || isShowFullSidebar) && 'w-[255px]',
+          (isShowSidebar || isShowFullSidebar) && 'w-[240px]',
         )}
         style={{ transition: '.4s', transitionDelay: '.05s' }}
       >
