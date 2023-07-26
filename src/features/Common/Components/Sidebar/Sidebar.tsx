@@ -49,8 +49,8 @@ const Sidebar = () => {
   return (
     <div
       className={twMerge(
-        'fixed left-0 top-0 z-[49] h-screen w-20 bg-slate-100 py-6 pt-20',
-        (isShowFullSidebar || isShowSidebar) && 'w-72',
+        'fixed left-0 top-0 z-[49] mt-px h-screen w-20 bg-slate-100 py-6 pt-20',
+        (isShowFullSidebar || isShowSidebar) && 'w-[270px]',
       )}
       style={{ transition: '.2s ease-in-out' }}
       onMouseMove={() => handleMouseMove()}
@@ -59,7 +59,7 @@ const Sidebar = () => {
       id="sidebar"
     >
       <ComposeButton isShowSidebar={isShowSidebar} />
-      <div className="h-[95%] overflow-auto py-3">
+      <div className="h-[95%] overflow-hidden py-3 hover:overflow-y-auto">
         {visibleSide &&
           visibleSide.map((visibleSideItem) => (
             <SidebarItem

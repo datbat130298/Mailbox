@@ -29,7 +29,7 @@ const UserDropdown = ({ onClick }: UserDropdownProps) => {
       .then(() => {
         dispatch(clearUser());
         onClick();
-        navigate('/', {
+        navigate('/auth/login', {
           replace: true,
         });
       })
