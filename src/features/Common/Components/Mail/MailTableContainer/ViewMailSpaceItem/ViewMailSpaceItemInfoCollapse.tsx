@@ -6,6 +6,7 @@ import { twMerge } from 'tailwind-merge';
 import { TypeChat } from '../../../../../../app/Enums/commonEnums';
 import { MailType } from '../../../../../../app/Types/commonTypes';
 import useSelector from '../../../../../Hooks/useSelector';
+import { convertHtmlToString } from '../../../../../utils/helpers';
 
 interface ViewMailSpaceItemInfoCollapseProp {
   mail: MailType | null;
@@ -54,8 +55,8 @@ const ViewMailSpaceItemInfoCollapse = ({ mail, isArray }: ViewMailSpaceItemInfoC
         className={twMerge('line-clamp-1 flex w-full justify-start', emailUser === mail?.address && 'italic')}
       >
         <p className="line-clamp-1 w-fit text-ellipsis text-left text-sm">{`Re: ${subjectRe}`}</p>
-        <p className={twMerge('line-clamp-1 flex w-fit text-ellipsis text-sm text-gray-600')}>
-          {!_.isEmpty(mail?.content) && `- ${mail?.content}`}
+        <p className={twMerge('line-clamp-1 flex w-full text-ellipsis text-sm text-gray-600')}>
+          {!_.isEmpty(mail?.content) && `- ${convertHtmlToString(mail?.content)}`}
         </p>
       </div>
     </div>

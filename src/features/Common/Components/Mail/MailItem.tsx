@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { MailType } from '../../../../app/Types/commonTypes';
 import useSelector from '../../../Hooks/useSelector';
+import { convertHtmlToString } from '../../../utils/helpers';
 import Checkbox from '../Form/Checkbox';
 import MailItemAction from './MailItemAction';
 
@@ -35,6 +36,7 @@ const MailItem = ({ mail, onChangeSelectRows, onClickShowMail, selected, selecte
       height: 'h-13 leading-[52px]',
     };
   }, [itemMailStyle]);
+
   return (
     <div className="group relative h-fit w-full">
       <div
@@ -83,7 +85,7 @@ const MailItem = ({ mail, onChangeSelectRows, onClickShowMail, selected, selecte
                 <div className="line-clamp-1 break-all">{mail?.subject}</div>
               </div>
               <div className="line-clamp-1 h-full w-fit text-ellipsis break-all pl-1">
-                {!_.isEmpty(mail?.content) && `- ${mail?.content}`}
+                {!_.isEmpty(mail?.content) && `- ${convertHtmlToString(mail.content)}`}
               </div>
             </div>
           </div>

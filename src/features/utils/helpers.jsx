@@ -26,4 +26,10 @@ const triggerClickPrev = (data, currentTarget) => {
   return false;
 };
 
-export { triggerClickOutside, triggerClickNext, triggerClickPrev };
+const convertHtmlToString = (html) => {
+  const tempDivElement = document.createElement('div');
+  tempDivElement.innerHTML = html;
+  return tempDivElement.textContent || tempDivElement.innerText || '';
+};
+
+export { triggerClickOutside, triggerClickNext, triggerClickPrev, convertHtmlToString };
