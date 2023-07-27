@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import isEmail from 'validator/lib/isEmail';
 import { AuthService } from '../../../../app/Services';
+import { setTokens } from '../../../../app/Services/Common/AuthService';
 import { setUser } from '../../../../app/Slices/userSlice';
 import { AxiosErrorDataType } from '../../../../app/Types/commonTypes';
 import Alert from '../../Components/Alert/Alert';
@@ -74,6 +75,8 @@ const Login = () => {
           navigate(from, {
             replace: true,
           });
+          const { token } = response.data.data;
+          setTokens(token);
         });
       })
       .catch((err) => {
