@@ -49,7 +49,7 @@ const ComposePopupInput = (
   }, [disabled]);
 
   return (
-    <div className="mx-2 my-1 flex items-center gap-2 border-b-[1px] border-gray-200 py-2 pb-3">
+    <div className="mx-1 my-1 flex items-center gap-2 border-b-[1px] border-gray-200 py-2 pb-3">
       {label && <span className="text-sm">{label}</span>}
       <input
         placeholder={placeholder}

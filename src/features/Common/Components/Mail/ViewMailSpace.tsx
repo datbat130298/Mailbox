@@ -183,7 +183,7 @@ const ViewMailSpace = ({ mailData }: ViewMailSpaceProps) => {
                     containerClassName:
                       'absolute right-0 top-0 w-[calc(100%-64px)] rounded-2xl overflow-hidden h-fit',
                     composeClassName: 'min-h-[300px] h-fit',
-                    composeContent: 'overflow-hidden',
+                    composeContent: 'overflow-hidden w-[300px]',
                   }
                 : {
                     containerClassName: '',

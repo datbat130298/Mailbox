@@ -6,7 +6,7 @@ import { FaRegTrashAlt } from 'react-icons/fa';
 import { FiLink2, FiMoreVertical } from 'react-icons/fi';
 import { IoMdAttach } from 'react-icons/io';
 import { IoImageOutline } from 'react-icons/io5';
-import { MdOutlineContentCopy, MdTagFaces } from 'react-icons/md';
+import { MdOpenInNew, MdOutlineContentCopy, MdTagFaces } from 'react-icons/md';
 import { MultiValue } from 'react-select';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import striptags from 'striptags';
@@ -14,6 +14,7 @@ import { twMerge } from 'tailwind-merge';
 import { DraftActionEnum, useDraftsDispatch } from '../../../../../app/Context/DraftContext';
 import { ComposeViewTypeEnum } from '../../../../../app/Enums/commonEnums';
 import { ComposePopupStyleType, MailType } from '../../../../../app/Types/commonTypes';
+import Tooltip from '../../Tooltip/Tooltip';
 import ComposePopupButtonMore from './ComposePopupButtonMore/ComposePopupButtonMore';
 import ComposePopupButtonSend from './ComposePopupButtonSend';
 import ComposePopupHeader from './ComposePopupHeader';
@@ -23,7 +24,6 @@ import { OptionLabel } from './ComposePopupRecipient/ComposePopupSelectRecipient
 import ComposePopupSelectTimeModal from './ComposePopupSelectTimeModal';
 import ComposePopupToolbarItem from './ComposePopupToolbarItem';
 import WriterCompose from './EditorWriterCompose';
-import ReplyAndForwardHeader from './ReplyAndForwardHeader';
 
 export interface ComposePopupProps {
   content: string;
@@ -48,10 +48,13 @@ export interface ComposePopupProps {
   setComposeViewType?: Dispatch<SetStateAction<ComposeViewTypeEnum>>;
   contentInbox?: string;
   handleClickInsertContent?: (text: string) => void;
+  handleClickChangeView?: () => void;
 }
 
 const ComposePopup = ({
+  handleClickChangeView,
   handleClickInsertContent,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   setComposeViewType,
   content,
   onChangeEditor,
@@ -84,13 +87,6 @@ const ComposePopup = ({
 
   const dispatch = useDraftsDispatch();
 
-  const handleClickDeleteFooter = () => {
-    // eslint-disable-next-line no-console
-    if (onClear) {
-      onClear();
-    }
-  };
-
   useEffect(() => {
     if (contentInbox && viewType === ComposeViewTypeEnum.REPLY) {
       setIsShowButtonInsertContent(true);
@@ -109,6 +105,13 @@ const ComposePopup = ({
       toolbar.style.visibility = 'visible';
     }
   }, [isVisibleToolbar]);
+
+  const handleClickDeleteFooter = () => {
+    if (_.isFunction(handleClickChangeView)) handleClickChangeView();
+    if (onClear) {
+      onClear();
+    }
+  };
 
   const handleClickMore = () => {
     setIsShowOptionMore((prev) => !prev);
@@ -197,7 +200,8 @@ const ComposePopup = ({
       onClear();
     }
   };
-  const handleAddComposePopupDraft = () => {
+
+  const handleClickChangeViewTypeToPopup = () => {
     dispatch({
       type: DraftActionEnum.ADD_COMPOSE,
       viewType: ComposeViewTypeEnum.POPUP,
@@ -207,6 +211,7 @@ const ComposePopup = ({
       recipientCc: selectedCcRecipient,
       subject,
     });
+    if (_.isFunction(handleClickChangeView)) handleClickChangeView();
   };
 
   return (
@@ -218,19 +223,6 @@ const ComposePopup = ({
         composeClassName,
       )}
     >
-      {(viewType === ComposeViewTypeEnum.REPLY || viewType === ComposeViewTypeEnum.FORWARD) && (
-        <ReplyAndForwardHeader
-          setComposeViewType={setComposeViewType}
-          type={viewType}
-          toEmail={fromMail?.from_user?.email}
-          handleAddComposePopupDraft={handleAddComposePopupDraft}
-          content={content}
-          selectRecipient={selectRecipient || undefined}
-          selectedCcRecipient={selectedCcRecipient || undefined}
-          selectedBccRecipient={selectedBccRecipient || undefined}
-          subject={subject}
-        />
-      )}
       {(viewType === ComposeViewTypeEnum.MODAL || viewType === ComposeViewTypeEnum.POPUP) && (
         <ComposePopupHeader
           title={!_.isEmpty(fromMail) ? `${t('reply')}: ${debounceSubject}` : debounceSubject}
@@ -247,16 +239,15 @@ const ComposePopup = ({
         )}
       >
         <div className="mt-0.5 px-2">
-          {viewType !== ComposeViewTypeEnum.REPLY && (
-            <ComposePopupRecipient
-              selectRecipient={selectRecipient}
-              selectedCcRecipient={selectedCcRecipient}
-              selectedBccRecipient={selectedBccRecipient}
-              onChangeSelectRecipient={onChangeSelectRecipient}
-              onChangeSelectCcRecipient={onChangeSelectCcRecipient}
-              onChangeSelectBccRecipient={onChangeSelectBccRecipient}
-            />
-          )}
+          <ComposePopupRecipient
+            selectRecipient={selectRecipient}
+            selectedCcRecipient={selectedCcRecipient}
+            selectedBccRecipient={selectedBccRecipient}
+            onChangeSelectRecipient={onChangeSelectRecipient}
+            onChangeSelectCcRecipient={onChangeSelectCcRecipient}
+            onChangeSelectBccRecipient={onChangeSelectBccRecipient}
+          />
+
           <ComposePopupInput placeholder={t('subject')} value={subject} onChange={onChangeSubjectInput} />
         </div>
         <div
@@ -336,12 +327,28 @@ const ComposePopup = ({
               />
             </div>
           </div>
+          <div className=" flex items-center justify-center">
+            {(viewType === ComposeViewTypeEnum.REPLY || viewType === ComposeViewTypeEnum.FORWARD) && (
+              <Tooltip title={t('open_in_a_popup')} position="top">
+                <div
+                  role="button"
+                  tabIndex={0}
+                  onClick={handleClickChangeViewTypeToPopup}
+                  className="-mr-2 mt-2.5 flex h-8 w-fit items-center justify-center rounded-md px-2 hover:bg-gray-100 hover:text-black"
+                >
+                  <div className="flex-center h-full w-max">
+                    <MdOpenInNew size={17} />
+                  </div>
+                </div>
+              </Tooltip>
+            )}
 
-          <ComposePopupToolbarItem
-            onClick={handleClickDeleteFooter}
-            title={t('discard_draft')}
-            icon={<FaRegTrashAlt size={14} />}
-          />
+            <ComposePopupToolbarItem
+              onClick={handleClickDeleteFooter}
+              title={t('discard_draft')}
+              icon={<FaRegTrashAlt size={14} />}
+            />
+          </div>
         </div>
       </div>
 

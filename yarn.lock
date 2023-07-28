@@ -9206,6 +9206,11 @@ react-list@^0.8.13:
   dependencies:
     prop-types "15"
 
+react-multi-email@^1.0.14:
+  version "1.0.14"
+  resolved "https://registry.yarnpkg.com/react-multi-email/-/react-multi-email-1.0.14.tgz#97a3607f6662cca9233a538666834971b33a89a8"
+  integrity sha512-3luWs4cS0S1X6VACe4jy6Li6QdAo1WpLNpfQsn1mzvmFIDlrYVzJCoG/wfJjKsI5ilUg/4oRNePE8g3OkHNu/w==
+
 react-redux@^8.0.5:
   version "8.0.5"
   resolved "https://registry.npmjs.org/react-redux/-/react-redux-8.0.5.tgz"
