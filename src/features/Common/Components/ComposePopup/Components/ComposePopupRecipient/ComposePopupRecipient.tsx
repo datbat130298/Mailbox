@@ -86,7 +86,7 @@ const ComposePopupRecipient = ({
     <div ref={recipientRef}>
       {viewText && (
         <div
-          className="mx-2 my-1 flex items-center gap-2 border-b-[1px] border-gray-200 py-2 pb-3"
+          className="mx-1 my-1 flex items-center gap-2 border-b-[1px] border-gray-200 py-2 pb-3"
           role="button"
           tabIndex={0}
           onClick={handleClickRecipient}
@@ -102,7 +102,7 @@ const ComposePopupRecipient = ({
         <div
           className={twMerge(
             'mx-1 flex flex-col items-center border-b-[1px] border-gray-200 px-1 py-0',
-            _.isEmpty(selectRecipient) && 'mx-2 flex-row items-center',
+            _.isEmpty(selectRecipient) && 'mx-1 flex-row items-center',
             (isShowBccInput || isShowCcInput) && 'mx-1 flex-col ',
           )}
         >

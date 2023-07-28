@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import isEmail from 'validator/lib/isEmail';
 import { AuthService } from '../../../../app/Services';
+import { setTokens } from '../../../../app/Services/Common/AuthService';
 import { setUser } from '../../../../app/Slices/userSlice';
 import { AxiosErrorDataType } from '../../../../app/Types/commonTypes';
 import Alert from '../../Components/Alert/Alert';
@@ -60,9 +61,11 @@ const Login = () => {
     setIsSubmitting(true);
     setError(null);
     AuthService.loginWithEmailPassword(email, password)
-      .then(() => {
+      .then((res) => {
         let from = searchParams.get('redirect') || '';
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        const { token } = res.data.data;
+        setTokens(token || '');
         AuthService.getMe().then((response) => {
           dispatch(setUser(response.data.data));
           // if (response?.data?.data?.roles?.find((role: any) => role.slug === 'admin')) {

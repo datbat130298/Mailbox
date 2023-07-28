@@ -42,6 +42,7 @@ export interface UserDataType {
   updated_at?: string;
   roles: UserRoleType[];
   config?: UserConfigType;
+  token?: string;
 }
 
 export interface UserFormDataType {

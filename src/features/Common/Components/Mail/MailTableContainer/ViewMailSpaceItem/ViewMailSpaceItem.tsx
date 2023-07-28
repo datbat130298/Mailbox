@@ -5,9 +5,10 @@ import { BsCameraVideo, BsChatLeftText } from 'react-icons/bs';
 import { GoDotFill } from 'react-icons/go';
 import { IoCallOutline, IoSearchOutline } from 'react-icons/io5';
 import { twMerge } from 'tailwind-merge';
-import { TypeChat } from '../../../../../../app/Enums/commonEnums';
+import { ComposeViewTypeEnum, TypeChat } from '../../../../../../app/Enums/commonEnums';
 import { MailType } from '../../../../../../app/Types/commonTypes';
 import useSelector from '../../../../../Hooks/useSelector';
+import ComposePopupContainer from '../../../ComposePopup/ComposeContainer';
 import ViewMailSpaceGroupButtonFooter from '../ViewMailSpace/ViewMailSpaceGroupButtonFooter';
 import ViewMailSpaceItemInfoCollapse from './ViewMailSpaceItemInfoCollapse';
 
@@ -20,12 +21,22 @@ interface ViewMailSpaceItemProp {
 
 const ViewMailSpaceItem = ({ mail, isActive, isArray, handleSelectMail }: ViewMailSpaceItemProp) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isShowComposeWrite, setIsShowComposeWrite] = useState(false);
+  const [viewType, setViewType] = useState<ComposeViewTypeEnum>();
+
   const userEmail = useSelector((state) => state.user.email);
 
   const dateMail = dayjs();
   const dateCurrent = dayjs(mail?.time);
 
+  const emailUser = useSelector((state) => state.user.email);
+
+  const contentDefaultForward = `<br><br><p>---------- Forwarded message -------- <br> From: ${mail?.from_user?.email} <br>Date: ${mail?.time}<br>Subject: ${mail?.subject}<br>To: ${emailUser}</p>`;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const contentForward = `${contentDefaultForward} <br><br> ${mail?.content}`;
+
   const handleClickHeaderMailItem = (mailCurrent: MailType) => {
+    setIsShowComposeWrite(false);
     if (!isArray) return;
     setIsOpen((prev) => !prev);
     if (_.isFunction(handleSelectMail)) {
@@ -33,11 +44,25 @@ const ViewMailSpaceItem = ({ mail, isActive, isArray, handleSelectMail }: ViewMa
     }
   };
 
+  const handleClickForward = () => {
+    setViewType(ComposeViewTypeEnum.FORWARD);
+    setIsShowComposeWrite(true);
+  };
+
+  const handleClickChangeView = () => {
+    setIsShowComposeWrite(false);
+  };
+
   useEffect(() => {
     if (_.isEmpty(mail?.inbox) && !isArray) {
       setIsOpen(true);
     }
   }, [mail]);
+
+  const handleClickReply = () => {
+    setViewType(ComposeViewTypeEnum.REPLY);
+    setIsShowComposeWrite(true);
+  };
 
   return (
     <div
@@ -111,7 +136,27 @@ const ViewMailSpaceItem = ({ mail, isActive, isArray, handleSelectMail }: ViewMa
             {/* eslint-disable-next-line react/no-danger */}
             <div dangerouslySetInnerHTML={{ __html: mail?.content ? mail.content : ' ' }} />
           </div>
-          <ViewMailSpaceGroupButtonFooter />
+          <ViewMailSpaceGroupButtonFooter
+            onClickReply={handleClickReply}
+            onClickForward={handleClickForward}
+            isShowComposeReplyOrForward={isShowComposeWrite}
+          />
+          {isShowComposeWrite && (
+            <div className=" pb-3">
+              <ComposePopupContainer
+                contentInbox={viewType === ComposeViewTypeEnum.FORWARD ? contentForward : mail?.content}
+                handleClickChangeView={handleClickChangeView}
+                isShowComposeReplyOrForward={isShowComposeWrite}
+                composeViewType={viewType}
+                fromMail={mail || ({} as MailType)}
+                composePopupStyle={{
+                  containerClassName: 'w-full shadow-none rounded-2xl overflow-hidden h-fit',
+                  composeClassName: 'min-h-[300px] h-fit',
+                  composeContent: 'overflow-hidden',
+                }}
+              />
+            </div>
+          )}
         </>
       )}
     </div>

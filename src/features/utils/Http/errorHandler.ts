@@ -1,57 +1,77 @@
-import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { UNAUTHORIZED } from 'http-status';
-import { AUTHENTICATION_PATH } from '../../../app/Const/URL';
-import { AuthService } from '../../../app/Services';
-
-// eslint-disable-next-line import/no-cycle
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { StatusCodes } from 'http-status-codes';
+import { isEmpty } from 'lodash';
+import { getAccessToken, refreshAccessToken, setTokens } from '../../../app/Services/Common/AuthService';
 
 const errorHandler = async (
-  error: { response: AxiosResponse; config: AxiosRequestConfig },
-  instance: AxiosInstance,
+  error: { response: any; config?: any | undefined },
+  instance?: { request: (arg0: any) => any },
+  handler?: (arg0: string, arg1: boolean) => void,
 ) => {
-  const { response, config } = error;
-  let redirectURL = '';
-  const redirectWhenError = config?.redirectWhenError;
-  if (response) {
-    const { status } = response;
-    const autoRefreshToken = config?.autoRefreshToken;
+  const { response, config = {} } = error;
+  const { willRedirect, autoRefreshToken } = config;
 
-    if (autoRefreshToken !== false) {
-      if (status === UNAUTHORIZED) {
-        const { refreshToken } = AuthService.getAccessTokens();
-        if (refreshToken) {
-          try {
-            const newTokens = await AuthService.refreshAccessToken(refreshToken);
-            AuthService.setAccessTokens(newTokens.accessToken, newTokens.refreshToken);
-            config.headers = {
-              ...config.headers,
-              Authorization: `Bearer ${newTokens.accessToken}`,
-            };
-            config.autoRefreshToken = false;
-            return await instance?.(config);
-          } catch (refreshError) {
-            redirectURL = AUTHENTICATION_PATH.LOGIN_PATH;
+  const currentURL = window.location.pathname;
+  let redirectURL = '';
+
+  if (!isEmpty(response)) {
+    const { status } = response;
+
+    if (status === StatusCodes.UNAUTHORIZED && autoRefreshToken !== false) {
+      const refreshToken = getAccessToken();
+
+      if (refreshToken) {
+        try {
+          const { token: newAccessToken } = await refreshAccessToken(refreshToken);
+
+          setTokens(newAccessToken || '');
+
+          config.headers.Authorization = `Bearer ${newAccessToken}`;
+          config.autoRefreshToken = false;
+          if (instance) {
+            return instance.request(config);
           }
-        } else {
-          redirectURL = AUTHENTICATION_PATH.LOGIN_PATH;
+        } catch (refreshError) {
+          redirectURL = `/auth/login`;
         }
       }
-    } else if (redirectWhenError !== false) {
-      switch (status) {
-        case UNAUTHORIZED: {
-          redirectURL = AUTHENTICATION_PATH.LOGIN_PATH;
+    } else {
+      switch (response.status) {
+        case StatusCodes.UNAUTHORIZED: {
+          redirectURL = '/auth/login';
           break;
         }
+        case StatusCodes.NOT_FOUND:
+          redirectURL = '/error/404';
+          break;
+        case StatusCodes.FORBIDDEN:
+          redirectURL = '/error/403';
+          break;
+        case StatusCodes.INTERNAL_SERVER_ERROR:
+          redirectURL = '/error/500';
+          break;
+        case StatusCodes.SERVICE_UNAVAILABLE:
+          redirectURL = '/error/503';
+          break;
         default:
+          redirectURL = '/error';
           break;
       }
     }
+  } else {
+    redirectURL = '/error';
   }
 
-  if (redirectURL && redirectWhenError) {
-    const currentURL = window.location.pathname;
-    if (currentURL !== redirectURL) {
-      window.location.href = `${redirectURL}?from=${currentURL}`;
+  if (willRedirect !== false) {
+    // If `redirectURL` is matched with the current URL, do not redirect.
+    if (redirectURL.includes(currentURL)) {
+      return Promise.reject(error);
+    }
+
+    if (handler) {
+      handler(`${redirectURL}?redirect=${currentURL}`, true);
+    } else {
+      window.location.href = `${redirectURL}?redirect=${currentURL}`;
     }
   }
 

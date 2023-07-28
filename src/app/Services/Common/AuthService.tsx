@@ -86,7 +86,17 @@ const getLoginStatus = async () => {
   return true;
 };
 
+const getAccessToken = () => {
+  return window.localStorage.getItem('access_token');
+};
+
+const setTokens = (accessToken: string) => {
+  window.localStorage.setItem('access_token', accessToken);
+};
+
 export {
+  getAccessToken,
+  setTokens,
   getMe,
   logOut,
   createAccount,
