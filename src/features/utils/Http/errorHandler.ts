@@ -3,7 +3,11 @@ import { StatusCodes } from 'http-status-codes';
 import { isEmpty } from 'lodash';
 import { getAccessToken, refreshAccessToken, setTokens } from '../../../app/Services/Common/AuthService';
 
-const errorHandler = async (error: any, instance: any, handler: any) => {
+const errorHandler = async (
+  error: { response: any; config?: any | undefined },
+  instance?: { request: (arg0: any) => any },
+  handler?: (arg0: string, arg1: boolean) => void,
+) => {
   const { response, config = {} } = error;
   const { willRedirect, autoRefreshToken } = config;
 
@@ -20,12 +24,13 @@ const errorHandler = async (error: any, instance: any, handler: any) => {
         try {
           const { token: newAccessToken } = await refreshAccessToken(refreshToken);
 
-          setTokens(newAccessToken);
+          setTokens(newAccessToken || '');
 
           config.headers.Authorization = `Bearer ${newAccessToken}`;
           config.autoRefreshToken = false;
-
-          return instance.request(config);
+          if (instance) {
+            return instance.request(config);
+          }
         } catch (refreshError) {
           redirectURL = `/auth/login`;
         }
@@ -64,7 +69,7 @@ const errorHandler = async (error: any, instance: any, handler: any) => {
     }
 
     if (handler) {
-      handler(`${redirectURL}?redirect=${currentURL}`);
+      handler(`${redirectURL}?redirect=${currentURL}`, true);
     } else {
       window.location.href = `${redirectURL}?redirect=${currentURL}`;
     }

@@ -29,6 +29,7 @@ const MailTable = ({
 }: MailTableProps) => {
   const detectLoadingRef = useRef<HTMLDivElement>(null);
   const { inViewport } = useInViewport(detectLoadingRef);
+
   useLayoutEffect(() => {
     if (!_.isFunction(onChangeShowShadow)) return;
     if (inViewport) {
@@ -37,6 +38,7 @@ const MailTable = ({
       onChangeShowShadow(true);
     }
   }, [inViewport, onChangeShowShadow]);
+
   return (
     <div
       className={twMerge('overflow-overlay -z-10 h-full w-full gap-y-4  overflow-hidden overflow-y-auto ')}

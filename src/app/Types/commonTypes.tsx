@@ -9,6 +9,7 @@ import { UserDataType } from './userTypes';
 export interface AuthTokensType {
   accessToken: string;
   refreshToken: string;
+  token?: string;
 }
 
 export interface AuthLoginType {

@@ -61,9 +61,11 @@ const Login = () => {
     setIsSubmitting(true);
     setError(null);
     AuthService.loginWithEmailPassword(email, password)
-      .then(() => {
+      .then((res) => {
         let from = searchParams.get('redirect') || '';
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        const { token } = res.data.data;
+        setTokens(token || '');
         AuthService.getMe().then((response) => {
           dispatch(setUser(response.data.data));
           // if (response?.data?.data?.roles?.find((role: any) => role.slug === 'admin')) {
@@ -75,8 +77,6 @@ const Login = () => {
           navigate(from, {
             replace: true,
           });
-          const { token } = response.data.data;
-          setTokens(token);
         });
       })
       .catch((err) => {

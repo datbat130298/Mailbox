@@ -21,9 +21,11 @@ interface ComposePopupContainerProps {
   composeViewType?: ComposeViewTypeEnum;
   setComposeViewType?: Dispatch<SetStateAction<ComposeViewTypeEnum>>;
   id?: string;
+  handleClickChangeView?: () => void;
 }
 
 const ComposePopupContainer = ({
+  handleClickChangeView,
   contentInbox,
   setComposeViewType,
   composeViewType,
@@ -169,6 +171,7 @@ const ComposePopupContainer = ({
         (composeViewType === ComposeViewTypeEnum.REPLY ||
           composeViewType === ComposeViewTypeEnum.FORWARD) && (
           <ComposePopup
+            handleClickChangeView={handleClickChangeView}
             id={id}
             contentInbox={contentInbox}
             handleClickInsertContent={handleClickInsertContent}
