@@ -240,6 +240,7 @@ const ComposePopup = ({
       >
         <div className="mt-0.5 px-2">
           <ComposePopupRecipient
+            viewType={viewType}
             selectRecipient={selectRecipient}
             selectedCcRecipient={selectedCcRecipient}
             selectedBccRecipient={selectedBccRecipient}
@@ -248,7 +249,12 @@ const ComposePopup = ({
             onChangeSelectBccRecipient={onChangeSelectBccRecipient}
           />
 
-          <ComposePopupInput placeholder={t('subject')} value={subject} onChange={onChangeSubjectInput} />
+          <ComposePopupInput
+            viewType={viewType}
+            placeholder={t('subject')}
+            value={subject}
+            onChange={onChangeSubjectInput}
+          />
         </div>
         <div
           className={twMerge(

@@ -54,7 +54,7 @@ const AdvancedSearch = () => {
   }, [dropdownSearchTabRef]);
 
   return (
-    <div ref={dropdownSearchTabRef} className="relative h-full w-fit py-3.5">
+    <div ref={dropdownSearchTabRef} className="relative w-fit py-3.5">
       <div className="flex h-12 w-[720px] justify-start rounded-4xl bg-slate-200 p-1.5">
         <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-gray-700 hover:bg-gray-300">
           <HiOutlineSearch size={18} />

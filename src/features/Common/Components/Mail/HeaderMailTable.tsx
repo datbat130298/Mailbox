@@ -2,12 +2,10 @@ import _ from 'lodash';
 import React, { ForwardedRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FiFilter } from 'react-icons/fi';
-import { IoArrowBackOutline } from 'react-icons/io5';
 import { twMerge } from 'tailwind-merge';
 import FilterDatetime from '../../WorkSpace/Sent/FilterDatetime';
 import FilterDropdown from '../FilterDropdown/FilterDropdown';
 import Checkbox from '../Form/Checkbox';
-import Pagination from '../Pagination/Pagination';
 import SelectViewStyle from '../SelectViewStyle/SelectViewStyle';
 import HeaderAction from './HeaderAction';
 
@@ -18,9 +16,7 @@ interface HeaderMailTableProps {
   isShowCheckboxHeader: boolean;
   onClickSelectAll: (e: boolean) => void;
   onCloseViewMailSpace: () => void;
-  onClickNextButton: () => false | void;
-  onClickPrevButton: () => false | void;
-  isShowViewMailSpace?: boolean;
+  // isShowViewMailSpace?: boolean;
 }
 
 const HeaderMailTable = (
@@ -28,13 +24,13 @@ const HeaderMailTable = (
     actionArray,
     isShowShadow,
     isChecked,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     isShowCheckboxHeader,
     onClickSelectAll,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onCloseViewMailSpace,
-    onClickNextButton,
-    onClickPrevButton,
-    isShowViewMailSpace,
-  }: HeaderMailTableProps,
+  }: // isShowViewMailSpace,
+  HeaderMailTableProps,
   ref: ForwardedRef<HTMLDivElement>,
 ) => {
   const { t } = useTranslation();
@@ -84,69 +80,47 @@ const HeaderMailTable = (
       className={twMerge(
         'absolute left-0 top-0 z-40 flex h-14 w-full justify-between rounded-t-lg px-2 text-gray-700 ',
         isShowShadow ? 'shadow-bottom' : 'border-b-[0.5px]',
-        isShowViewMailSpace && 'w-1/2',
+        // isShowViewMailSpace && 'w-1/2',
+        // !isShowViewMailSpace && 'w-full',
       )}
       ref={ref}
     >
-      {!isShowCheckboxHeader && (
-        <div className="flex h-full w-fit gap-x-0.5">
-          <div className="group my-3 flex h-8 w-fit rounded-md px-2 hover:bg-gray-100">
-            <div className="flex-center h-full w-max">
-              <Checkbox
-                checked={isChecked}
-                indeterminate={isChecked}
-                onChange={(e) => onClickSelectAll(e.target.checked)}
-                className="group-hover:border-primary-700 group-hover:text-primary-700"
-              />
-            </div>
-            <FilterDropdown
-              elementStyle={<div className="hidden" />}
-              data={filterCheckboxData}
-              position="-left-6 top-10"
+      <div className="flex h-full w-fit gap-x-0.5">
+        <div className="group my-3 flex h-8 w-fit rounded-md px-2 hover:bg-gray-100">
+          <div className="flex-center h-full w-max">
+            <Checkbox
+              checked={isChecked}
+              indeterminate={isChecked}
+              onChange={(e) => onClickSelectAll(e.target.checked)}
+              className="group-hover:border-primary-700 group-hover:text-primary-700"
             />
           </div>
-          {_.includes(actionArray, 'delete_forrever') && isChecked && (
-            <div className="my-3 flex h-8 w-fit rounded-md px-2  hover:bg-gray-100 hover:text-primary-700">
-              <div className="h-full w-full text-center text-sm font-semibold leading-8">
-                {t('delete_forever')}
-              </div>
-            </div>
-          )}
-          {_.includes(actionArray, 'view') && !isChecked && (
-            <FilterDropdown
-              data={filterViewData}
-              icon={<FiFilter size={14} />}
-              label={t('view')}
-              position="left-0 top-[52px]"
-            />
-          )}
-          {_.includes(actionArray, 'datetime') && !isChecked && <FilterDatetime />}
-          <HeaderAction showAction={isChecked} />
+          <FilterDropdown
+            elementStyle={<div className="hidden" />}
+            data={filterCheckboxData}
+            position="-left-6 top-10"
+          />
         </div>
-      )}
-      {isShowCheckboxHeader && (
-        <div className="flex justify-start">
-          <div
-            role="button"
-            tabIndex={0}
-            onClick={onCloseViewMailSpace}
-            className="my-3 ml-1 flex h-8 w-fit rounded-md px-2  hover:bg-gray-100 hover:text-primary-700"
-          >
-            <div className="flex-center h-full w-max">
-              <IoArrowBackOutline size={14} />
+        {_.includes(actionArray, 'delete_forrever') && isChecked && (
+          <div className="my-3 flex h-8 w-fit rounded-md px-2  hover:bg-gray-100 hover:text-primary-700">
+            <div className="h-full w-full text-center text-sm font-semibold leading-8">
+              {t('delete_forever')}
             </div>
-            <div className="ml-1 text-sm leading-8">{t('back')}</div>
           </div>
-          <HeaderAction showAction={isShowCheckboxHeader} />
-        </div>
-      )}
+        )}
+        {_.includes(actionArray, 'view') && !isChecked && (
+          <FilterDropdown
+            data={filterViewData}
+            icon={<FiFilter size={14} />}
+            label={t('view')}
+            position="left-0 top-[52px]"
+          />
+        )}
+        {_.includes(actionArray, 'datetime') && !isChecked && <FilterDatetime />}
+        <HeaderAction showAction={isChecked} />
+      </div>
       <div className="flex h-full w-fit">
-        <Pagination
-          isHiddenRange={isShowCheckboxHeader}
-          onClickNextButton={onClickNextButton}
-          onClickPrevButton={onClickPrevButton}
-        />
-        {!isShowCheckboxHeader && <SelectViewStyle />}
+        <SelectViewStyle />
       </div>
     </div>
   );

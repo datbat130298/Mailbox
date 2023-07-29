@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MultiValue } from 'react-select';
 import { twMerge } from 'tailwind-merge';
+import { ComposeViewTypeEnum } from '../../../../../../app/Enums/commonEnums';
 import { getContacts } from '../../../../../../app/Services/Contact/Contact';
 import { ContactType } from '../../../../../../app/Types/commonTypes';
 import { triggerClickOutside } from '../../../../../utils/helpers';
@@ -15,9 +16,11 @@ interface ComposePopupRecipientProps {
   onChangeSelectRecipient: (selected: MultiValue<OptionLabel>) => void;
   onChangeSelectCcRecipient: (selected: MultiValue<OptionLabel>) => void;
   onChangeSelectBccRecipient: (selected: MultiValue<OptionLabel>) => void;
+  viewType?: string;
 }
 
 const ComposePopupRecipient = ({
+  viewType,
   selectRecipient,
   selectedCcRecipient,
   selectedBccRecipient,
@@ -86,7 +89,11 @@ const ComposePopupRecipient = ({
     <div ref={recipientRef}>
       {viewText && (
         <div
-          className="mx-1 my-1 flex items-center gap-2 border-b-[1px] border-gray-200 py-2 pb-3"
+          className={twMerge(
+            'mx-1 my-1 flex items-center gap-2 border-b-[1px] border-gray-200 py-2 pb-3',
+            viewType !== ComposeViewTypeEnum.REPLY && 'mx-2',
+            viewType !== ComposeViewTypeEnum.FORWARD && 'mx-2',
+          )}
           role="button"
           tabIndex={0}
           onClick={handleClickRecipient}
@@ -102,7 +109,12 @@ const ComposePopupRecipient = ({
         <div
           className={twMerge(
             'mx-1 flex flex-col items-center border-b-[1px] border-gray-200 px-1 py-0',
-            _.isEmpty(selectRecipient) && 'mx-1 flex-row items-center',
+            _.isEmpty(selectRecipient) &&
+              viewType !== ComposeViewTypeEnum.REPLY &&
+              'mx-2 flex-row items-center',
+            _.isEmpty(selectRecipient) &&
+              viewType !== ComposeViewTypeEnum.REPLY &&
+              'mx-2 flex-row items-center',
             (isShowBccInput || isShowCcInput) && 'mx-1 flex-col ',
           )}
         >

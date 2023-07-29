@@ -15,6 +15,9 @@ module.exports = {
         lora: ['Lora', 'serif'],
         'source-sans-pro': ['Source Sans Pro', 'sans-serif'],
       },
+      fontSize: {
+        s: ['0.6rem', { lineHeight: '0.75rem' }],
+      },
       colors: {
         primary: {
           ...colors.red,

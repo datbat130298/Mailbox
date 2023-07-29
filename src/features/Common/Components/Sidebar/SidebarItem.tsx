@@ -40,7 +40,7 @@ const SidebarItem = ({
         onClick={(e: React.MouseEvent) => e.stopPropagation()}
         to={to || pathname}
         className={twMerge(
-          'relative mx-3 my-0.5 flex w-[64px] items-center justify-between overflow-hidden rounded-md py-[11px] pl-5 text-gray-700  transition-width duration-300 before:absolute before:left-0 before:top-1/2 before:h-2/3 before:w-1 before:-translate-y-1/2 before:rounded-sm before:bg-primary-800 hover:bg-slate-200',
+          'relative mx-3 my-0.5 flex w-[64px] items-center justify-between overflow-hidden rounded-md py-[11px] pl-5 text-gray-700  transition-width duration-300 before:absolute before:left-0 before:top-1/2 before:h-2/3 before:w-1 before:-translate-y-1/2 before:rounded-sm before:bg-primary-600 hover:bg-slate-200',
           (isShowFullSidebar || isShowSidebar) && 'w-60',
           isActivated
             ? 'bg-slate-200 font-semibold text-primary-600 before:block'
@@ -48,7 +48,7 @@ const SidebarItem = ({
           className,
         )}
       >
-        <div className="relative flex flex-shrink-0 items-center justify-center text-slate-800">
+        <div className="relative ml-px flex flex-shrink-0 items-center justify-center text-slate-800">
           {cloneElement(icon, {
             className: twMerge('flex-shrink-0 w-max '),
           })}

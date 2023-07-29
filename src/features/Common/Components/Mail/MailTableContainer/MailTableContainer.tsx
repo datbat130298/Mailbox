@@ -1,11 +1,9 @@
 import _ from 'lodash';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 import { MailType } from '../../../../../app/Types/commonTypes';
 import useSelector from '../../../../Hooks/useSelector';
-import { triggerClickNext, triggerClickPrev } from '../../../../utils/helpers';
 import EmptyData from '../../EmptyData/EmptyData';
 import HeaderMailTable from '../HeaderMailTable';
 import MailTable from '../MailTable';
@@ -31,7 +29,6 @@ const MailTableContainer = ({ mailData, isLoading }: MailTableContainerProp) => 
 
   const isShowFullSideBar = useSelector((state) => state.layout.isShowFullSidebar);
 
-  const navigate = useNavigate();
   const { t } = useTranslation();
 
   const isChecked = useMemo(() => {
@@ -62,24 +59,6 @@ const MailTableContainer = ({ mailData, isLoading }: MailTableContainerProp) => 
     return setSelectRows((prev) => prev.filter((item) => item !== idRows));
   };
 
-  const handleClickNextButton = () => {
-    const nextItem = triggerClickNext(mailData, selectedMail);
-    if (nextItem) {
-      setSelectedMail(nextItem);
-      return navigate(`/drafts/${nextItem.uuid}`);
-    }
-    return false;
-  };
-
-  const handleClickPrevButton = () => {
-    const prevItem = triggerClickPrev(mailData, selectedMail);
-    if (prevItem) {
-      setSelectedMail(prevItem);
-      return navigate(`/drafts/${prevItem.uuid}`);
-    }
-    return false;
-  };
-
   const handleSelectAll = (checked: boolean) => {
     const selectAll = mailData.map((item) => item?.uuid);
     if (checked) {
@@ -100,10 +79,7 @@ const MailTableContainer = ({ mailData, isLoading }: MailTableContainerProp) => 
   const onMouseMove = useCallback(
     (event: MouseEvent) => {
       if (!isClicked.current) return;
-      if (
-        event.clientX <= (isShowFullSideBar ? 750 : 570) ||
-        event.clientX >= (isShowFullSideBar ? 1520 : 1400)
-      ) {
+      if (event.clientX <= (isShowFullSideBar ? 750 : 570) || event.clientX >= 1400) {
         return;
       }
 
@@ -114,23 +90,29 @@ const MailTableContainer = ({ mailData, isLoading }: MailTableContainerProp) => 
       }
 
       if (tableRef.current !== null && !isShowFullSideBar) {
-        tableRef.current.style.width = `${event.clientX - 90}px`;
+        tableRef.current.style.width = `${event.clientX - 95}px`;
       }
       if (tableRef.current !== null && isShowFullSideBar) {
-        tableRef.current.style.width = `${event.clientX - 288}px`;
+        tableRef.current.style.width = `${event.clientX - 283}px`;
       }
 
       if (headerTableRef.current && !isShowFullSideBar) {
-        headerTableRef.current.style.width = `${event.clientX - 90}px`;
+        headerTableRef.current.style.width = `${event.clientX - 95}px`;
       }
       if (headerTableRef.current && isShowFullSideBar) {
-        headerTableRef.current.style.width = `${event.clientX - 288}px`;
+        headerTableRef.current.style.width = `${event.clientX - 283}px`;
       }
     },
     [isShowFullSideBar],
   );
 
   useEffect(() => {
+    if (isShowViewMailSpace && headerTableRef.current !== null) {
+      headerTableRef.current.style.width = '50%';
+    }
+    if (!isShowViewMailSpace && headerTableRef.current !== null) {
+      headerTableRef.current.style.width = '100%';
+    }
     if (
       isShowViewMailSpace &&
       dragBarSide.current &&
@@ -144,6 +126,7 @@ const MailTableContainer = ({ mailData, isLoading }: MailTableContainerProp) => 
       dragBarSide.current.addEventListener('mouseup', onMouseUp);
       if (containerRef.current !== null) {
         containerRef.current.addEventListener('mousemove', onMouseMove);
+        containerRef.current.addEventListener('mouseup', onMouseUp);
       }
 
       return () => {
@@ -151,6 +134,7 @@ const MailTableContainer = ({ mailData, isLoading }: MailTableContainerProp) => 
           dragBarSide.current.removeEventListener('mousedown', onMouseDown);
           dragBarSide.current.removeEventListener('mouseup', onMouseUp);
           containerRef.current?.removeEventListener('mousemove', onMouseMove);
+          containerRef.current?.removeEventListener('mouseup', onMouseUp);
         }
       };
     }
@@ -165,15 +149,13 @@ const MailTableContainer = ({ mailData, isLoading }: MailTableContainerProp) => 
       <div className={twMerge('h-full w-full pt-14', isShowViewMailSpace && 'w-1/2')} ref={tableRef}>
         <div className={twMerge('', tableRef.current && `w-${tableRef.current.style.width}`)}>
           <HeaderMailTable
-            isShowViewMailSpace={isShowViewMailSpace}
+            // isShowViewMailSpace={isShowViewMailSpace}
             ref={headerTableRef}
             actionArray={['datetime']}
             isShowShadow={isShowShadow}
             isShowCheckboxHeader={isShowViewMailSpace}
             isChecked={isChecked}
             onClickSelectAll={handleSelectAll}
-            onClickNextButton={handleClickNextButton}
-            onClickPrevButton={handleClickPrevButton}
             onCloseViewMailSpace={() => {
               setIsShowViewMailSpace(false);
               setSelectedMail({} as MailType);

@@ -9,7 +9,7 @@ interface ViewMailSpaceContainerProp {
 
 const ViewMailSpaceContainer = ({ mailData }: ViewMailSpaceContainerProp) => {
   const [isShowShadow, setIsShowShadow] = useState(false);
-  const [selectedMail, setSelectedMail] = useState<MailType>({} as MailType);
+  const [selectedMail, setSelectedMail] = useState<MailType>(mailData || ({} as MailType));
 
   const subjectRe = useMemo(() => {
     if (mailData?.subject) return mailData.subject;
@@ -30,8 +30,8 @@ const ViewMailSpaceContainer = ({ mailData }: ViewMailSpaceContainerProp) => {
 
   return (
     <>
-      <div className={twMerge('ml-1 flex h-12 items-center px-5', isShowShadow && 'shadow-bottom')}>
-        <p className="line-clamp-1 text-ellipsis text-base font-medium">{`Re: ${subjectRe}`}</p>
+      <div className={twMerge('ml-0.5 flex h-12 items-center px-5', isShowShadow && '')}>
+        <p className="line-clamp-1 text-ellipsis text-left text-base font-medium">{`Re: ${subjectRe}`}</p>
       </div>
       <div className="ml-1 h-[calc(100%-110px)] overflow-y-auto" onScroll={(e) => handleScroll(e)}>
         {mailData?.inbox && mailData?.inbox.length ? (
@@ -41,6 +41,7 @@ const ViewMailSpaceContainer = ({ mailData }: ViewMailSpaceContainerProp) => {
               isActive={selectedMail.uuid === mailData.uuid}
               handleSelectMail={handleSelectMail}
               isArray
+              isFirstOpen
             />
             {mailData.inbox.map((mail) => (
               <ViewMailSpaceItem
