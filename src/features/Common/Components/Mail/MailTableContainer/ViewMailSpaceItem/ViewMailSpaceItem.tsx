@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { BsCameraVideo, BsChatLeftText } from 'react-icons/bs';
 import { GoDotFill } from 'react-icons/go';
 import { IoCallOutline, IoSearchOutline } from 'react-icons/io5';
+import { PiFlagPennantFill } from 'react-icons/pi';
 import { twMerge } from 'tailwind-merge';
 import { ComposeViewTypeEnum, TypeChat } from '../../../../../../app/Enums/commonEnums';
 import { MailType } from '../../../../../../app/Types/commonTypes';
@@ -17,9 +18,16 @@ interface ViewMailSpaceItemProp {
   isActive: boolean;
   isArray?: boolean;
   handleSelectMail?: (mail: MailType) => void;
+  isFirstOpen?: boolean;
 }
 
-const ViewMailSpaceItem = ({ mail, isActive, isArray, handleSelectMail }: ViewMailSpaceItemProp) => {
+const ViewMailSpaceItem = ({
+  mail,
+  isActive,
+  isArray,
+  handleSelectMail,
+  isFirstOpen,
+}: ViewMailSpaceItemProp) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isShowComposeWrite, setIsShowComposeWrite] = useState(false);
   const [viewType, setViewType] = useState<ComposeViewTypeEnum>();
@@ -56,6 +64,8 @@ const ViewMailSpaceItem = ({ mail, isActive, isArray, handleSelectMail }: ViewMa
   useEffect(() => {
     if (_.isEmpty(mail?.inbox) && !isArray) {
       setIsOpen(true);
+    } else if (isFirstOpen) {
+      setIsOpen(true);
     }
   }, [mail]);
 
@@ -64,18 +74,29 @@ const ViewMailSpaceItem = ({ mail, isActive, isArray, handleSelectMail }: ViewMa
     setIsShowComposeWrite(true);
   };
 
+  const handleClickReplyCollapse = () => {
+    setViewType(ComposeViewTypeEnum.REPLY);
+    setIsShowComposeWrite(true);
+    setIsOpen(true);
+  };
+
+  const handleClickForwardCollapse = () => {
+    setViewType(ComposeViewTypeEnum.FORWARD);
+    setIsShowComposeWrite(true);
+    setIsOpen(true);
+  };
+
   return (
     <div
       className={twMerge(
         'mr-4 h-fit flex-col items-center justify-start border-b-[0.5px]',
-        isActive && 'border-l-2 border-l-blue-500',
+        isActive && 'border-l-2 border-l-blue-500 bg-white',
+        isOpen && 'bg-white',
+        !isOpen && 'group',
       )}
     >
       <div
-        className={twMerge(
-          'flex h-20 w-full items-center bg-white px-3',
-          !isOpen && 'bg-gray-50 hover:bg-white',
-        )}
+        className={twMerge('flex h-20 w-full items-center px-3', !isOpen && 'bg-gray-50 hover:bg-white')}
         tabIndex={0}
         role="button"
         onClick={() => handleClickHeaderMailItem(mail || ({} as MailType))}
@@ -90,36 +111,48 @@ const ViewMailSpaceItem = ({ mail, isActive, isArray, handleSelectMail }: ViewMa
             {userEmail === mail?.from_user?.email ? 'ME' : mail?.author.slice(0, 1)}
           </p>
         </div>
-        {!isOpen && <ViewMailSpaceItemInfoCollapse isArray={isArray} mail={mail} />}
+        {!isOpen && (
+          <ViewMailSpaceItemInfoCollapse
+            isArray={isArray}
+            mail={mail}
+            isActive={isActive}
+            isOpen={isOpen}
+            onClickReply={handleClickReplyCollapse}
+            onClickForward={handleClickForwardCollapse}
+          />
+        )}
         {isOpen && (
-          <div className="mx-4 flex flex-col gap-1">
+          <div className="ml-4 flex flex-col gap-1">
             <div className="flex items-center justify-start gap-4">
               <p>{userEmail === mail?.from_user?.email ? 'Me' : mail?.author}</p>
               <div className="flex items-center gap-0.5">
                 <GoDotFill size={10} className="mx-1 mt-0.5 text-gray-300" />
-                <div className="flex h-7 w-7 items-center justify-center rounded-md hover:bg-gray-100">
-                  <BsChatLeftText size={15} className=" text-gray-500" />
+                <div className="flex h-7 w-7 items-center justify-center rounded-md text-gray-500 hover:bg-slate-100 hover:text-black">
+                  <BsChatLeftText size={15} className="" />
                 </div>
-                <div className="flex h-7 w-7 items-center justify-center rounded-md hover:bg-gray-100">
-                  <IoCallOutline size={17} className=" text-gray-500" />
+                <div className="flex h-7 w-7 items-center justify-center rounded-md text-gray-500 hover:bg-slate-100 hover:text-black">
+                  <IoCallOutline size={17} className="" />
                 </div>
-                <div className="flex h-7 w-7 items-center justify-center rounded-md hover:bg-gray-100">
-                  <BsCameraVideo size={18} className=" text-gray-500" />
+                <div className="flex h-7 w-7 items-center justify-center rounded-md text-gray-500 hover:bg-slate-100 hover:text-black">
+                  <BsCameraVideo size={18} className="" />
                 </div>
-                <div className="flex h-7 w-7 items-center justify-center rounded-md hover:bg-gray-100">
-                  <IoSearchOutline size={18} className=" text-gray-500" />
+                <div className="flex h-7 w-7 items-center justify-center rounded-md text-gray-500 hover:bg-slate-100 hover:text-black">
+                  <IoSearchOutline size={18} className="" />
                 </div>
               </div>
             </div>
             <div className="flex items-center justify-start gap-2">
+              <div className="rounded-md text-gray-500 hover:bg-slate-100 hover:text-black">
+                <PiFlagPennantFill className="-ml-[5px] p-1" size={20} />
+              </div>
               <p className="text-xs text-gray-600">
-                {!dateMail.diff(dateCurrent, 'D')
+                {dateMail.diff(dateCurrent, 'D')
                   ? dayjs(mail?.time).format('ddd, MMM D, YYYY h:mm A')
                   : dayjs(mail?.time).format('h:mm A')}
               </p>
               <p
                 className={twMerge(
-                  'flex items-center  text-xs uppercase text-gray-600',
+                  'flex items-center text-xs uppercase text-gray-600',
                   mail?.type === TypeChat.SENT && isArray && 'text-orange-500',
                 )}
               >
@@ -132,7 +165,7 @@ const ViewMailSpaceItem = ({ mail, isActive, isArray, handleSelectMail }: ViewMa
       </div>
       {isOpen && (
         <>
-          <div className="mx-3 mt-3 break-all border-y-[0.5px] py-5 text-left text-base">
+          <div className="mx-5 break-all border-y-[0.5px] py-4 text-left text-base">
             {/* eslint-disable-next-line react/no-danger */}
             <div dangerouslySetInnerHTML={{ __html: mail?.content ? mail.content : ' ' }} />
           </div>
@@ -142,7 +175,7 @@ const ViewMailSpaceItem = ({ mail, isActive, isArray, handleSelectMail }: ViewMa
             isShowComposeReplyOrForward={isShowComposeWrite}
           />
           {isShowComposeWrite && (
-            <div className=" pb-3">
+            <div className="mx-2 pb-3">
               <ComposePopupContainer
                 contentInbox={viewType === ComposeViewTypeEnum.FORWARD ? contentForward : mail?.content}
                 handleClickChangeView={handleClickChangeView}

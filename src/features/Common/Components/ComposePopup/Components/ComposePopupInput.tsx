@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import React, { ForwardedRef, forwardRef, useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
+import { ComposeViewTypeEnum } from '../../../../../app/Enums/commonEnums';
 
 export interface ComposePopupInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
   placeholder: string;
@@ -10,10 +11,12 @@ export interface ComposePopupInputProps extends Omit<React.InputHTMLAttributes<H
   inlineError?: boolean;
   isShowLabelWhenFocusing?: boolean;
   inputClassName?: string;
+  viewType?: string;
 }
 
 const ComposePopupInput = (
   {
+    viewType,
     label,
     placeholder,
     className,
@@ -49,7 +52,13 @@ const ComposePopupInput = (
   }, [disabled]);
 
   return (
-    <div className="mx-1 my-1 flex items-center gap-2 border-b-[1px] border-gray-200 py-2 pb-3">
+    <div
+      className={twMerge(
+        'mx-1 my-1 flex items-center gap-2 border-b-[1px] border-gray-200 py-2 pb-3',
+        viewType !== ComposeViewTypeEnum.REPLY && 'mx-2',
+        viewType !== ComposeViewTypeEnum.FORWARD && 'mx-2',
+      )}
+    >
       {label && <span className="text-sm">{label}</span>}
       <input
         placeholder={placeholder}

@@ -35,7 +35,11 @@ const SidebarGroup = ({ children, title, isShowSidebar }: SidebarGroupProp) => {
         )}
       >
         <div className="flex h-full w-full items-center">
-          <div className={twMerge('relative flex  flex-shrink-0  items-center justify-center rounded-full')}>
+          <div
+            className={twMerge(
+              'relative ml-0.5  flex  flex-shrink-0 items-center justify-center rounded-full',
+            )}
+          >
             <BiChevronRight
               className={twMerge('duration-200', isShow && 'rotate-90', isCollapsed && '')}
               size={26}

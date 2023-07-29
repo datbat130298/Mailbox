@@ -9,6 +9,7 @@ const initialState: UserDataType = {
   last_name: '',
   username: '',
   roles: [],
+  token: '',
 };
 
 export const userSlice = createSlice({

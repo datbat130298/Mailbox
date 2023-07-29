@@ -10,7 +10,7 @@ interface ViewMailSpaceProp {
 
 const ViewMailSpace = ({ handleClose, mailData }: ViewMailSpaceProp, ref: ForwardedRef<HTMLDivElement>) => {
   return (
-    <div className="flex h-full justify-start shadow-left">
+    <div className="flex h-full justify-start bg-slate-50 shadow-left">
       <div className="w-2 flex-shrink-0 hover:cursor-col-resize" ref={ref}>
         <div className="h-14 w-full border-b-[0.5px]" />
       </div>

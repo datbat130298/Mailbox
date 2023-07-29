@@ -1,14 +1,19 @@
 import { GoDotFill } from 'react-icons/go';
+import { twMerge } from 'tailwind-merge';
 
 interface ViewMailSpaceButtonFooterItemProp {
   title: string;
   onClick: () => void;
+  className?: string;
 }
 
-const ViewMailSpaceButtonFooterItem = ({ title, onClick }: ViewMailSpaceButtonFooterItemProp) => {
+const ViewMailSpaceButtonFooterItem = ({ title, onClick, className }: ViewMailSpaceButtonFooterItemProp) => {
   return (
     <div
-      className="flex h-9 items-center justify-start rounded-lg px-2 text-sm hover:cursor-pointer hover:bg-gray-100"
+      className={twMerge(
+        'flex h-9 items-center justify-start rounded-lg px-2 text-sm hover:cursor-pointer hover:bg-gray-100',
+        className,
+      )}
       tabIndex={0}
       role="button"
       onClick={onClick}
