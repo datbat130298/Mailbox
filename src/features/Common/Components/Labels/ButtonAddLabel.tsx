@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { GrFormAdd } from 'react-icons/gr';
+import { MdAdd } from 'react-icons/md';
 import { twMerge } from 'tailwind-merge';
 import useSelector from '../../../Hooks/useSelector';
+import Tooltip from '../Tooltip/Tooltip';
 import AddLabelsModal from './AddLabelsModal';
 
 interface ButtonAddLabelProp {
@@ -23,7 +24,7 @@ const ButtonAddLabel = ({ isShowSidebar }: ButtonAddLabelProp) => {
   };
 
   return (
-    <>
+    <Tooltip position="left" title={t('add_label')}>
       <div
         className={twMerge(
           'flex  items-center justify-between rounded-r-full ',
@@ -41,15 +42,16 @@ const ButtonAddLabel = ({ isShowSidebar }: ButtonAddLabelProp) => {
           tabIndex={0}
           onClick={handleClickAdd}
           className={twMerge(
-            'rounded-full p-2 text-gray-500 hover:bg-slate-200',
-            !isShowSidebar && 'ml-[22px]',
+            'rounded-full p-2 text-gray-700 hover:bg-slate-200',
+            !isShowSidebar && 'ml-[23px]',
+            isShowFullSidebar && 'mr-0.5',
           )}
         >
-          <GrFormAdd size={24} />
+          <MdAdd size={22} />
         </div>
       </div>
       <AddLabelsModal isOpen={isShowAddLabel} onClose={handleCloseModal} title={t('new_label')} />
-    </>
+    </Tooltip>
   );
 };
 

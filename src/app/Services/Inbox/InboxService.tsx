@@ -15,7 +15,8 @@ const dataInbox = [
         author: 'Khoi Tran',
         subject: 'Hello from KhoiTran',
         type: TypeChat.SENT,
-        content: 'I just assign task for you. Please check at https:// and feedback for me.',
+        content:
+          'Ta chỉ là chiếc lá </br> Việc của mình là xanh</br> Ta chỉ là quả chanh</br> Chờ một người đến vắt</br>Ta chỉ là đôi mắt </br>Ngơ ngác nhìn đời trôi</br>Ta chỉ là bờ môi</br>Muốn chạm vào ai quá!',
         time: '2023-05-30T03:29:57+00:00',
         address: 'khoi.tran@techupcorp.com',
         from_user: {
@@ -38,7 +39,8 @@ const dataInbox = [
         author: 'Khoi Tran',
         type: TypeChat.SENT,
         subject: 'Hello from KhoiTran',
-        content: 'I just assign task for you. Please check at https:// and feedback for me.',
+        content:
+          'Ta chỉ là chiếc lá </br> Việc của mình là xanh</br> Ta chỉ là quả chanh</br> Chờ một người đến vắt</br>Ta chỉ là đôi mắt </br>Ngơ ngác nhìn đời trôi</br>Ta chỉ là bờ môi</br>Muốn chạm vào ai quá!',
         time: '2023-05-30T03:29:57+00:00',
         address: 'khoi.tran@techupcorp.com',
         from_user: {

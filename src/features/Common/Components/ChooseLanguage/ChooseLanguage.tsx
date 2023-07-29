@@ -51,7 +51,7 @@ const ChooseLanguage = ({ language, onChangeLanguage }: ChooseLanguageProps) => 
               alt={item.name}
               className="mr-px w-6 sm:mr-1"
             />
-            <div className="hidden w-max text-sm uppercase sm:block">{item.name}</div>
+            <div className="hidden w-max text-sm capitalize sm:block">{item.name}</div>
           </div>
         </OptionOP>
       ))}

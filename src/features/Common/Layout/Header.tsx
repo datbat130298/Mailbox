@@ -21,6 +21,7 @@ const Header = () => {
   const [language, setLanguage] = useState('en');
   const [isUserTabVisible, setUserTabVisible] = useState(false);
   const { t } = useTranslation();
+
   const handleToggleUserDropdown = useCallback(() => {
     setUserTabVisible((prev) => !prev);
   }, []);
@@ -45,11 +46,14 @@ const Header = () => {
   const isShowFullSidebar = useSelector((state) => state.layout.isShowFullSidebar);
 
   const handleShowFullSidebar = useCallback(() => {
+    if (user?.uuid === 0) {
+      return undefined;
+    }
     if (isShowFullSidebar) {
       return dispatch(setIsShowFullSidebar(false));
     }
     return dispatch(setIsShowFullSidebar(true));
-  }, [isShowFullSidebar]);
+  }, [isShowFullSidebar, user]);
 
   return (
     <div className="fixed right-0 top-0 z-50 flex h-20 w-full justify-between bg-slate-100 pl-6 pr-4">
@@ -61,7 +65,7 @@ const Header = () => {
             onClick={handleShowFullSidebar}
             className={twMerge(
               'mr-2 flex h-10 w-10 items-center rounded-full',
-              isShowFullSidebar && 'bg-gray-200',
+              isShowFullSidebar && 'bg-slate-200',
             )}
           >
             <CgMenu size={20} className="mx-auto " />

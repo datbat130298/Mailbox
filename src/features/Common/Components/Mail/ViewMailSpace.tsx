@@ -31,7 +31,7 @@ const ViewMailSpace = ({ mailData }: ViewMailSpaceProps) => {
   const fetchDataMail = useCallback((mailId: string | undefined) => {
     const data = getMailById(Number(mailId));
     if (data) {
-      setMail(data);
+      setMail(data as MailType);
     }
   }, []);
 

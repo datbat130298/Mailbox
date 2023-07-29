@@ -66,7 +66,7 @@ const LabelGroup = ({ label, id, childrenLabel, className, to }: GroupLabelProp)
           )}
         >
           <div className="flex ">
-            <div id={id.toString()} className="flex items-center gap-4">
+            <div id={id.toString()} className="ml-0.5 flex items-center gap-4">
               <div
                 role="button"
                 tabIndex={0}
