@@ -77,7 +77,13 @@ const loginWithEmailPassword = (
     },
   );
 
-const logOut = () => axiosInstance.post(COMMON_AUTH_API.LOGOUT);
+const logOut = async () => {
+  const response = await axiosInstance.post(COMMON_AUTH_API.LOGOUT);
+  window.localStorage.removeItem('access_token');
+  window.localStorage.removeItem('refresh_token');
+
+  return response.data.data;
+};
 
 const getLoginStatus = async () => {
   const cookie = new Cookies();
