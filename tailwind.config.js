@@ -6,6 +6,7 @@ module.exports = {
   theme: {
     extend: {
       screens: {
+        ms: '320px',
         '3xl': '1600px',
       },
       transitionProperty: {

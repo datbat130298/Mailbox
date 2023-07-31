@@ -69,7 +69,7 @@ const loginWithEmailPassword = (
 ): Promise<AxiosResponseType<UserDataType>> =>
   axiosInstance.post(
     getQueryURL(COMMON_AUTH_API.LOGIN, {
-      'expand[]': ['roles'],
+      'expand[]': ['user__roles'],
     }),
     {
       email,
@@ -77,7 +77,13 @@ const loginWithEmailPassword = (
     },
   );
 
-const logOut = () => axiosInstance.post(COMMON_AUTH_API.LOGOUT);
+const logOut = async () => {
+  const response = await axiosInstance.post(COMMON_AUTH_API.LOGOUT);
+  window.localStorage.removeItem('access_token');
+  window.localStorage.removeItem('refresh_token');
+
+  return response.data.data;
+};
 
 const getLoginStatus = async () => {
   const cookie = new Cookies();

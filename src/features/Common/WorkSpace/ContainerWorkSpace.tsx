@@ -16,12 +16,14 @@ const ContainerWorkSpace = () => {
   }, []);
 
   return (
-    <div className="flex h-full w-full justify-end overflow-x-hidden bg-slate-100 pl-4 pr-2">
+    <div className="flex h-full w-full justify-end overflow-x-hidden bg-slate-100 pl-2 pr-2 lg:pl-4">
+      {/* <div className=''> */}
       <Sidebar />
+      {/* </div> */}
       <div
         className={twMerge(
-          'mt-px h-[calc(100%-1px)] w-[calc(100%-75px)] overflow-hidden rounded-t-lg bg-white shadow-box',
-          isShowFullSidebar && 'w-[calc(100%-265px)]',
+          'w-100% mt-px h-[calc(100%-1px)] overflow-hidden rounded-t-lg bg-white shadow-box lg:w-[calc(100%-75px)]',
+          isShowFullSidebar && 'lg:w-[calc(100%-265px)]',
         )}
       >
         <WorkSpaceRoutes />

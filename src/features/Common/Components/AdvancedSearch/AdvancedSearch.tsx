@@ -54,17 +54,17 @@ const AdvancedSearch = () => {
   }, [dropdownSearchTabRef]);
 
   return (
-    <div ref={dropdownSearchTabRef} className="relative w-fit py-3.5">
-      <div className="flex h-12 w-[720px] justify-start rounded-4xl bg-slate-200 p-1.5">
+    <div ref={dropdownSearchTabRef} className="relative w-0 py-0 lg:w-fit lg:py-3.5">
+      <div className="flex h-12 w-0 justify-start rounded-4xl bg-slate-200 p-0 lg:w-[720px] lg:p-1.5">
         <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-gray-700 hover:bg-gray-300">
-          <HiOutlineSearch size={18} />
+          <HiOutlineSearch size={18} className="hidden lg:block" />
         </div>
         <Input
           size="sm"
           value={searchTearm}
           onChange={(e) => setSearchTearm(e.target.value)}
           placeholder={t('search_in_mailbox') as string}
-          className="mx-1 h-full w-[628px] border-none bg-transparent px-[-4px]"
+          className="mx-1 h-full w-0 border-none bg-transparent px-[-4px] lg:w-[628px]"
           inputClassName="placeholder-gray-500"
           isShowPlacehoder
         />
@@ -73,7 +73,7 @@ const AdvancedSearch = () => {
           tabIndex={0}
           onClick={() => setIsShowDropdown((prev) => !prev)}
           className={twMerge(
-            'flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-gray-700 hover:bg-gray-300',
+            'hidden h-0 w-0 flex-shrink-0 items-center justify-center rounded-full text-gray-700 hover:bg-gray-300 lg:flex lg:h-9 lg:w-9',
             isShowDropdown && 'bg-gray-300',
           )}
         >

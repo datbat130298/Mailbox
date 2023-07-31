@@ -2,7 +2,9 @@ import _ from 'lodash';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { twMerge } from 'tailwind-merge';
+import { setMailItemStyle } from '../../../../../app/Slices/layoutSlice';
 import { MailType } from '../../../../../app/Types/commonTypes';
+import useDispatch from '../../../../Hooks/useDispatch';
 import useSelector from '../../../../Hooks/useSelector';
 import EmptyData from '../../EmptyData/EmptyData';
 import HeaderMailTable from '../HeaderMailTable';
@@ -30,6 +32,7 @@ const MailTableContainer = ({ mailData, isLoading }: MailTableContainerProp) => 
   const isShowFullSideBar = useSelector((state) => state.layout.isShowFullSidebar);
 
   const { t } = useTranslation();
+  const dispatch = useDispatch();
 
   const isChecked = useMemo(() => {
     if (!_.isEmpty(selectRows)) return true;
@@ -140,6 +143,16 @@ const MailTableContainer = ({ mailData, isLoading }: MailTableContainerProp) => 
     }
     return undefined;
   }, [isShowViewMailSpace, isShowFullSideBar]);
+
+  useEffect(() => {
+    if (headerTableRef === null) return;
+    if (
+      headerTableRef.current?.getBoundingClientRect().width &&
+      headerTableRef.current?.getBoundingClientRect().width < 640
+    ) {
+      dispatch(setMailItemStyle('classic'));
+    }
+  }, [headerTableRef]);
 
   return (
     <div

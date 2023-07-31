@@ -49,8 +49,8 @@ const Sidebar = () => {
   return (
     <div
       className={twMerge(
-        'fixed left-0 top-0 z-[49] mt-px h-screen w-20 bg-slate-100 py-6 pt-20',
-        (isShowFullSidebar || isShowSidebar) && 'w-[270px]',
+        'fixed left-0 top-0 z-[49] mt-px h-screen w-0 bg-slate-100 py-6 pt-20 sm:w-20',
+        (isShowFullSidebar || isShowSidebar) && 'w-0 sm:w-[270px]',
       )}
       style={{ transition: '.2s ease-in-out' }}
       onMouseMove={() => handleMouseMove()}

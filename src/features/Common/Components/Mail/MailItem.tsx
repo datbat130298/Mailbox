@@ -12,15 +12,17 @@ import MailItemAction from './MailItemAction';
 
 interface MailItemProps {
   mail: MailType;
-  onChangeSelectRows: (idRows: number, checked: boolean) => void;
+  onChangeSelectRow: (idRows: number, checked: boolean) => void;
   onClickShowMail: (mail: MailType) => void;
   selected: boolean;
   selectedMail: MailType | null;
 }
 
-const MailItem = ({ mail, onChangeSelectRows, onClickShowMail, selected, selectedMail }: MailItemProps) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const MailItem = ({ mail, onChangeSelectRow, onClickShowMail, selected, selectedMail }: MailItemProps) => {
   const isRead = mail?.read;
   const { itemMailStyle } = useSelector((state) => state.layout);
+  const userEmail = useSelector((state) => state.user.email);
 
   const style = useMemo(() => {
     if (itemMailStyle === 'compact')
@@ -50,16 +52,32 @@ const MailItem = ({ mail, onChangeSelectRows, onClickShowMail, selected, selecte
           style?.height,
         )}
       >
-        <div className="flex-center h-full w-fit rounded-md px-2">
-          <div className="flex-center h-full w-max ">
-            <Checkbox checked={selected} onChange={(e) => onChangeSelectRows(mail.uuid, e.target.checked)} />
+        <div className="lg:flex-center hidden h-0 w-0 rounded-md p-0 lg:flex lg:h-full lg:w-fit lg:items-center lg:justify-center lg:px-2 ">
+          <div className="lg:flex-center hidden h-0 w-0 lg:flex lg:h-full lg:w-max lg:items-center lg:justify-center">
+            <Checkbox
+              className=""
+              checked={selected}
+              onChange={(e) => onChangeSelectRow(mail.uuid, e.target.checked)}
+            />
           </div>
-          <div className="flex items-center justify-center">
+          <div className="hidden w-10 items-center justify-center lg:flex">
             {isRead ? (
               <LuMailOpen size={20} className="ml-3 text-gray-300" />
             ) : (
               <IoMailOutline size={21} className="ml-3 text-blue-700" />
             )}
+          </div>
+        </div>
+        <div className="flex items-center justify-center lg:hidden ">
+          <div
+            className={twMerge(
+              'ml-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-cyan-500',
+              userEmail === mail?.from_user?.email && 'bg-sky-300 italic opacity-40',
+            )}
+          >
+            <p className="text-lg font-semibold">
+              {userEmail === mail?.from_user?.email ? 'ME' : mail?.author.slice(0, 1)}
+            </p>
           </div>
         </div>
 
@@ -98,13 +116,24 @@ const MailItem = ({ mail, onChangeSelectRows, onClickShowMail, selected, selecte
               </div>
             </div>
           </div>
-          <div
-            className={twMerge(
-              'z-5 absolute right-0 top-0 line-clamp-1 flex h-full w-24 justify-end text-ellipsis break-all  pr-4  text-center text-xs font-semibold leading-[52px] text-gray-700',
-              style?.height,
-            )}
-          >
-            {dayjs(mail.time).format('ddd, MMM D, h:mm A')}
+
+          <div className="z-5 h-full text-xs font-semibold text-gray-700 lg:mr-8 lg:w-28">
+            <div
+              className={twMerge(
+                'line-clamp-1 hidden h-full w-28 text-ellipsis break-all lg:block lg:items-center lg:justify-center lg:text-center',
+                style?.height,
+              )}
+            >
+              {dayjs(mail.time).format('ddd, MMM D, h:mm A')}
+            </div>
+            <div
+              className={twMerge(
+                'line-clamp-1 flex h-1/2 w-full items-center justify-end text-ellipsis break-all text-center leading-6 lg:hidden',
+              )}
+            >
+              {dayjs(mail.time).format('MMM D')}
+            </div>
+            <p className="flex h-1/2 items-center justify-end font-normal leading-6 lg:hidden lg:h-0">40kb</p>
           </div>
         </div>
       </div>

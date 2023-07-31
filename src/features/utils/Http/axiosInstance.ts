@@ -20,6 +20,11 @@ const axiosInstance = axios.create({
   withCredentials: true,
 });
 
+axiosInstance.interceptors.request.use((request) => {
+  request.headers['Content-Type'] = 'application/json';
+  request.headers.Authorization = `Bearer ${window.localStorage.getItem('access_token')}`;
+  return request;
+});
 // Interceptors for request
 
 export default axiosInstance;
