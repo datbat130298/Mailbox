@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import isEmail from 'validator/lib/isEmail';
 import { AuthService } from '../../../../app/Services';
 import { setTokens } from '../../../../app/Services/Common/AuthService';
 import { setUser } from '../../../../app/Slices/userSlice';
 import { AxiosErrorDataType } from '../../../../app/Types/commonTypes';
+import useDispatch from '../../../Hooks/useDispatch';
 import Alert from '../../Components/Alert/Alert';
 import Button from '../../Components/Button';
 import Input from '../../Components/Form/Input';
@@ -21,8 +21,8 @@ const Login = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isAllowSubmit, setIsAllowSubmit] = useState(false);
   const [error, setError] = useState<AxiosErrorDataType | null>(null);
-  const dispatch = useDispatch();
 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -62,21 +62,12 @@ const Login = () => {
     setError(null);
     AuthService.loginWithEmailPassword(email, password)
       .then((res) => {
-        let from = searchParams.get('redirect') || '';
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         const { token } = res.data.data;
         setTokens(token || '');
-        AuthService.getMe().then((response) => {
-          dispatch(setUser(response.data.data));
-          // if (response?.data?.data?.roles?.find((role: any) => role.slug === 'admin')) {
-          //   from = searchParams.get('redirect') || '/admin';
-          // } else {
-          //   from = searchParams.get('redirect') || '/my';
-          // }
-          from = '/inbox';
-          navigate(from, {
-            replace: true,
-          });
+        dispatch(setUser(res.data.data));
+        const from = '/inbox';
+        navigate(from, {
+          replace: true,
         });
       })
       .catch((err) => {
