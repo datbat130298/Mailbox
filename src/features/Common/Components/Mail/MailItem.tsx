@@ -107,16 +107,16 @@ const MailItem = ({ mail, onChangeSelectRow, onClickShowMail, selected, selected
             <div className={twMerge('flex h-full w-fit justify-start', style?.height_bottom)}>
               <div
                 className={twMerge(
-                  'flex h-full max-w-[calc(100%-192px)] flex-shrink-0 text-ellipsis font-semibold',
+                  'flex h-full w-full justify-start text-ellipsis font-semibold sm:w-[calc(100%-192px)]',
                   isRead && 'font-normal',
                 )}
               >
                 {mail.subject && (
-                  <div className="line-clamp- break-all text-left">{`${mail.subject} - `}</div>
+                  <div className="w-full text-ellipsis break-all text-left">{`${mail.subject} - `}</div>
                 )}
-              </div>
-              <div className="line-clamp-1 h-full text-ellipsis break-all pl-1 text-left">
-                {`${convertHtmlToString(mail.content)}`}
+                <div className="line-clamp-1 h-full w-full text-ellipsis break-all pl-1 text-left">
+                  {`${convertHtmlToString(mail.content)}`}
+                </div>
               </div>
             </div>
           </div>

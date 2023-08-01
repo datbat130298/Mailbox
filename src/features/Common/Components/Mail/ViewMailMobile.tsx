@@ -3,26 +3,24 @@ import _ from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CgMailForward, CgMailReply } from 'react-icons/cg';
-import { MdArrowDropDown, MdOutlineMoreVert } from 'react-icons/md';
 import { useParams } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
-import { ComposeViewTypeEnum } from '../../../../app/Enums/commonEnums';
 import { getMailById } from '../../../../app/Services/Inbox/InboxService';
 import { MailType } from '../../../../app/Types/commonTypes';
 import useSelector from '../../../Hooks/useSelector';
 import Button from '../Button';
-import ComposePopupContainer from '../ComposePopup/ComposeContainer';
-import Tooltip from '../Tooltip/Tooltip';
+import Modal from '../Modal/Modal';
 import MailTag from './MailTag';
 
 interface ViewMailMobileProps {
   mailData: MailType | null;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-const ViewMailMobile = ({ mailData }: ViewMailMobileProps) => {
+const ViewMailMobile = ({ mailData, isOpen, onClose }: ViewMailMobileProps) => {
   const { t } = useTranslation();
-  const [composeViewType, setComposeViewType] = useState(ComposeViewTypeEnum.POPUP);
-  const [isShowCompose, setIsShowCompose] = useState(false);
+  const [, setIsShowCompose] = useState(false);
   const [mail, setMail] = useState<MailType>();
   const { uuid } = useParams();
 
@@ -44,81 +42,77 @@ const ViewMailMobile = ({ mailData }: ViewMailMobileProps) => {
   }, [uuid, mailData, fetchDataMail]);
 
   const handleClickReply = () => {
-    setComposeViewType(ComposeViewTypeEnum.REPLY);
+    onClose();
     setIsShowCompose(true);
   };
 
   const handleClickForward = () => {
-    setComposeViewType(ComposeViewTypeEnum.FORWARD);
+    onClose();
     setIsShowCompose(true);
   };
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleClear = () => {
-    setComposeViewType(ComposeViewTypeEnum.POPUP);
     setIsShowCompose(false);
   };
 
   const contentDefaultForward = `<br><br><p>---------- Forwarded message -------- <br> From: ${mailData?.from_user?.email} <br>Date: ${mailData?.time}<br>Subject: ${mailData?.subject}<br>To: ${emailUser}</p>`;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const contentForward = `${contentDefaultForward} <br><br> ${mailData?.content}`;
 
   return (
-    <div className="overflow-overlay z-[9999] h-full w-full overflow-hidden overflow-y-auto px-4">
-      <div className="mt-2 flex min-h-[40px] w-full items-start justify-start gap-x-2 pl-16 text-xl">
-        <div className="flex-shrink-0">{mail?.subject}</div>
-        <MailTag />
-      </div>
-      <div className="mb-4 flex h-12 w-full">
-        <div className="flex h-12 w-fit flex-shrink-0 items-center justify-center">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      isShowFooter={false}
+      isShowHeader={false}
+      className="overflow-hidden rounded-none"
+      contentContainerClassName="p-0 h-screen w-screen rounded-none"
+    >
+      <div className="overflow-overlay z-49 h-full w-full overflow-hidden overflow-y-auto">
+        <div className=" flex h-10 w-full items-center justify-between px-2 text-xl shadow-bottom">
+          <div className="flex max-w-[256px] items-center justify-start gap-x-2">
+            <div className="max-w-[220px] flex-shrink-0 truncate">{mail?.subject}</div>
+            <MailTag />
+          </div>
           <div
-            className={twMerge(
-              'flex h-full w-12 flex-shrink-0  items-center justify-center rounded-full bg-cyan-500 drop-shadow',
-            )}
+            className="flex h-6 w-6 flex-shrink-0  items-center justify-center rounded-full text-sm font-normal underline hover:bg-slate-200"
+            role="button"
+            tabIndex={0}
+            onClick={onClose}
           >
-            <p className="text-xl font-semibold">{mail?.author.slice(0, 1)}</p>
+            Back
           </div>
         </div>
-        <div className="flex h-full w-[calc(100%-48px)] justify-between pl-4">
-          <div>
-            <div className="flex h-6 w-fit justify-start ">
-              <div className="text-sm font-semibold leading-6">{mail?.author}</div>
-              <div className="px-1 text-xs leading-6 text-gray-700">{`<${mail?.address}>`}</div>
+        <div className="mb-2 mt-2 flex h-12 w-full px-2">
+          <div className="flex h-12 w-fit flex-shrink-0 items-center justify-center">
+            <div
+              className={twMerge(
+                'flex h-full w-12 flex-shrink-0  items-center justify-center rounded-full bg-cyan-500 drop-shadow',
+              )}
+            >
+              <p className="text-xl font-semibold">{mail?.author.slice(0, 1)}</p>
             </div>
-            <div className="flex h-6 w-fit gap-x-1 text-xs ">
-              <div className="h-full  leading-[22px] text-gray-700">to me</div>
-              <div className="flex-center h-full">
-                <MdArrowDropDown size={16} />
+          </div>
+          <div className="flex h-full w-[calc(100%-48px)] justify-between pl-2">
+            <div>
+              <div className="flex h-6 w-fit justify-start ">
+                <div className="text-sm font-semibold leading-6">{mail?.author}</div>
+                <div className="px-1 text-xs leading-6 text-gray-700">{`<${mail?.address}>`}</div>
+              </div>
+              <div className="h-fit w-fit pr-2 text-xs ">
+                {dayjs(mail?.time).format('MMMM D, YYYY HH:mm A')}
               </div>
             </div>
           </div>
-          <div className="flex h-full w-fit justify-end text-gray-700">
-            <div className="h-full w-fit pr-2 text-xs leading-[48px]">
-              {dayjs(mail?.time).format('MMMM D, YYYY HH:mm A')}
-            </div>
-            <Tooltip title={t('reply')} position="bottom">
-              <div role="button" tabIndex={0} onClick={handleClickReply} className="flex-center h-full w-fit">
-                <div className="flex-center h-10  w-10 rounded-full hover:bg-gray-100 hover:text-primary-700">
-                  <CgMailReply size={18} />
-                </div>
-              </div>
-            </Tooltip>
-            <Tooltip title={t('more')} position="bottom">
-              <div className="flex-center h-full w-fit">
-                <div className="flex-center h-10 w-10 rounded-full hover:bg-gray-100 hover:text-primary-700">
-                  <MdOutlineMoreVert size={18} />
-                </div>
-              </div>
-            </Tooltip>
+        </div>
+        <div className="h-fit pl-16">
+          <div className="h-fit w-full text-left">
+            <div
+              // eslint-disable-next-line react/no-danger
+              dangerouslySetInnerHTML={{ __html: mailData ? mailData.content : ' ' }}
+            />
           </div>
-        </div>
-      </div>
-      <div className="h-fit pl-16">
-        <div className="h-fit w-full text-left">
-          <div
-            // eslint-disable-next-line react/no-danger
-            dangerouslySetInnerHTML={{ __html: mailData ? mailData.content : ' ' }}
-          />
-        </div>
-        {composeViewType === ComposeViewTypeEnum.POPUP && (
+
           <div className="mt-8 flex h-fit w-full justify-start gap-x-3 pb-8">
             <Button
               className="h-8 rounded-2xl border-none bg-white text-gray-700 ring-1"
@@ -147,53 +141,9 @@ const ViewMailMobile = ({ mailData }: ViewMailMobileProps) => {
               </div>
             </Button>
           </div>
-        )}
+        </div>
       </div>
-
-      <div className="relative z-0 my-8 flex h-[344px] w-full">
-        {(composeViewType === ComposeViewTypeEnum.REPLY ||
-          composeViewType === ComposeViewTypeEnum.FORWARD) && (
-          <div className="h-16 w-16 ">
-            <div className="flex h-12 w-fit flex-shrink-0 items-center justify-center">
-              <div
-                className={twMerge(
-                  'flex h-full w-12 flex-shrink-0  items-center justify-center rounded-full bg-purple-700 drop-shadow',
-                )}
-              >
-                <p className="text-[20px] font-semibold text-white">{mail?.author?.slice(0, 1)}</p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {isShowCompose && (
-          <ComposePopupContainer
-            contentInbox={
-              composeViewType === ComposeViewTypeEnum.FORWARD ? contentForward : mailData?.content
-            }
-            setComposeViewType={setComposeViewType}
-            composeClassName="z-0"
-            onClear={handleClear}
-            fromMail={mail}
-            composeViewType={composeViewType}
-            isShowComposeReplyOrForward={isShowCompose}
-            composePopupStyle={
-              composeViewType === ComposeViewTypeEnum.REPLY || composeViewType === ComposeViewTypeEnum.FORWARD
-                ? {
-                    containerClassName:
-                      'absolute right-0 top-0 w-[calc(100%-64px)] rounded-2xl overflow-hidden h-fit',
-                    composeClassName: 'min-h-[300px] h-fit',
-                    composeContent: 'overflow-hidden w-[300px]',
-                  }
-                : {
-                    containerClassName: '',
-                    composeClassName: '',
-                  }
-            }
-          />
-        )}
-      </div>
-    </div>
+    </Modal>
   );
 };
 export default ViewMailMobile;

@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { IoClose } from 'react-icons/io5';
 import { MultiValue } from 'react-select';
 import ComposePopup from '../../Components/ComposePopup/Components/ComposePopup';
 import { OptionLabel } from '../../Components/ComposePopup/Components/ComposePopupRecipient/ComposePopupSelectRecipients';
@@ -61,16 +60,16 @@ const ComposeModalMobile = ({ isOpen, onClose }: ComposeModalMobileProp) => {
       contentContainerClassName="p-0 h-screen w-screen rounded-none"
     >
       <div className="flex h-10 w-full items-center justify-between border-b-[0.5px] px-2">
-        <div className="line-clamp-1 w-[calc(100%-50px)] text-ellipsis break-all pl-2 text-sm font-semibold">
+        <div className="line-clamp-1 w-[calc(100%-50px)] truncate text-ellipsis break-all pl-2 text-sm font-semibold">
           {debounceSubject || t('new_message')}
         </div>
         <div
-          className="flex h-6 w-6 items-center justify-center rounded-full border border-gray-200 hover:bg-slate-200"
+          className="flex h-6 w-fit items-center justify-center rounded-full text-sm underline hover:bg-slate-200"
           role="button"
           tabIndex={0}
           onClick={onClose}
         >
-          <IoClose size={16} className="" />
+          Back
         </div>
       </div>
       <ComposePopup

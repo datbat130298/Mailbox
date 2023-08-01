@@ -159,7 +159,7 @@ const MailTableContainer = ({ mailData, isLoading }: MailTableContainerProp) => 
       dispatch(setMailItemStyle('classic'));
     }
   }, [headerTableRef]);
-  console.log(isShowViewMailMobile);
+
   return (
     <div
       className={twMerge('h-full w-full text-center', isShowViewMailSpace && 'flex overflow-hidden')}
@@ -199,7 +199,11 @@ const MailTableContainer = ({ mailData, isLoading }: MailTableContainerProp) => 
           <ViewMailSpace handleClose={handleClose} mailData={selectedMail} ref={dragBarSide} />
         </div>
       )}
-      {isShowViewMailMobile && <ViewMailMobile mailData={selectedMail} />}
+      <ViewMailMobile
+        mailData={selectedMail}
+        isOpen={isShowViewMailMobile}
+        onClose={() => setIsShowViewMailMobile(false)}
+      />
     </div>
   );
 };
