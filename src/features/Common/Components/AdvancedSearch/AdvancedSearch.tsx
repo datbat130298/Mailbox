@@ -66,7 +66,7 @@ const AdvancedSearch = () => {
           placeholder={t('search_in_mailbox') as string}
           className="mx-1 h-full w-0 border-none bg-transparent px-[-4px] lg:w-[628px]"
           inputClassName="placeholder-gray-500"
-          isShowPlacehoder
+          isShowPlaceholder
         />
         <div
           role="button"

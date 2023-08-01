@@ -1,5 +1,4 @@
 import dayjs from 'dayjs';
-import _ from 'lodash';
 import { useMemo } from 'react';
 import { IoMailOutline } from 'react-icons/io5';
 import { LuMailOpen } from 'react-icons/lu';
@@ -85,17 +84,20 @@ const MailItem = ({ mail, onChangeSelectRow, onClickShowMail, selected, selected
           role="button"
           tabIndex={0}
           onClick={() => onClickShowMail(mail)}
-          className="relative h-full w-[calc(100%-52px)] pl-2 pr-24"
+          className={twMerge(
+            'relative h-full w-[calc(100%-52px)] pl-2 pr-24',
+            itemMailStyle === 'classic' && 'py-1',
+          )}
         >
           <div
             className={twMerge(
-              'flex h-full w-[95%] justify-start overflow-hidden text-gray-700',
+              'flex h-full w-[85%] justify-start overflow-hidden text-gray-700',
               style?.display,
             )}
           >
             <div
               className={twMerge(
-                'line-clamp-1 flex h-full w-48 flex-shrink-0 text-ellipsis  break-all font-semibold  text-gray-700',
+                'line-clamp-1 flex h-full w-48 flex-shrink-0 text-ellipsis break-all font-semibold  text-gray-700',
                 isRead && 'font-normal',
                 style?.height_top,
               )}
@@ -105,22 +107,29 @@ const MailItem = ({ mail, onChangeSelectRow, onClickShowMail, selected, selected
             <div className={twMerge('flex h-full w-fit justify-start', style?.height_bottom)}>
               <div
                 className={twMerge(
-                  'flex h-full max-w-[calc(100%-192px)] flex-shrink-0 text-ellipsis  font-semibold ',
+                  'flex h-full max-w-[calc(100%-192px)] flex-shrink-0 text-ellipsis font-semibold',
                   isRead && 'font-normal',
                 )}
               >
-                <div className="line-clamp-1 break-all">{mail?.subject}</div>
+                {mail.subject && (
+                  <div className="line-clamp- break-all text-left">{`${mail.subject} - `}</div>
+                )}
               </div>
-              <div className="line-clamp-1 h-full text-ellipsis break-all pl-1">
-                {!_.isEmpty(mail?.content) && `- ${convertHtmlToString(mail.content)}`}
+              <div className="line-clamp-1 h-full text-ellipsis break-all pl-1 text-left">
+                {`${convertHtmlToString(mail.content)}`}
               </div>
             </div>
           </div>
 
-          <div className="z-5 h-full text-xs font-semibold text-gray-700 lg:mr-8 lg:w-28">
+          <div
+            className={twMerge(
+              'z-5 z-5 absolute right-0 top-0 h-full w-12 text-xs font-semibold text-gray-700 lg:w-32',
+              itemMailStyle === 'classic' && 'py-1',
+            )}
+          >
             <div
               className={twMerge(
-                'line-clamp-1 hidden h-full w-28 text-ellipsis break-all lg:block lg:items-center lg:justify-center lg:text-center',
+                'line-clamp-1 hidden h-full  text-ellipsis break-all lg:block lg:items-center lg:justify-center lg:text-center',
                 style?.height,
               )}
             >

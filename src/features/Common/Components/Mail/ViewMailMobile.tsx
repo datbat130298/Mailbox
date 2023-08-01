@@ -15,11 +15,11 @@ import ComposePopupContainer from '../ComposePopup/ComposeContainer';
 import Tooltip from '../Tooltip/Tooltip';
 import MailTag from './MailTag';
 
-interface ViewMailSpaceProps {
-  mailData?: MailType;
+interface ViewMailMobileProps {
+  mailData: MailType | null;
 }
 
-const ViewMailSpace = ({ mailData }: ViewMailSpaceProps) => {
+const ViewMailMobile = ({ mailData }: ViewMailMobileProps) => {
   const { t } = useTranslation();
   const [composeViewType, setComposeViewType] = useState(ComposeViewTypeEnum.POPUP);
   const [isShowCompose, setIsShowCompose] = useState(false);
@@ -62,7 +62,7 @@ const ViewMailSpace = ({ mailData }: ViewMailSpaceProps) => {
   const contentForward = `${contentDefaultForward} <br><br> ${mailData?.content}`;
 
   return (
-    <div className="overflow-overlay -z-10 h-full w-full overflow-hidden overflow-y-auto px-4">
+    <div className="overflow-overlay z-[9999] h-full w-full overflow-hidden overflow-y-auto px-4">
       <div className="mt-2 flex min-h-[40px] w-full items-start justify-start gap-x-2 pl-16 text-xl">
         <div className="flex-shrink-0">{mail?.subject}</div>
         <MailTag />
@@ -196,4 +196,4 @@ const ViewMailSpace = ({ mailData }: ViewMailSpaceProps) => {
     </div>
   );
 };
-export default ViewMailSpace;
+export default ViewMailMobile;

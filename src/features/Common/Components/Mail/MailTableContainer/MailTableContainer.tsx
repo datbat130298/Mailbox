@@ -9,6 +9,7 @@ import useSelector from '../../../../Hooks/useSelector';
 import EmptyData from '../../EmptyData/EmptyData';
 import HeaderMailTable from '../HeaderMailTable';
 import MailTable from '../MailTable';
+import ViewMailMobile from '../ViewMailMobile';
 import ViewMailSpace from './ViewMailSpace/ViewMailSpace';
 
 interface MailTableContainerProp {
@@ -18,6 +19,7 @@ interface MailTableContainerProp {
 
 const MailTableContainer = ({ mailData, isLoading }: MailTableContainerProp) => {
   const [isShowViewMailSpace, setIsShowViewMailSpace] = useState(false);
+  const [isShowViewMailMobile, setIsShowViewMailMobile] = useState(false);
   const [selectRows, setSelectRows] = useState<Array<number>>([]);
   const [selectedMail, setSelectedMail] = useState<MailType | null>(null);
   const [isShowShadow, setIsShowShadow] = useState(false);
@@ -41,6 +43,10 @@ const MailTableContainer = ({ mailData, isLoading }: MailTableContainerProp) => 
 
   const handleSelectMail = (mail: MailType) => {
     setSelectedMail(mail);
+    if (window.screen.width < 620) {
+      setIsShowViewMailMobile(true);
+      return;
+    }
     setIsShowViewMailSpace(true);
     if (tableRef.current !== null) {
       tableRef.current.style.width = '50%';
@@ -153,7 +159,7 @@ const MailTableContainer = ({ mailData, isLoading }: MailTableContainerProp) => 
       dispatch(setMailItemStyle('classic'));
     }
   }, [headerTableRef]);
-
+  console.log(isShowViewMailMobile);
   return (
     <div
       className={twMerge('h-full w-full text-center', isShowViewMailSpace && 'flex overflow-hidden')}
@@ -162,7 +168,7 @@ const MailTableContainer = ({ mailData, isLoading }: MailTableContainerProp) => 
       <div className={twMerge('h-full w-full pt-14', isShowViewMailSpace && 'w-1/2')} ref={tableRef}>
         <div className={twMerge('', tableRef.current && `w-${tableRef.current.style.width}`)}>
           <HeaderMailTable
-            // isShowViewMailSpace={isShowViewMailSpace}
+            // isShowViewMailSpace={isShowViewMailMobile}
             ref={headerTableRef}
             actionArray={['datetime']}
             isShowShadow={isShowShadow}
@@ -193,6 +199,7 @@ const MailTableContainer = ({ mailData, isLoading }: MailTableContainerProp) => 
           <ViewMailSpace handleClose={handleClose} mailData={selectedMail} ref={dragBarSide} />
         </div>
       )}
+      {isShowViewMailMobile && <ViewMailMobile mailData={selectedMail} />}
     </div>
   );
 };

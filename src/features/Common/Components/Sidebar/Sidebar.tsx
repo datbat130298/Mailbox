@@ -17,7 +17,9 @@ const Sidebar = () => {
   const [isShowSidebar, setIsShowSidebar] = useState<boolean>(false);
   const { labelSystem } = useSelector((state) => state.labelSidebar);
   const { categoryLabel } = useSelector((state) => state.labelSidebar);
+
   const sidebarElement = useRef<HTMLDivElement>(null);
+  // const dispatch = useDispatch();
 
   const categoryItemDisplay = categoryLabel.filter((item) =>
     item.display.find((displayItem) => displayItem.show === true),
@@ -46,11 +48,15 @@ const Sidebar = () => {
     return setIsShowSidebar(false);
   };
 
+  // const handleClickCloseMobile = () => {
+  //   dispatch(setIsShowFullSidebar(false));
+  // };
+
   return (
     <div
       className={twMerge(
-        'fixed left-0 top-0 z-[49] mt-px h-screen w-0 bg-slate-100 py-6 pt-20 sm:w-20',
-        (isShowFullSidebar || isShowSidebar) && 'w-0 sm:w-[270px]',
+        'fixed left-0 top-0 z-50 mt-20 h-screen w-0 bg-slate-50 py-6 pt-0 shadow-xl sm:z-[49] sm:mt-px sm:w-20 sm:bg-slate-100 sm:pt-20 sm:shadow-none',
+        (isShowFullSidebar || isShowSidebar) && 'w-full sm:w-[270px]',
       )}
       style={{ transition: '.2s ease-in-out' }}
       onMouseMove={() => handleMouseMove()}
@@ -59,7 +65,7 @@ const Sidebar = () => {
       id="sidebar"
     >
       <ComposeButton isShowSidebar={isShowSidebar} />
-      <div className="h-[95%] overflow-hidden py-3 hover:overflow-y-auto">
+      <div className="h-[95%] overflow-hidden py-6 hover:overflow-y-auto sm:py-3">
         {visibleSide &&
           visibleSide.map((visibleSideItem) => (
             <SidebarItem

@@ -8,7 +8,7 @@ import Tooltip from '../../Tooltip/Tooltip';
 interface ComposePopupHeaderProps {
   onClose: () => void;
   onChangeViewType: () => void;
-  onZoom: () => void;
+  onZoom?: () => void;
   title?: string;
   className?: string;
 }

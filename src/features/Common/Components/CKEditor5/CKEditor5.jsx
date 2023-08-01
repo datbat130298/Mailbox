@@ -77,6 +77,7 @@ const CKEditor5 = ({
   isLoading,
   isDisabled,
   isRadiousToolbar = false,
+  isShowToolbar,
 }) => {
   const editWriter = (editor) => {
     if (editor) {
@@ -87,6 +88,7 @@ const CKEditor5 = ({
       /* eslint no-param-reassign: "error" */
       editor.plugins.get('FileRepository').createUploadAdapter = (loader) => new UploadAdaptor(loader);
       const toolbarElement = editor.ui.view.toolbar.element;
+      toolbarElement.style.display = isShowToolbar ? 'none' : '';
       toolbarElement.style.height = '40px';
       toolbarElement.style.width = 'fit-content';
       toolbarElement.style.borderLeft = 'none';
