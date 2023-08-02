@@ -25,6 +25,5 @@ axiosInstance.interceptors.request.use((request) => {
   request.headers.Authorization = `Bearer ${window.localStorage.getItem('access_token')}`;
   return request;
 });
-// Interceptors for request
 
 export default axiosInstance;
