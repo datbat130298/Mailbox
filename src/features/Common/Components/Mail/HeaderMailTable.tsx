@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React, { Ref } from 'react';
+import React, { ForwardedRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FiFilter } from 'react-icons/fi';
 import { twMerge } from 'tailwind-merge';
@@ -31,7 +31,7 @@ const HeaderMailTable = (
     onCloseViewMailSpace,
   }: // isShowViewMailSpace,
   HeaderMailTableProps,
-  ref: Ref<HTMLDivElement>,
+  ref: ForwardedRef<HTMLDivElement>,
 ) => {
   const { t } = useTranslation();
   const filterCheckboxData = [

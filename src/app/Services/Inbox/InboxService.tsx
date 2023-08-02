@@ -5,7 +5,7 @@ const dataInbox = [
   {
     uuid: 1,
     read: false,
-    author: 'Khoi Tran',
+    author: 'Khoi Trannnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnmnnnnnnnnnnnnnnn',
     subject: 'Hello from KhoiTran',
     type: TypeChat.INBOX,
     inbox: [

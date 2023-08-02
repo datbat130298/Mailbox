@@ -25,19 +25,19 @@ const ViewMailSpaceHeader = ({ handleClose }: ViewMailSpaceHeaderProp) => {
         <div className="flex items-center justify-start gap-1">
           <div className="flex items-center gap-1 rounded-lg px-2 py-0.5 transition-all duration-150 hover:cursor-pointer hover:bg-white hover:text-primary-500">
             <IoMdAlarm size={19} />
-            <p className="text-sm leading-8">Reminder</p>
+            <p className="line-clamp-1 text-sm leading-8">Reminder</p>
           </div>
           <div className="flex items-center gap-1 rounded-lg px-2 py-0.5 transition-all duration-150 hover:cursor-pointer hover:bg-white hover:text-primary-500">
             <BsCheck size={24} className="-mx-1" />
-            <p className="text-sm leading-8">Add task</p>
+            <p className="line-clamp-1 text-sm leading-8">Add task</p>
           </div>
           <div className="flex items-center gap-1 rounded-lg px-2 py-0.5 transition-all duration-150 hover:cursor-pointer hover:bg-white hover:text-primary-500">
             <AiOutlineLink size={18} />
-            <p className="text-sm leading-8">Permalink</p>
+            <p className="line-clamp-1 text-sm leading-8">Permalink</p>
           </div>
           <div className="flex items-center gap-1 rounded-lg px-2 py-0.5 transition-all duration-150 hover:cursor-pointer hover:bg-white hover:text-primary-500">
             <MdOutlineWatchLater size={18} />
-            <p className="text-sm leading-8">Snooze</p>
+            <p className="line-clamp-1 text-sm leading-8">Snooze</p>
           </div>
         </div>
         <div className="flex gap-2">
