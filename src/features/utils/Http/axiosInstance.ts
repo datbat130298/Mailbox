@@ -26,6 +26,4 @@ axiosInstance.interceptors.request.use((request) => {
   return request;
 });
 
-// Interceptors for request
-
 export default axiosInstance;

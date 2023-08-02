@@ -12,7 +12,6 @@ import { triggerClickOutside } from '../../utils/helpers';
 import AdvancedSearch from '../Components/AdvancedSearch/AdvancedSearch';
 import Button from '../Components/Button';
 import ChooseLanguage from '../Components/ChooseLanguage/ChooseLanguage';
-import Tooltip from '../Components/Tooltip/Tooltip';
 import UserDropdown from '../Components/UserDropdown/UserDropdown';
 
 const Header = () => {
@@ -56,23 +55,23 @@ const Header = () => {
   }, [isShowFullSidebar, user]);
 
   return (
-    <div className="fixed right-0 top-0 z-50 flex h-20 w-full justify-between bg-slate-100 pl-6 pr-4">
+    <div className="fixed right-0 top-0 z-50 flex h-20 w-full justify-between bg-slate-100 pl-0 pr-2 lg:pl-6 lg:pr-4">
       <div className="flex h-full w-max items-center">
-        <Tooltip title={t('main-menu')} position="bottom">
-          <div
-            role="button"
-            tabIndex={0}
-            onClick={handleShowFullSidebar}
-            className={twMerge(
-              'mr-2 flex h-10 w-10 items-center rounded-full',
-              isShowFullSidebar && 'bg-slate-200',
-            )}
-          >
-            <CgMenu size={20} className="mx-auto " />
-          </div>
-        </Tooltip>
-        <div className="flex h-full w-72 flex-shrink-0 items-center justify-start pl-4">
-          <img className="h-[28px] w-[120px]" src={logoText} alt="Workflow" />
+        {/* <Tooltip title={t('main-menu')} position="bottom"> */}
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={handleShowFullSidebar}
+          className={twMerge(
+            'ml-3 mr-1 flex h-10 w-10 items-center rounded-full lg:ml-0 lg:mr-2',
+            isShowFullSidebar && 'bg-slate-200',
+          )}
+        >
+          <CgMenu size={20} className="mx-auto " />
+        </div>
+        {/* </Tooltip> */}
+        <div className="flex h-full w-fit flex-shrink-0 items-center justify-start pl-0 lg:w-72 lg:pl-4">
+          <img className="h-[28px] max-w-[120px] lg:w-[120px]" src={logoText} alt="Workflow" />
         </div>
         <AdvancedSearch />
       </div>
@@ -87,7 +86,7 @@ const Header = () => {
           </div>
         ) : (
           <>
-            <div className="mr-1 border-r-2 border-gray-200 pr-4">
+            <div className="mr-1 hidden border-r-2 border-gray-200 pr-4 lg:block">
               <ChooseLanguage language={language} onChangeLanguage={handChangeLanguage} />
             </div>
             <div className="ml-4 flex h-full w-fit flex-shrink-0 items-center justify-center">

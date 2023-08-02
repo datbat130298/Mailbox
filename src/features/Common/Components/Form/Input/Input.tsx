@@ -13,7 +13,7 @@ export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
   inlineError?: boolean;
   isShowLabelWhenFocusing?: boolean;
   inputClassName?: string;
-  isShowPlacehoder?: boolean;
+  isShowPlaceholder?: boolean;
   type?: string;
 }
 
@@ -31,7 +31,7 @@ const Input = (
     size = 'normal',
     inlineError = false,
     isShowLabelWhenFocusing = false,
-    isShowPlacehoder = false,
+    isShowPlaceholder = false,
     labelPostfix,
     inputClassName,
     onFocus,
@@ -165,7 +165,7 @@ const Input = (
           className={twMerge(
             'relative flex w-full items-center justify-start',
             isFocusing || value ? 'opacity-100' : 'opacity-0',
-            isShowPlacehoder && 'opacity-100',
+            isShowPlaceholder && 'opacity-100',
           )}
         >
           {children}

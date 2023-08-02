@@ -69,7 +69,7 @@ const loginWithEmailPassword = (
 ): Promise<AxiosResponseType<UserDataType>> =>
   axiosInstance.post(
     getQueryURL(COMMON_AUTH_API.LOGIN, {
-      'expand[]': ['roles'],
+      'expand[]': ['user__roles'],
     }),
     {
       email,

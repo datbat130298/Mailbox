@@ -42,13 +42,14 @@ export interface ComposePopupProps {
   composePopupStyle?: ComposePopupStyleType;
   id?: string;
   onClose?: () => void;
-  onZoom: () => void;
+  onZoom?: () => void;
   onChangeSubjectInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onClear?: () => void;
   setComposeViewType?: Dispatch<SetStateAction<ComposeViewTypeEnum>>;
   contentInbox?: string;
   handleClickInsertContent?: (text: string) => void;
   handleClickChangeView?: () => void;
+  isShowToolbar?: boolean;
 }
 
 const ComposePopup = ({
@@ -77,6 +78,7 @@ const ComposePopup = ({
   onZoom,
   onClear,
   contentInbox,
+  isShowToolbar = false,
 }: ComposePopupProps) => {
   const [isVisibleToolbar, setIsVisibleToolbar] = useState<boolean>(false);
   const [isShowSelectTimeModal, setIsShowSelectTimeModal] = useState<boolean>(false);
@@ -94,17 +96,6 @@ const ComposePopup = ({
     }
     setIsShowButtonInsertContent(false);
   }, [contentInbox, viewType]);
-
-  useEffect(() => {
-    const toolbar = document.querySelector<HTMLElement>('.ck.ck-toolbar');
-    if (toolbar) {
-      if (!isVisibleToolbar) {
-        toolbar.style.visibility = 'hidden';
-        return;
-      }
-      toolbar.style.visibility = 'visible';
-    }
-  }, [isVisibleToolbar]);
 
   const handleClickDeleteFooter = () => {
     if (_.isFunction(handleClickChangeView)) handleClickChangeView();
@@ -176,12 +167,26 @@ const ComposePopup = ({
   }, [contentInbox]);
 
   useEffect(() => {
-    const delayVisibleToolbar = setTimeout(() => {
-      if (viewType === ComposeViewTypeEnum.MODAL) {
-        setIsVisibleToolbar(true);
+    const toolbar = document.querySelector<HTMLElement>('.ck.ck-toolbar');
+    if (toolbar) {
+      if (!isVisibleToolbar) {
+        toolbar.style.visibility = 'hidden';
+        return;
       }
-    }, 100);
-    return () => clearTimeout(delayVisibleToolbar);
+      toolbar.style.visibility = 'visible';
+    }
+  }, [isVisibleToolbar]);
+
+  useEffect(() => {
+    if (window.screen.width > 620) {
+      const delayVisibleToolbar = setTimeout(() => {
+        if (viewType === ComposeViewTypeEnum.MODAL) {
+          setIsVisibleToolbar(true);
+        }
+      }, 100);
+      return () => clearTimeout(delayVisibleToolbar);
+    }
+    return undefined;
   }, [viewType]);
 
   const handleFormat = () => {
@@ -258,12 +263,13 @@ const ComposePopup = ({
         </div>
         <div
           className={twMerge(
-            'w- mx-2 h-[430px] overflow-auto',
+            'mx-2 h-[430px] overflow-auto',
             viewType === ComposeViewTypeEnum.MODAL && 'h-[73vh]',
             composePopupStyle?.composeClassName,
           )}
         >
           <WriterCompose
+            isShowToolbar={isShowToolbar}
             id={id}
             data={content}
             handleChangeEditor={onChangeEditor}
@@ -286,7 +292,7 @@ const ComposePopup = ({
               onClickArrow={handleClickArrow}
               onClickSendWithTime={handleClickSendWihTime}
             />
-            <div className="flex w-full items-center justify-start">
+            <div className="hidden w-full items-center justify-start sm:flex">
               <ComposePopupToolbarItem
                 id="format"
                 isActive={isVisibleToolbar}

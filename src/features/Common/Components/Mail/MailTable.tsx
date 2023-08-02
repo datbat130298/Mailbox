@@ -59,7 +59,7 @@ const MailTable = ({
               key={item.uuid}
               mail={item}
               selected={_.includes(selectRows, item.uuid)}
-              onChangeSelectRows={onChangeSelectRows}
+              onChangeSelectRow={onChangeSelectRows}
               onClickShowMail={onClickShowMail || (() => null)}
             />
           ))}
