@@ -63,11 +63,20 @@ const editorConfiguration = {
   },
 };
 
-const WriterCompose = ({ data, handleChangeEditor, handleChangeBlur, isLoading, isDisabled, id }) => {
+const WriterCompose = ({
+  data,
+  handleChangeEditor,
+  handleChangeBlur,
+  isLoading,
+  isDisabled,
+  id,
+  isShowToolbar,
+}) => {
   const render = useMemo(() => {
     return (
       <div className="h-full w-full text-sm" id={id}>
         <CKEditor5
+          isShowToolbar={isShowToolbar}
           config={editorConfiguration}
           data={data}
           onChange={handleChangeEditor}

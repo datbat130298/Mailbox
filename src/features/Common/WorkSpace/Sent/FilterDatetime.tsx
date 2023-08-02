@@ -91,7 +91,7 @@ const FilterDatetime = () => {
           <div className="h-fit w-max p-3">
             <div className="flex justify-center gap-x-1">
               <Input
-                isShowPlacehoder
+                isShowPlaceholder
                 placeholder={t('start_date') as string}
                 size="sm"
                 className="w-40  border"
@@ -102,7 +102,7 @@ const FilterDatetime = () => {
                 max={dayjs(new Date()).format('YYYY-MM-DD')}
               />
               <Input
-                isShowPlacehoder
+                isShowPlaceholder
                 placeholder={t('end_date') as string}
                 size="sm"
                 className="w-40  border"

@@ -46,14 +46,14 @@ const AddLabelsModal = ({ isOpen, onClose, title }: AddLabelModalProps) => {
 
   return (
     <Modal
-      contentContainerClassName="w-[600px] p-4"
+      contentContainerClassName="sm:w-[600px] p-4 w-full"
       onClose={onClose}
       isOpen={isOpen}
       title={title}
       className="p-4"
       isAllowSubmit={isAllowSubmit}
     >
-      <div className="m-4 flex flex-col gap-6">
+      <div className="m-1 flex flex-col gap-6 sm:m-4">
         <Input
           className="w-full"
           value={labelName}

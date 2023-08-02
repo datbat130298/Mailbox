@@ -29,7 +29,7 @@ const SidebarGroup = ({ children, title, isShowSidebar }: SidebarGroupProp) => {
       <div
         className={twMerge(
           'relative mx-3 my-0.5 flex w-[64px] items-center justify-between rounded-lg py-2 pl-4 text-gray-700  transition-width duration-300 hover:bg-slate-200',
-          (isShowFullSidebar || isShowSidebar) && 'w-60',
+          (isShowFullSidebar || isShowSidebar) && 'w-[92%] sm:w-60',
           isShow && (!isShowFullSidebar || !isShowSidebar) && ' bg-slate-200 text-primary-700',
           isShow && (isShowFullSidebar || isShowSidebar) && ' bg-slate-200 font-semibold text-primary-700',
         )}

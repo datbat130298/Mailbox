@@ -28,8 +28,8 @@ const ComposeButton = ({ isShowSidebar }: ComposeButtonProp) => {
     <div className="">
       <Button
         className={twMerge(
-          'group mb-2 ml-3 h-14 w-10 overflow-hidden border-0 bg-slate-300 text-gray-700 shadow-none ring-1 hover:bg-slate-200 hover:text-primary-700 hover:drop-shadow-md',
-          (isShowFullSidebar || isShowSidebar) && 'w-40',
+          'group mb-2 ml-3 hidden h-14 w-0 justify-center overflow-hidden border-0 bg-slate-300 text-gray-700 shadow-none ring-1 hover:bg-slate-200 hover:text-primary-700 hover:drop-shadow-md lg:flex lg:w-10',
+          (isShowFullSidebar || isShowSidebar) && 'w-0 lg:w-40',
         )}
         color="light"
         onClick={handleClickCompose}

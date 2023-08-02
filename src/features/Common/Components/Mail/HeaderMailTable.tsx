@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React, { ForwardedRef } from 'react';
+import React, { Ref } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FiFilter } from 'react-icons/fi';
 import { twMerge } from 'tailwind-merge';
@@ -31,7 +31,7 @@ const HeaderMailTable = (
     onCloseViewMailSpace,
   }: // isShowViewMailSpace,
   HeaderMailTableProps,
-  ref: ForwardedRef<HTMLDivElement>,
+  ref: Ref<HTMLDivElement>,
 ) => {
   const { t } = useTranslation();
   const filterCheckboxData = [
@@ -119,7 +119,7 @@ const HeaderMailTable = (
         {_.includes(actionArray, 'datetime') && !isChecked && <FilterDatetime />}
         <HeaderAction showAction={isChecked} />
       </div>
-      <div className="flex h-full w-fit">
+      <div className="hidden h-full w-fit sm:flex ">
         <SelectViewStyle />
       </div>
     </div>
