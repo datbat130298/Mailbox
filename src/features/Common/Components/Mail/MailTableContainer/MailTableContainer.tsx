@@ -43,7 +43,7 @@ const MailTableContainer = ({ mailData, isLoading }: MailTableContainerProp) => 
 
   const handleSelectMail = (mail: MailType) => {
     setSelectedMail(mail);
-    if (window.screen.width < 620) {
+    if (window.innerWidth < 1280) {
       setIsShowViewMailMobile(true);
       return;
     }
@@ -87,8 +87,9 @@ const MailTableContainer = ({ mailData, isLoading }: MailTableContainerProp) => 
 
   const onMouseMove = useCallback(
     (event: MouseEvent) => {
+      const minWidthViewMail = isShowFullSideBar ? window.innerWidth - 500 : window.innerWidth - 520;
       if (!isClicked.current) return;
-      if (event.clientX <= (isShowFullSideBar ? 750 : 570) || event.clientX >= 1400) {
+      if (event.clientX <= (isShowFullSideBar ? 730 : 540) || event.clientX >= minWidthViewMail) {
         return;
       }
 

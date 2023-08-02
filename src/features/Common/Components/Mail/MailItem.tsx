@@ -51,15 +51,15 @@ const MailItem = ({ mail, onChangeSelectRow, onClickShowMail, selected, selected
           style?.height,
         )}
       >
-        <div className="lg:flex-center hidden h-0 w-0 rounded-md p-0 lg:flex lg:h-full lg:w-fit lg:items-center lg:justify-center lg:px-2 ">
-          <div className="lg:flex-center hidden h-0 w-0 lg:flex lg:h-full lg:w-max lg:items-center lg:justify-center">
+        <div className="md:flex-center hidden h-0 w-0 rounded-md p-0 md:flex md:h-full md:w-fit md:items-center md:justify-center md:px-2 ">
+          <div className="md:flex-center hidden h-0 w-0 md:flex md:h-full md:w-max md:items-center md:justify-center">
             <Checkbox
               className=""
               checked={selected}
               onChange={(e) => onChangeSelectRow(mail.uuid, e.target.checked)}
             />
           </div>
-          <div className="hidden w-10 items-center justify-center lg:flex">
+          <div className="hidden w-10 items-center justify-center md:flex">
             {isRead ? (
               <LuMailOpen size={20} className="ml-3 text-gray-300" />
             ) : (
@@ -67,7 +67,7 @@ const MailItem = ({ mail, onChangeSelectRow, onClickShowMail, selected, selected
             )}
           </div>
         </div>
-        <div className="flex items-center justify-center lg:hidden ">
+        <div className="flex items-center justify-center md:hidden ">
           <div
             className={twMerge(
               'ml-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-cyan-500',
@@ -89,15 +89,10 @@ const MailItem = ({ mail, onChangeSelectRow, onClickShowMail, selected, selected
             itemMailStyle === 'classic' && 'py-1',
           )}
         >
-          <div
-            className={twMerge(
-              'flex h-full w-[85%] justify-start overflow-hidden text-gray-700',
-              style?.display,
-            )}
-          >
+          <div className={twMerge('flex h-full w-[90%] justify-start overflow-hidden', style?.display)}>
             <div
               className={twMerge(
-                'line-clamp-1 flex h-full w-48 flex-shrink-0 text-ellipsis break-all font-semibold  text-gray-700',
+                'h-full w-40 flex-shrink-0 truncate pr-4 text-left font-semibold  text-gray-800',
                 isRead && 'font-normal',
                 style?.height_top,
               )}
@@ -107,42 +102,49 @@ const MailItem = ({ mail, onChangeSelectRow, onClickShowMail, selected, selected
             <div className={twMerge('flex h-full w-fit justify-start', style?.height_bottom)}>
               <div
                 className={twMerge(
-                  'flex h-full w-full justify-start text-ellipsis font-semibold sm:w-[calc(100%-192px)]',
+                  'h-full w-fit flex-shrink-0 text-ellipsis text-left font-semibold text-gray-800',
                   isRead && 'font-normal',
                 )}
               >
-                {mail.subject && (
-                  <div className="w-full text-ellipsis break-all text-left">{`${mail.subject} - `}</div>
-                )}
-                <div className="line-clamp-1 h-full w-full text-ellipsis break-all pl-1 text-left">
-                  {`${convertHtmlToString(mail.content)}`}
-                </div>
+                {mail.subject && `${mail.subject} - `}
+              </div>
+              <div className="line-clamp-1 h-full text-ellipsis break-all pl-1 text-left text-gray-500">
+                {`${convertHtmlToString(mail.content)}`}
               </div>
             </div>
           </div>
 
           <div
             className={twMerge(
-              'z-5 z-5 absolute right-0 top-0 h-full w-12 text-xs font-semibold text-gray-700 lg:w-32',
+              'z-5 z-5 absolute right-0 top-0 h-full w-12 text-xs font-semibold lg:w-32',
               itemMailStyle === 'classic' && 'py-1',
             )}
           >
             <div
               className={twMerge(
-                'line-clamp-1 hidden h-full  text-ellipsis break-all lg:block lg:items-center lg:justify-center lg:text-center',
-                style?.height,
+                'line-clamp-1 hidden h-full items-center text-ellipsis break-all text-gray-500 lg:flex lg:items-center lg:justify-center lg:text-center',
+                // style?.height,
+                !isRead && ' text-gray-800',
               )}
             >
               {dayjs(mail.time).format('ddd, MMM D, h:mm A')}
             </div>
             <div
               className={twMerge(
-                'line-clamp-1 flex h-1/2 w-full items-center justify-end text-ellipsis break-all text-center leading-6 lg:hidden',
+                'line-clamp-1 flex h-1/2 w-full items-center justify-end text-ellipsis break-all text-center leading-6 text-gray-500 lg:hidden',
+                !isRead && ' text-gray-800',
               )}
             >
               {dayjs(mail.time).format('MMM D')}
             </div>
-            <p className="flex h-1/2 items-center justify-end font-normal leading-6 lg:hidden lg:h-0">40kb</p>
+            <p
+              className={twMerge(
+                'flex h-1/2 items-center justify-end leading-6 text-gray-500 lg:hidden lg:h-0',
+                !isRead && ' text-gray-800',
+              )}
+            >
+              40kb
+            </p>
           </div>
         </div>
       </div>

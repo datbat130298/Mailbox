@@ -124,7 +124,9 @@ const ViewMailSpaceItem = ({
         {isOpen && (
           <div className="ml-4 flex flex-col gap-1">
             <div className="flex items-center justify-start gap-4">
-              <p>{userEmail === mail?.from_user?.email ? 'Me' : mail?.author}</p>
+              <p className="max-w-[150px] truncate">
+                {userEmail === mail?.from_user?.email ? 'Me' : mail?.author}
+              </p>
               <div className="flex items-center gap-0.5">
                 <GoDotFill size={10} className="mx-1 mt-0.5 text-gray-300" />
                 <div className="flex h-7 w-7 items-center justify-center rounded-md text-gray-500 hover:bg-slate-100 hover:text-black">

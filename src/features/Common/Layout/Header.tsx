@@ -73,7 +73,7 @@ const Header = () => {
         <div className="flex h-full w-fit flex-shrink-0 items-center justify-start pl-0 lg:w-72 lg:pl-4">
           <img className="h-[28px] max-w-[120px] lg:w-[120px]" src={logoText} alt="Workflow" />
         </div>
-        <AdvancedSearch />
+        {user?.uuid !== 0 && <AdvancedSearch />}
       </div>
       <div className="flex h-full w-fit flex-shrink-0 items-center justify-center">
         {user?.uuid === 0 ? (
