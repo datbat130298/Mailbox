@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { nanoid } from 'nanoid';
-import { Reducer, createContext, useContext, useReducer } from 'react';
-import { OptionLabel } from '../../features/Common/Components/ComposePopup/Components/ComposePopupRecipient/ComposePopupSelectRecipients';
+import { createContext, Reducer, useContext, useReducer } from 'react';
+import { EmailType } from '../../features/Common/Components/SelectMultiEmail/SelectMultiEmail';
 import { ComposeViewTypeEnum } from '../Enums/commonEnums';
 import { ComposeType } from '../Types/commonTypes';
 
@@ -14,9 +14,9 @@ interface DraftAction {
   type: DraftActionEnum;
   uuid?: string;
   isShow?: boolean;
-  recipient?: readonly OptionLabel[];
-  recipientCc?: readonly OptionLabel[];
-  recipientBcc?: readonly OptionLabel[];
+  recipient?: EmailType[];
+  recipientCc?: EmailType[];
+  recipientBcc?: EmailType[];
   subject?: string;
   content?: string;
   viewType: ComposeViewTypeEnum;

@@ -167,7 +167,7 @@ const ViewMailSpaceItem = ({
       </div>
       {isOpen && (
         <>
-          <div className="mx-5 break-all border-y-[0.5px] py-4 text-left text-base">
+          <div className="mx-4 break-all border-y-[0.5px] py-4 text-left text-base">
             {/* eslint-disable-next-line react/no-danger */}
             <div dangerouslySetInnerHTML={{ __html: mail?.content ? mail.content : ' ' }} />
           </div>
@@ -177,7 +177,7 @@ const ViewMailSpaceItem = ({
             isShowComposeReplyOrForward={isShowComposeWrite}
           />
           {isShowComposeWrite && (
-            <div className="mx-2 pb-3">
+            <div className="pb-3">
               <ComposePopupContainer
                 contentInbox={viewType === ComposeViewTypeEnum.FORWARD ? contentForward : mail?.content}
                 handleClickChangeView={handleClickChangeView}

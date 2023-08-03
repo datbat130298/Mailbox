@@ -1,14 +1,13 @@
 import _ from 'lodash';
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
-import { MultiValue } from 'react-select';
 import { twMerge } from 'tailwind-merge';
 import { DraftActionEnum, useDraftsDispatch } from '../../../../app/Context/DraftContext';
 import { ComposeViewTypeEnum } from '../../../../app/Enums/commonEnums';
 import { ComposePopupStyleType, ComposeType, MailType } from '../../../../app/Types/commonTypes';
 import Modal from '../Modal/Modal';
+import { EmailType } from '../SelectMultiEmail/SelectMultiEmail';
 import ComposePopup from './Components/ComposePopup';
 import ComposePopupHeader from './Components/ComposePopupHeader';
-import { OptionLabel } from './Components/ComposePopupRecipient/ComposePopupSelectRecipients';
 
 interface ComposePopupContainerProps {
   contentInbox?: string;
@@ -39,9 +38,9 @@ const ComposePopupContainer = ({
 }: ComposePopupContainerProps) => {
   const [subject, setSubject] = useState<string>('');
   const [debounceSubject, setDebounceSubject] = useState<string>('');
-  const [selectedRecipient, setSelectedRecipient] = useState<readonly OptionLabel[] | undefined>([]);
-  const [selectedCcRecipient, setSelectedCcRecipient] = useState<readonly OptionLabel[] | undefined>([]);
-  const [selectedBccRecipient, setSelectedBccRecipient] = useState<readonly OptionLabel[] | undefined>([]);
+  const [selectedRecipient, setSelectedRecipient] = useState<Array<EmailType>>([]);
+  const [selectedCcRecipient, setSelectedCcRecipient] = useState<Array<EmailType>>([]);
+  const [selectedBccRecipient, setSelectedBccRecipient] = useState<Array<EmailType>>([]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [content, setContent] = useState<any>(
     composeViewType === ComposeViewTypeEnum.FORWARD ? contentInbox : ' ',
@@ -49,13 +48,14 @@ const ComposePopupContainer = ({
 
   const dispatch = useDraftsDispatch();
 
-  const handleOnChangeRecipient = (selectedOptions: MultiValue<OptionLabel>) =>
+  const handleOnChangeRecipient = (selectedOptions: Array<EmailType>) => {
     setSelectedRecipient(selectedOptions);
+  };
 
-  const handleOnChangeCcRecipient = (selectedOptions: MultiValue<OptionLabel>) =>
+  const handleOnChangeCcRecipient = (selectedOptions: Array<EmailType>) =>
     setSelectedCcRecipient(selectedOptions);
 
-  const handleOnChangeBccRecipient = (selectedOptions: MultiValue<OptionLabel>) =>
+  const handleOnChangeBccRecipient = (selectedOptions: Array<EmailType>) =>
     setSelectedBccRecipient(selectedOptions);
 
   const handleChangeEditor = (value: string) => {
@@ -139,9 +139,9 @@ const ComposePopupContainer = ({
 
   useEffect(() => {
     if (compose) {
-      setSelectedBccRecipient(compose?.recipientBcc);
-      setSelectedCcRecipient(compose?.recipientCc);
-      setSelectedRecipient(compose?.recipient);
+      setSelectedBccRecipient(compose.recipientBcc || []);
+      setSelectedCcRecipient(compose.recipientCc || []);
+      setSelectedRecipient(compose.recipient || []);
       setDebounceSubject(compose.subject || '');
       setContent(compose.content || ' ');
       setSubject(compose.subject || '');
@@ -150,6 +150,7 @@ const ComposePopupContainer = ({
 
   useEffect(() => {
     if (!_.isEmpty(fromMail)) {
+      setSelectedRecipient([{ email: fromMail.address }] as unknown as SetStateAction<EmailType[]>);
       setSubject(fromMail.subject);
       setDebounceSubject(fromMail.subject);
     }
