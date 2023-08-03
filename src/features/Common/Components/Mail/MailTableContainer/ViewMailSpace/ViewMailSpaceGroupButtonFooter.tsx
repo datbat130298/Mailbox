@@ -23,7 +23,7 @@ const ViewMailSpaceGroupButtonFooter = ({
   return (
     <div
       className={twMerge(
-        ' mx-[22px] flex h-12 items-center justify-start gap-2 text-blue-600',
+        'mx-4 flex h-12 items-center justify-start gap-2 text-blue-600',
         isShowComposeReplyOrForward && 'border-b-[0.5px]',
       )}
     >

@@ -1,10 +1,9 @@
 import _ from 'lodash';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MultiValue } from 'react-select';
 import ComposePopup from '../../Components/ComposePopup/Components/ComposePopup';
-import { OptionLabel } from '../../Components/ComposePopup/Components/ComposePopupRecipient/ComposePopupSelectRecipients';
 import Modal from '../../Components/Modal/Modal';
+import { EmailType } from '../../Components/SelectMultiEmail/SelectMultiEmail';
 
 interface ComposeModalMobileProp {
   isOpen: boolean;
@@ -14,21 +13,21 @@ interface ComposeModalMobileProp {
 const ComposeModalMobile = ({ isOpen, onClose }: ComposeModalMobileProp) => {
   const [subject, setSubject] = useState<string>('');
   const [debounceSubject, setDebounceSubject] = useState<string>('');
-  const [selectedRecipient, setSelectedRecipient] = useState<readonly OptionLabel[] | undefined>([]);
-  const [selectedCcRecipient, setSelectedCcRecipient] = useState<readonly OptionLabel[] | undefined>([]);
-  const [selectedBccRecipient, setSelectedBccRecipient] = useState<readonly OptionLabel[] | undefined>([]);
+  const [selectedRecipient, setSelectedRecipient] = useState<Array<EmailType>>([]);
+  const [selectedCcRecipient, setSelectedCcRecipient] = useState<Array<EmailType>>([]);
+  const [selectedBccRecipient, setSelectedBccRecipient] = useState<Array<EmailType>>([]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [content, setContent] = useState<any>(' ');
 
   const { t } = useTranslation();
 
-  const handleOnChangeRecipient = (selectedOptions: MultiValue<OptionLabel>) =>
+  const handleOnChangeRecipient = (selectedOptions: Array<EmailType>) =>
     setSelectedRecipient(selectedOptions);
 
-  const handleOnChangeCcRecipient = (selectedOptions: MultiValue<OptionLabel>) =>
+  const handleOnChangeCcRecipient = (selectedOptions: Array<EmailType>) =>
     setSelectedCcRecipient(selectedOptions);
 
-  const handleOnChangeBccRecipient = (selectedOptions: MultiValue<OptionLabel>) =>
+  const handleOnChangeBccRecipient = (selectedOptions: Array<EmailType>) =>
     setSelectedBccRecipient(selectedOptions);
 
   const handleChangeEditor = (value: string) => {

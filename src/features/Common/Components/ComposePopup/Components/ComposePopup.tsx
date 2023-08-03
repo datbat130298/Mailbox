@@ -7,21 +7,19 @@ import { FiLink2, FiMoreVertical } from 'react-icons/fi';
 import { IoMdAttach } from 'react-icons/io';
 import { IoImageOutline } from 'react-icons/io5';
 import { MdOpenInNew, MdOutlineContentCopy, MdTagFaces } from 'react-icons/md';
-import { MultiValue } from 'react-select';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import striptags from 'striptags';
 import { twMerge } from 'tailwind-merge';
 import { DraftActionEnum, useDraftsDispatch } from '../../../../../app/Context/DraftContext';
 import { ComposeViewTypeEnum } from '../../../../../app/Enums/commonEnums';
 import { ComposePopupStyleType, MailType } from '../../../../../app/Types/commonTypes';
-import CustomSelectMultiEmail from '../../CustomSelectMultiInput/CustomSelectMultiEmail';
+import { EmailType } from '../../SelectMultiEmail/SelectMultiEmail';
 import Tooltip from '../../Tooltip/Tooltip';
 import ComposePopupButtonMore from './ComposePopupButtonMore/ComposePopupButtonMore';
 import ComposePopupButtonSend from './ComposePopupButtonSend';
 import ComposePopupHeader from './ComposePopupHeader';
 import ComposePopupInput from './ComposePopupInput';
 import ComposePopupRecipient from './ComposePopupRecipient/ComposePopupRecipient';
-import { OptionLabel } from './ComposePopupRecipient/ComposePopupSelectRecipients';
 import ComposePopupSelectTimeModal from './ComposePopupSelectTimeModal';
 import ComposePopupToolbarItem from './ComposePopupToolbarItem';
 import WriterCompose from './EditorWriterCompose';
@@ -29,12 +27,12 @@ import WriterCompose from './EditorWriterCompose';
 export interface ComposePopupProps {
   content: string;
   onChangeEditor: (value: string) => void;
-  selectRecipient: readonly OptionLabel[] | undefined;
-  selectedCcRecipient: readonly OptionLabel[] | undefined;
-  selectedBccRecipient: readonly OptionLabel[] | undefined;
-  onChangeSelectRecipient: (selected: MultiValue<OptionLabel>) => void;
-  onChangeSelectCcRecipient: (selected: MultiValue<OptionLabel>) => void;
-  onChangeSelectBccRecipient: (selected: MultiValue<OptionLabel>) => void;
+  selectRecipient: Array<EmailType>;
+  selectedCcRecipient: Array<EmailType>;
+  selectedBccRecipient: Array<EmailType>;
+  onChangeSelectRecipient: (selected: Array<EmailType>) => void;
+  onChangeSelectCcRecipient: (selected: Array<EmailType>) => void;
+  onChangeSelectBccRecipient: (selected: Array<EmailType>) => void;
   composeClassName?: string;
   viewType?: string;
   subject: string;
@@ -254,8 +252,6 @@ const ComposePopup = ({
             onChangeSelectCcRecipient={onChangeSelectCcRecipient}
             onChangeSelectBccRecipient={onChangeSelectBccRecipient}
           />
-
-          <CustomSelectMultiEmail />
 
           <ComposePopupInput
             viewType={viewType}
