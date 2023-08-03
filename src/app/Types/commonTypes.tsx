@@ -1,7 +1,7 @@
 import { PaginationState } from '@tanstack/react-table';
 import { AxiosError, AxiosResponse } from 'axios';
 import { Dayjs } from 'dayjs';
-import { OptionLabel } from '../../features/Common/Components/ComposePopup/Components/ComposePopupRecipient/ComposePopupSelectRecipients';
+import { EmailType } from '../../features/Common/Components/SelectMultiEmail/SelectMultiEmail';
 import { ComposeViewTypeEnum } from '../Enums/commonEnums';
 import { TableColumnFilterState } from './elementTypes';
 import { UserDataType } from './userTypes';
@@ -147,9 +147,9 @@ export interface ContactType {
 export interface ComposeType {
   uuid?: string;
   isShow?: boolean;
-  recipient?: readonly OptionLabel[];
-  recipientCc?: readonly OptionLabel[];
-  recipientBcc?: readonly OptionLabel[];
+  recipient?: EmailType[];
+  recipientCc?: EmailType[];
+  recipientBcc?: EmailType[];
   subject?: string;
   content?: string;
   viewType: ComposeViewTypeEnum;

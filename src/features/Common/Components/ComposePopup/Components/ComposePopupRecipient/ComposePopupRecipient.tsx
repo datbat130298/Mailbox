@@ -1,21 +1,18 @@
 import _ from 'lodash';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MultiValue } from 'react-select';
 import { twMerge } from 'tailwind-merge';
 import { ComposeViewTypeEnum } from '../../../../../../app/Enums/commonEnums';
-import { getContacts } from '../../../../../../app/Services/Contact/Contact';
-import { ContactType } from '../../../../../../app/Types/commonTypes';
 import { triggerClickOutside } from '../../../../../utils/helpers';
-import ComposePopupSelectRecipients, { OptionLabel } from './ComposePopupSelectRecipients';
+import SelectMultiEmail, { EmailType } from '../../../SelectMultiEmail/SelectMultiEmail';
 
 interface ComposePopupRecipientProps {
-  selectRecipient: readonly OptionLabel[] | undefined;
-  selectedCcRecipient: readonly OptionLabel[] | undefined;
-  selectedBccRecipient: readonly OptionLabel[] | undefined;
-  onChangeSelectRecipient: (selected: MultiValue<OptionLabel>) => void;
-  onChangeSelectCcRecipient: (selected: MultiValue<OptionLabel>) => void;
-  onChangeSelectBccRecipient: (selected: MultiValue<OptionLabel>) => void;
+  selectRecipient: Array<EmailType>;
+  selectedCcRecipient: Array<EmailType>;
+  selectedBccRecipient: Array<EmailType>;
+  onChangeSelectRecipient: (selected: Array<EmailType>) => void;
+  onChangeSelectCcRecipient: (selected: Array<EmailType>) => void;
+  onChangeSelectBccRecipient: (selected: Array<EmailType>) => void;
   viewType?: string;
 }
 
@@ -29,7 +26,6 @@ const ComposePopupRecipient = ({
   onChangeSelectBccRecipient,
 }: ComposePopupRecipientProps) => {
   const [viewText, setViewText] = useState<boolean>(true);
-  const [contacts, setContacts] = useState<Array<ContactType>>([]);
   const [isShowCcInput, setIsShowCcInput] = useState<boolean>(false);
   const [isShowBccInput, setIsShowBccInput] = useState<boolean>(false);
   const recipientRef = useRef<HTMLDivElement>(null);
@@ -52,29 +48,11 @@ const ComposePopupRecipient = ({
     triggerClickOutside(recipientRef, () => setViewText(true));
   }, [recipientRef, triggerClickOutside]);
 
-  const fetchData = useCallback(() => {
-    getContacts().then((data: Array<ContactType>) => {
-      setContacts(data);
-    });
-  }, []);
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
   const transferString = useMemo(() => {
-    const array = selectRecipient?.concat(selectedBccRecipient || [], selectedCcRecipient || []);
-    const string = array?.map((item: OptionLabel) => item.label);
+    const array = selectRecipient?.concat(selectedBccRecipient, selectedCcRecipient);
+    const string = array?.map((item: EmailType) => item.email);
     return string?.join(', ');
   }, [selectRecipient, selectedCcRecipient, selectedBccRecipient]);
-
-  const options = useMemo(() => {
-    return contacts.map((contact) => ({
-      value: contact.id,
-      label: contact.email,
-      avatar: contact.avatar,
-    }));
-  }, [contacts]);
 
   useEffect(() => {
     if (_.isEmpty(selectedCcRecipient)) {
@@ -108,7 +86,7 @@ const ComposePopupRecipient = ({
       {!viewText && (
         <div
           className={twMerge(
-            'mx-1 flex flex-col items-center border-b-[1px] border-gray-200 px-1 py-0',
+            'mx-1 flex flex-col items-center border-b-[1px] border-gray-200 py-0',
             _.isEmpty(selectRecipient) &&
               viewType !== ComposeViewTypeEnum.REPLY &&
               'mx-2 flex-row items-center',
@@ -118,31 +96,28 @@ const ComposePopupRecipient = ({
             (isShowBccInput || isShowCcInput) && 'mx-1 flex-col ',
           )}
         >
-          <ComposePopupSelectRecipients
+          <SelectMultiEmail
             label={t('to')}
-            options={options}
-            defaultValue={selectRecipient || []}
+            selectedValue={selectRecipient || []}
             onChange={onChangeSelectRecipient}
           />
           {isShowCcInput && (
-            <ComposePopupSelectRecipients
-              className="-mt-1.5"
+            <SelectMultiEmail
+              className="-mt-1"
               label={t('cc')}
-              options={options}
-              defaultValue={selectedCcRecipient || []}
+              selectedValue={selectedCcRecipient || []}
               onChange={onChangeSelectCcRecipient}
             />
           )}
           {isShowBccInput && (
-            <ComposePopupSelectRecipients
-              className="-mt-1.5"
+            <SelectMultiEmail
+              className="-mt-1"
               label={t('bcc')}
-              options={options}
-              defaultValue={selectedBccRecipient || []}
+              selectedValue={selectedBccRecipient || []}
               onChange={onChangeSelectBccRecipient}
             />
           )}
-          <div className="flex w-full justify-end gap-1 text-sm text-slate-700">
+          <div className="ml-auto flex justify-end gap-1 text-sm text-slate-700">
             <div
               role="button"
               tabIndex={0}
