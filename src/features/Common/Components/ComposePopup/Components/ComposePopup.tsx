@@ -14,6 +14,7 @@ import { twMerge } from 'tailwind-merge';
 import { DraftActionEnum, useDraftsDispatch } from '../../../../../app/Context/DraftContext';
 import { ComposeViewTypeEnum } from '../../../../../app/Enums/commonEnums';
 import { ComposePopupStyleType, MailType } from '../../../../../app/Types/commonTypes';
+import CustomSelectMultiEmail from '../../CustomSelectMultiInput/CustomSelectMultiEmail';
 import Tooltip from '../../Tooltip/Tooltip';
 import ComposePopupButtonMore from './ComposePopupButtonMore/ComposePopupButtonMore';
 import ComposePopupButtonSend from './ComposePopupButtonSend';
@@ -253,6 +254,8 @@ const ComposePopup = ({
             onChangeSelectCcRecipient={onChangeSelectCcRecipient}
             onChangeSelectBccRecipient={onChangeSelectBccRecipient}
           />
+
+          <CustomSelectMultiEmail />
 
           <ComposePopupInput
             viewType={viewType}
