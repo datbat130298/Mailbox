@@ -221,7 +221,7 @@ const ComposePopup = ({
   return (
     <div
       className={twMerge(
-        'z-50 h-[610px] w-[540px] rounded-t-md bg-white shadow-compose',
+        'z-50 h-[610px] w-[540px] flex-shrink-0 rounded-t-md bg-white shadow-compose',
         composePopupStyle?.containerClassName,
         viewType === ComposeViewTypeEnum.MODAL && 'rounded-md',
         composeClassName,

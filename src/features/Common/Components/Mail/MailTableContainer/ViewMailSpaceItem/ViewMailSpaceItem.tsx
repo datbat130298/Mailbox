@@ -62,6 +62,7 @@ const ViewMailSpaceItem = ({
   };
 
   useEffect(() => {
+    setIsShowComposeWrite(false);
     if (_.isEmpty(mail?.inbox) && !isArray) {
       setIsOpen(true);
     } else if (isFirstOpen) {

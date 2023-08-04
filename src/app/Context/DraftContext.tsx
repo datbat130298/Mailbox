@@ -24,24 +24,83 @@ interface DraftAction {
 
 const DraftsContext = createContext<ComposeType[] | []>([]);
 
+const handleAddCompose = (state: ComposeType[], newCompose: ComposeType) => {
+  let newArr = [];
+  if (state.length < 2) {
+    newArr = [
+      ...state,
+      {
+        uuid: nanoid(),
+        viewType:
+          localStorage.getItem('defaultFullScreen') && localStorage.getItem('defaultFullScreen') === 'true'
+            ? ComposeViewTypeEnum.MODAL
+            : newCompose.viewType,
+        recipient: newCompose?.recipient,
+        recipientBcc: newCompose.recipientBcc,
+        recipientCc: newCompose.recipientCc,
+        subject: newCompose.subject,
+        content: newCompose.content,
+      },
+    ];
+    return newArr;
+  }
+  if (state.length === 2) {
+    newArr = state.map((item: ComposeType, index: number) => {
+      if (index === state.length - 2) {
+        return {
+          ...item,
+          viewType: ComposeViewTypeEnum.ZOOM_OUT,
+        };
+      }
+      return item;
+    });
+    return [
+      ...newArr,
+      {
+        uuid: nanoid(),
+        viewType:
+          localStorage.getItem('defaultFullScreen') && localStorage.getItem('defaultFullScreen') === 'true'
+            ? ComposeViewTypeEnum.MODAL
+            : newCompose.viewType,
+        recipient: newCompose?.recipient,
+        recipientBcc: newCompose.recipientBcc,
+        recipientCc: newCompose.recipientCc,
+        subject: newCompose.subject,
+        content: newCompose.content,
+      },
+    ];
+  }
+  newArr = state.map((item: ComposeType, index: number) => {
+    if (index <= state.length - 2) {
+      return {
+        ...item,
+        viewType: ComposeViewTypeEnum.ZOOM_OUT,
+      };
+    }
+    return item;
+  });
+
+  return [
+    ...newArr,
+    {
+      uuid: nanoid(),
+      viewType:
+        localStorage.getItem('defaultFullScreen') && localStorage.getItem('defaultFullScreen') === 'true'
+          ? ComposeViewTypeEnum.MODAL
+          : newCompose.viewType,
+      recipient: newCompose?.recipient,
+      recipientBcc: newCompose.recipientBcc,
+      recipientCc: newCompose.recipientCc,
+      subject: newCompose.subject,
+      content: newCompose.content,
+    },
+  ];
+};
+
 const draftReducer = (state: ComposeType[], action: DraftAction) => {
   switch (action.type) {
     case DraftActionEnum.ADD_COMPOSE: {
-      return [
-        ...state,
-        {
-          uuid: nanoid(),
-          viewType:
-            localStorage.getItem('defaultFullScreen') && localStorage.getItem('defaultFullScreen') === 'true'
-              ? ComposeViewTypeEnum.MODAL
-              : action.viewType,
-          recipient: action?.recipient,
-          recipientBcc: action.recipientBcc,
-          recipientCc: action.recipientCc,
-          subject: action.subject,
-          content: action.content,
-        },
-      ];
+      return handleAddCompose(state, action);
     }
     case DraftActionEnum.CHANGE_VIEW: {
       const newArr = state.map((item: ComposeType) => {
