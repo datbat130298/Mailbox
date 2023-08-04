@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { nanoid } from 'nanoid';
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { DraftActionEnum, useDraftsDispatch } from '../../../../app/Context/DraftContext';
@@ -150,11 +151,13 @@ const ComposePopupContainer = ({
 
   useEffect(() => {
     if (!_.isEmpty(fromMail)) {
-      setSelectedRecipient([{ email: fromMail.address }] as unknown as SetStateAction<EmailType[]>);
+      if (composeViewType === ComposeViewTypeEnum.REPLY) {
+        setSelectedRecipient([{ id: nanoid(), email: fromMail.address }]);
+      }
       setSubject(fromMail.subject);
       setDebounceSubject(fromMail.subject);
     }
-  }, [fromMail]);
+  }, [fromMail, composeViewType]);
 
   const handleClickInsertContent = (contentText: string) => {
     setContent(contentText);

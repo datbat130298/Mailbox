@@ -45,7 +45,7 @@ const ViewMailSpaceItemInfoCollapse = ({
     >
       <div className={twMerge('flex flex-row items-center justify-between')}>
         <div className="flex items-center justify-start gap-1.5">
-          <p className="truncate text-base font-normal not-italic text-black">
+          <p className="max-w-[70px] truncate text-base font-normal not-italic text-black">
             {emailUser === mail?.from_user?.email ? 'Me' : mail?.author}
           </p>
           <div className="rounded-md text-gray-500 hover:bg-slate-100 hover:text-black">
