@@ -97,27 +97,106 @@ const handleAddCompose = (state: ComposeType[], newCompose: ComposeType) => {
   ];
 };
 
+const handleChangeView = (state: ComposeType[], compose: ComposeType) => {
+  let arrDraft: ComposeType[] = [];
+  let count = 0;
+  let isSpecial = false;
+
+  arrDraft = [...state];
+  arrDraft.splice(-4)?.forEach((item: ComposeType, index: number) => {
+    if (
+      (state[state.length - 4]?.viewType === ComposeViewTypeEnum.POPUP &&
+        compose.uuid !== item.uuid &&
+        compose.viewType === ComposeViewTypeEnum.POPUP) ||
+      (compose.uuid === item.uuid && index === state.length - 4)
+    ) {
+      isSpecial = true;
+    }
+    if (item.viewType === ComposeViewTypeEnum.POPUP) {
+      // eslint-disable-next-line no-return-assign
+      return (count += 1);
+    }
+    return count;
+  });
+  if (count <= 1) {
+    if (isSpecial) {
+      const newArr = state.map((item: ComposeType) => {
+        if (item.uuid !== compose.uuid) {
+          return {
+            ...item,
+            viewType: ComposeViewTypeEnum.ZOOM_OUT,
+          };
+        }
+        return {
+          uuid: compose.uuid,
+          viewType: compose.viewType,
+          recipient: compose?.recipient,
+          recipientBcc: compose.recipientBcc,
+          recipientCc: compose.recipientCc,
+          subject: compose.subject,
+          content: compose.content,
+        };
+      });
+      return newArr;
+    }
+    const newArr = state.map((item: ComposeType) => {
+      if (item.uuid !== compose.uuid) {
+        return item;
+      }
+      return {
+        uuid: compose.uuid,
+        viewType: compose.viewType,
+        recipient: compose?.recipient,
+        recipientBcc: compose.recipientBcc,
+        recipientCc: compose.recipientCc,
+        subject: compose.subject,
+        content: compose.content,
+      };
+    });
+    return newArr;
+  }
+  if (count === 2 && compose.viewType === ComposeViewTypeEnum.ZOOM_OUT) {
+    const newArr = state.map((item: ComposeType) => {
+      if (item.uuid !== compose.uuid) {
+        return item;
+      }
+      return {
+        uuid: compose.uuid,
+        viewType: compose.viewType,
+        recipient: compose?.recipient,
+        recipientBcc: compose.recipientBcc,
+        recipientCc: compose.recipientCc,
+        subject: compose.subject,
+        content: compose.content,
+      };
+    });
+    return newArr;
+  }
+  if (count === 2 && compose.viewType === ComposeViewTypeEnum.POPUP) {
+    const arrState = state.map((item: ComposeType) => {
+      if (item.uuid === compose.uuid) {
+        return {
+          ...item,
+          viewType: compose.viewType,
+        };
+      }
+      return {
+        ...item,
+        viewType: ComposeViewTypeEnum.ZOOM_OUT,
+      };
+    });
+    return arrState;
+  }
+  return state;
+};
+
 const draftReducer = (state: ComposeType[], action: DraftAction) => {
   switch (action.type) {
     case DraftActionEnum.ADD_COMPOSE: {
       return handleAddCompose(state, action);
     }
     case DraftActionEnum.CHANGE_VIEW: {
-      const newArr = state.map((item: ComposeType) => {
-        if (item.uuid !== action.uuid) {
-          return item;
-        }
-        return {
-          uuid: action.uuid,
-          viewType: action.viewType,
-          recipient: action?.recipient,
-          recipientBcc: action.recipientBcc,
-          recipientCc: action.recipientCc,
-          subject: action.subject,
-          content: action.content,
-        };
-      });
-      return newArr;
+      return handleChangeView(state, action);
     }
     case DraftActionEnum.DELETE: {
       const newArr = state.filter((item: ComposeType) => item.uuid !== action.uuid);

@@ -15,8 +15,8 @@ interface ViewMailSpaceItemInfoCollapseProp {
   isArray: boolean | undefined;
   isActive: boolean;
   isOpen: boolean;
-  onClickReply: () => void;
-  onClickForward: () => void;
+  onClickReply: (e: React.MouseEvent) => void;
+  onClickForward: (e: React.MouseEvent) => void;
 }
 
 const ViewMailSpaceItemInfoCollapse = ({

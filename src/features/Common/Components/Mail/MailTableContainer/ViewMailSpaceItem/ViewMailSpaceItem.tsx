@@ -1,11 +1,13 @@
 import dayjs from 'dayjs';
 import _ from 'lodash';
+import { nanoid } from 'nanoid';
 import { useEffect, useState } from 'react';
 import { BsCameraVideo, BsChatLeftText } from 'react-icons/bs';
 import { GoDotFill } from 'react-icons/go';
 import { IoCallOutline, IoSearchOutline } from 'react-icons/io5';
 import { PiFlagPennantFill } from 'react-icons/pi';
 import { twMerge } from 'tailwind-merge';
+import { DraftActionEnum, useDraftsDispatch } from '../../../../../../app/Context/DraftContext';
 import { ComposeViewTypeEnum, TypeChat } from '../../../../../../app/Enums/commonEnums';
 import { MailType } from '../../../../../../app/Types/commonTypes';
 import useSelector from '../../../../../Hooks/useSelector';
@@ -14,7 +16,7 @@ import ViewMailSpaceGroupButtonFooter from '../ViewMailSpace/ViewMailSpaceGroupB
 import ViewMailSpaceItemInfoCollapse from './ViewMailSpaceItemInfoCollapse';
 
 interface ViewMailSpaceItemProp {
-  mail: MailType | null;
+  mail: MailType;
   isActive: boolean;
   isArray?: boolean;
   handleSelectMail?: (mail: MailType) => void;
@@ -33,11 +35,10 @@ const ViewMailSpaceItem = ({
   const [viewType, setViewType] = useState<ComposeViewTypeEnum>();
 
   const userEmail = useSelector((state) => state.user.email);
-
   const dateMail = dayjs();
   const dateCurrent = dayjs(mail?.time);
-
   const emailUser = useSelector((state) => state.user.email);
+  const dispatch = useDraftsDispatch();
 
   const contentDefaultForward = `<br><br><p>---------- Forwarded message -------- <br> From: ${mail?.from_user?.email} <br>Date: ${mail?.time}<br>Subject: ${mail?.subject}<br>To: ${emailUser}</p>`;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -75,16 +76,24 @@ const ViewMailSpaceItem = ({
     setIsShowComposeWrite(true);
   };
 
-  const handleClickReplyCollapse = () => {
-    setViewType(ComposeViewTypeEnum.REPLY);
-    setIsShowComposeWrite(true);
-    setIsOpen(true);
+  const handleClickReplyCollapse = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    dispatch({
+      type: DraftActionEnum.ADD_COMPOSE,
+      uuid: nanoid(),
+      viewType: ComposeViewTypeEnum.POPUP,
+      recipient: [{ email: mail.address }],
+    });
   };
 
-  const handleClickForwardCollapse = () => {
-    setViewType(ComposeViewTypeEnum.FORWARD);
-    setIsShowComposeWrite(true);
-    setIsOpen(true);
+  const handleClickForwardCollapse = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    dispatch({
+      type: DraftActionEnum.ADD_COMPOSE,
+      uuid: nanoid(),
+      viewType: ComposeViewTypeEnum.POPUP,
+      content: contentForward,
+    });
   };
 
   return (

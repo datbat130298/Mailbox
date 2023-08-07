@@ -72,6 +72,7 @@ const ComposeModalMobile = ({ isOpen, onClose }: ComposeModalMobileProp) => {
         </div>
       </div>
       <ComposePopup
+        onZoom={() => null}
         onClose={onClose}
         content={content}
         onChangeEditor={handleChangeEditor}

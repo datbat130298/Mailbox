@@ -78,7 +78,8 @@ const ComposePopupContainer = ({
     debounceInput(e.target.value);
   };
 
-  const handleClickZoom = () => {
+  const handleClickZoom = (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (compose?.viewType !== ComposeViewTypeEnum.ZOOM_OUT) {
       dispatch({
         type: DraftActionEnum.CHANGE_VIEW,
@@ -104,7 +105,8 @@ const ComposePopupContainer = ({
     });
   };
 
-  const handleChangeViewTypeToModal = () => {
+  const handleChangeViewTypeToModal = (e: React.MouseEvent) => {
+    e.stopPropagation();
     dispatch({
       type: DraftActionEnum.CHANGE_VIEW,
       uuid: compose?.uuid,
@@ -190,7 +192,7 @@ const ComposePopupContainer = ({
             onChangeSubjectInput={onChangeSubjectInput}
             debounceSubject={debounceSubject}
             subject={subject}
-            onZoom={handleClickZoom}
+            onZoom={(e: React.MouseEvent) => handleClickZoom(e)}
             viewType={composeViewType}
             fromMail={fromMail}
             onClear={onClear}
@@ -213,7 +215,7 @@ const ComposePopupContainer = ({
           onChangeSubjectInput={onChangeSubjectInput}
           debounceSubject={debounceSubject}
           subject={subject}
-          onZoom={handleClickZoom}
+          onZoom={(e: React.MouseEvent) => handleClickZoom(e)}
           viewType={compose.viewType}
           fromMail={fromMail}
           onClear={onClear}
@@ -242,7 +244,7 @@ const ComposePopupContainer = ({
             onChangeSubjectInput={onChangeSubjectInput}
             debounceSubject={debounceSubject}
             subject={subject}
-            onZoom={handleClickZoom}
+            onZoom={(e: React.MouseEvent) => handleClickZoom(e)}
             onClear={onClear}
             viewType={compose.viewType}
             composePopupStyle={{
@@ -256,10 +258,10 @@ const ComposePopupContainer = ({
         <div className={twMerge('z-50 h-fit min-w-[280px] rounded-t-md bg-white shadow-compose')}>
           <ComposePopupHeader
             className=" bg-[#F2F6FC]"
-            onChangeViewType={handleChangeViewTypeToModal}
+            onChangeViewType={(e: React.MouseEvent) => handleChangeViewTypeToModal(e)}
             title={debounceSubject}
             onClose={handleClosePopupZoomIn}
-            onZoom={handleClickZoom}
+            onZoom={(e: React.MouseEvent) => handleClickZoom(e)}
           />
         </div>
       )}

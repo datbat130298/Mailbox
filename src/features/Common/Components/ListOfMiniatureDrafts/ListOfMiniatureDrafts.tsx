@@ -7,7 +7,6 @@ import ComposePopupContainer from '../ComposePopup/ComposeContainer';
 
 const ListOfMiniatureDrafts = () => {
   const draftList = useDrafts();
-
   const maxWidthView = useMemo(() => {
     if (draftList.length < 4) return 'max-w-[1390px]';
     if (draftList.length >= 4) {
@@ -32,13 +31,9 @@ const ListOfMiniatureDrafts = () => {
         maxWidthView,
       )}
     >
-      {draftList.map((compose: ComposeType) => (
-        <ComposePopupContainer
-          key={compose.uuid}
-          id={compose.uuid}
-          compose={compose}
-          composeClassName="z-[60]"
-        />
+      {draftList.map((compose: ComposeType, index: number) => (
+        // eslint-disable-next-line react/no-array-index-key
+        <ComposePopupContainer key={index} id={compose.uuid} compose={compose} composeClassName="z-[60]" />
       ))}
     </div>
   );

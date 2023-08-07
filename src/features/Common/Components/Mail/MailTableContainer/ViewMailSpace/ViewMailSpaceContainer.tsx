@@ -54,7 +54,7 @@ const ViewMailSpaceContainer = ({ mailData }: ViewMailSpaceContainerProp) => {
             ))}
           </>
         ) : (
-          <ViewMailSpaceItem mail={mailData} isActive />
+          <ViewMailSpaceItem mail={mailData || ({} as unknown as MailType)} isActive />
         )}
       </div>
     </>
