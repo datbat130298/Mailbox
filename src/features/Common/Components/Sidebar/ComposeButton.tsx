@@ -18,7 +18,7 @@ const ComposeButton = ({ isShowSidebar }: ComposeButtonProp) => {
   const dispatch = useDraftsDispatch();
 
   const handleClickCompose = () => {
-    dispatch({ type: DraftActionEnum.ADD_COMPOSE, viewType: ComposeViewTypeEnum.POPUP });
+    dispatch({ type: DraftActionEnum.ADD_COMPOSE, viewType: ComposeViewTypeEnum.POPUP, content: ' ' });
     if (!localStorage.getItem('defaultFullScreen')) {
       localStorage.setItem('defaultFullScreen', 'false');
     }

@@ -70,7 +70,7 @@ const editorConfiguration = {
 
 const CKEditor5 = ({
   config = editorConfiguration,
-  data = '',
+  data = ' ',
   onChange,
   onBlur,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

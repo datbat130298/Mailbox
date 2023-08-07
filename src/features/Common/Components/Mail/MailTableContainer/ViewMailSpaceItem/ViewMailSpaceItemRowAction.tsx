@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { BiLink } from 'react-icons/bi';
 import { CgMailForward } from 'react-icons/cg';
 import { LuReply, LuReplyAll } from 'react-icons/lu';
@@ -8,8 +9,8 @@ import Tooltip from '../../../Tooltip/Tooltip';
 interface ViewMailSpaceItemRowActionProp {
   isActive: boolean;
   isOpen: boolean;
-  onClickReply: () => void;
-  onClickForward: () => void;
+  onClickReply: (e: React.MouseEvent) => void;
+  onClickForward: (e: React.MouseEvent) => void;
 }
 
 const ViewMailSpaceItemRowAction = ({
@@ -18,10 +19,12 @@ const ViewMailSpaceItemRowAction = ({
   onClickReply,
   onClickForward,
 }: ViewMailSpaceItemRowActionProp) => {
+  const { t } = useTranslation();
+
   return (
     <div className={twMerge('hidden group-hover:block', isActive && !isOpen && 'block')}>
       <div className="flex items-center gap-0.5">
-        <Tooltip position="bottom" title="reply">
+        <Tooltip position="bottom" title={t('reply')}>
           <div
             className="flex h-5 w-5 items-center justify-center rounded-sm hover:bg-slate-100"
             onClick={onClickReply}
@@ -31,22 +34,27 @@ const ViewMailSpaceItemRowAction = ({
             <LuReply size={16} className=" text-gray-500" />
           </div>
         </Tooltip>
-        <Tooltip position="bottom" title="forward">
+        <Tooltip position="bottom" title={t('reply_all')}>
           <div
             className="flex h-5 w-5 items-center justify-center rounded-sm hover:bg-slate-100"
-            onClick={onClickForward}
+            onClick={onClickReply}
             tabIndex={0}
             role="button"
           >
             <LuReplyAll size={16} className=" text-gray-500" />
           </div>
         </Tooltip>
-        <Tooltip position="bottom" title="reply">
-          <div className="flex h-5 w-5 items-center justify-center rounded-sm hover:bg-slate-100">
+        <Tooltip position="bottom" title={t('forward')}>
+          <div
+            className="flex h-5 w-5 items-center justify-center rounded-sm hover:bg-slate-100"
+            role="button"
+            tabIndex={0}
+            onClick={onClickForward}
+          >
             <CgMailForward size={16} className=" text-gray-500" />
           </div>
         </Tooltip>
-        <Tooltip position="bottom" title="reply">
+        <Tooltip position="bottom" title={t('reply')}>
           <div className="flex h-5 w-5 items-center justify-center rounded-sm hover:bg-slate-100">
             <BiLink size={15} className="  text-gray-500" />
           </div>

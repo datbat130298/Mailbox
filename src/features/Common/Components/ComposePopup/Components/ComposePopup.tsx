@@ -41,7 +41,7 @@ export interface ComposePopupProps {
   composePopupStyle?: ComposePopupStyleType;
   id?: string;
   onClose?: () => void;
-  onZoom?: () => void;
+  onZoom: (e: React.MouseEvent) => void;
   onChangeSubjectInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onClear?: () => void;
   setComposeViewType?: Dispatch<SetStateAction<ComposeViewTypeEnum>>;
@@ -132,7 +132,8 @@ const ComposePopup = ({
     console.log('this is SubmitSchudule');
   };
 
-  const handleChangeViewTypeCompose = () => {
+  const handleChangeViewTypeCompose = (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (viewType === ComposeViewTypeEnum.POPUP) {
       dispatch({
         type: DraftActionEnum.CHANGE_VIEW,
@@ -166,7 +167,8 @@ const ComposePopup = ({
   }, [contentInbox]);
 
   useEffect(() => {
-    const toolbar = document.querySelector<HTMLElement>('.ck.ck-toolbar');
+    const compose = document.getElementById(`${id}`);
+    const toolbar = compose?.querySelector<HTMLDivElement>('.ck.ck-toolbar');
     if (toolbar) {
       if (!isVisibleToolbar) {
         toolbar.style.visibility = 'hidden';
@@ -231,8 +233,8 @@ const ComposePopup = ({
         <ComposePopupHeader
           title={!_.isEmpty(fromMail) ? `${t('reply')}: ${debounceSubject}` : debounceSubject}
           onClose={handleClose}
-          onZoom={onZoom}
-          onChangeViewType={handleChangeViewTypeCompose}
+          onZoom={(e: React.MouseEvent) => onZoom(e)}
+          onChangeViewType={(e: React.MouseEvent) => handleChangeViewTypeCompose(e)}
         />
       )}
       <div
