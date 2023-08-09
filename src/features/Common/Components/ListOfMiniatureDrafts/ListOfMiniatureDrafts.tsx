@@ -13,8 +13,10 @@ const ListOfMiniatureDrafts = () => {
       let count = 0;
       draftList.forEach((item: ComposeType, index: number) => {
         if (index < draftList.length - 4) return count;
-        // eslint-disable-next-line no-return-assign
-        if (item.viewType === ComposeViewTypeEnum.POPUP) return (count += 1);
+        if (item.viewType === ComposeViewTypeEnum.POPUP) {
+          count += 1;
+          return count;
+        }
         return count;
       });
       if (count === 1) return 'max-w-[1420px]';
