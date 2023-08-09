@@ -12,6 +12,7 @@ import { triggerClickOutside } from '../../utils/helpers';
 import AdvancedSearch from '../Components/AdvancedSearch/AdvancedSearch';
 import Button from '../Components/Button';
 import ChooseLanguage from '../Components/ChooseLanguage/ChooseLanguage';
+import HeaderNotification from '../Components/Header/HeaderNotificaton';
 import UserDropdown from '../Components/UserDropdown/UserDropdown';
 
 const Header = () => {
@@ -89,6 +90,12 @@ const Header = () => {
             <div className="mr-1 hidden border-r-2 border-gray-200 pr-4 lg:block">
               <ChooseLanguage language={language} onChangeLanguage={handChangeLanguage} />
             </div>
+            {user?.uuid && (
+              <>
+                <HeaderNotification />
+                <div className="mx-1 h-5 w-0.5 bg-gray-200" />
+              </>
+            )}
             <div className="ml-4 flex h-full w-fit flex-shrink-0 items-center justify-center">
               <div className="relative h-11 w-11 cursor-pointer rounded-full" ref={userTabRef}>
                 <div

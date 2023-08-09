@@ -101,23 +101,23 @@ const handleChangeView = (state: ComposeType[], compose: ComposeType) => {
   let arrDraft: ComposeType[] = [];
   let count = 0;
   let isSpecial = false;
-
-  arrDraft = [...state];
-  arrDraft.splice(-4)?.forEach((item: ComposeType, index: number) => {
+  arrDraft = [...state.slice(-4)];
+  arrDraft?.forEach((item: ComposeType, index: number) => {
     if (
       (state[state.length - 4]?.viewType === ComposeViewTypeEnum.POPUP &&
         compose.uuid !== item.uuid &&
         compose.viewType === ComposeViewTypeEnum.POPUP) ||
-      (compose.uuid === item.uuid && index === state.length - 4)
+      (compose.uuid === item.uuid && index === arrDraft.length - 4)
     ) {
       isSpecial = true;
     }
     if (item.viewType === ComposeViewTypeEnum.POPUP) {
-      // eslint-disable-next-line no-return-assign
-      return (count += 1);
+      count += 1;
+      return count;
     }
     return count;
   });
+
   if (count <= 1) {
     if (isSpecial) {
       const newArr = state.map((item: ComposeType) => {

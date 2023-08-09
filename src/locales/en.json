@@ -113,5 +113,6 @@
   "edit_as_new": "Edit As New",
   "share_email": "Share Email",
   "close": "Close",
-  "popup": "Popup"
+  "popup": "Popup",
+  "notification_plural": "Notifications"
 }
