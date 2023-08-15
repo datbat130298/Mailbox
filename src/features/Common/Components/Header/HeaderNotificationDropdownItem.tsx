@@ -95,13 +95,14 @@ const HeaderNotificationDropdownItem = ({
   return (
     <div
       className={twMerge(
-        'group relative flex items-start space-x-6 rounded-md px-3 py-3 duration-100 hover:cursor-pointer hover:bg-gray-100',
+        'group relative mt-0.5 flex items-start space-x-4 rounded-md px-3 py-3 duration-100 hover:cursor-pointer hover:bg-gray-100 lg:space-x-6',
+        !notification.read && 'bg-slate-100',
       )}
       role="button"
       tabIndex={0}
       onClick={handleClickItem}
     >
-      <div className="mt-0.5 h-16 w-16 flex-shrink-0 overflow-hidden rounded-full bg-gray-100">
+      <div className="mt-0.5 h-10 w-10 flex-shrink-0 overflow-hidden rounded-full bg-gray-100 lg:h-14 lg:w-14">
         <img
           // src={notification.user?.avatar_img_absolute}
           src={user.avatar_img_absolute}

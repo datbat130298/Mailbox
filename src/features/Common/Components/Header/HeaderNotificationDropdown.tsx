@@ -209,18 +209,20 @@ const HeaderNotificationDropdown = ({ isShow, onClose }: HeaderNotificationDropd
     <>
       <div
         className={twMerge(
-          'absolute right-4 top-9 hidden w-[512px] overflow-hidden rounded-lg border-2 border-gray-100 bg-white pt-6 text-slate-700 shadow-sm transition duration-100 ease-linear',
+          'absolute -right-[66px] top-[50px] hidden w-[376px] overflow-hidden rounded-lg border-2 border-gray-100 bg-white pt-0 text-slate-700 shadow-xl transition duration-100 ease-linear lg:right-4 lg:top-9 lg:w-[512px] lg:pt-6',
           isShow && 'block',
         )}
       >
-        <div className={twMerge('border-b-2 border-gray-100 px-6 shadow-lg shadow-gray-100')}>
-          <div className="flex items-center justify-between">
-            <div className="text-xl font-semibold">{t('notification_plural')}</div>
+        <div
+          className={twMerge('border-b-2 border-gray-100  py-1 shadow-lg shadow-gray-100 lg:px-6 lg:py-0')}
+        >
+          <div className="flex items-center justify-between border-b border-gray-200 px-4 lg:border-none lg:px-0">
+            <div className="text-lg font-semibold lg:text-xl">{t('notification_plural')}</div>
             <HeaderNotificationFilter onChange={handleChangeFilter} />
           </div>
-          <div className="text-steal-700">
+          <div className="text-steal-700 px-4 lg:px-0">
             <div className="flex items-center justify-between">
-              <div className="mt-3 flex flex-1 items-center justify-start space-x-6">
+              <div className="flex flex-1 items-center justify-start space-x-6 lg:mt-3">
                 <HeaderNotificationTabItem
                   text={t('all')}
                   id={null}
@@ -247,7 +249,7 @@ const HeaderNotificationDropdown = ({ isShow, onClose }: HeaderNotificationDropd
             </div>
           </div>
         </div>
-        <div className="overflow-overlay flex max-h-[512px] flex-col overflow-y-auto px-3 py-3">
+        <div className="overflow-overlay flex max-h-[512px] flex-col overflow-y-auto px-1 py-1 lg:px-3 lg:py-3">
           {!isLoading && notificationList.length === 0 && <HeaderNotificationDropdownEmpty />}
           {(!isLoading || (isLoading && queryParams.page !== 1)) &&
             notificationList.length > 0 &&

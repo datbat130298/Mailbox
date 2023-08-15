@@ -41,7 +41,6 @@ const ViewMailSpaceItem = ({
   const dispatch = useDraftsDispatch();
 
   const contentDefaultForward = `<br><br><p>---------- Forwarded message -------- <br> From: ${mail?.from_user?.email} <br>Date: ${mail?.time}<br>Subject: ${mail?.subject}<br>To: ${emailUser}</p>`;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const contentForward = `${contentDefaultForward} <br><br> ${mail?.content}`;
 
   const handleClickHeaderMailItem = (mailCurrent: MailType) => {

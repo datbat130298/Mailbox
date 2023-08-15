@@ -57,6 +57,7 @@ const ComposePopupInput = (
         'mx-1 my-1 flex items-center gap-2 border-b-[1px] border-gray-200 py-2 pb-3',
         viewType !== ComposeViewTypeEnum.REPLY && 'mx-2',
         viewType !== ComposeViewTypeEnum.FORWARD && 'mx-2',
+        className,
       )}
     >
       {label && <span className="text-sm">{label}</span>}

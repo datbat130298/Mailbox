@@ -14,10 +14,12 @@ interface ComposePopupRecipientProps {
   onChangeSelectCcRecipient: (selected: Array<EmailType>) => void;
   onChangeSelectBccRecipient: (selected: Array<EmailType>) => void;
   viewType?: string;
+  className?: string;
 }
 
 const ComposePopupRecipient = ({
   viewType,
+  className,
   selectRecipient,
   selectedCcRecipient,
   selectedBccRecipient,
@@ -71,6 +73,7 @@ const ComposePopupRecipient = ({
             'mx-1 my-1 flex items-center gap-2 border-b-[1px] border-gray-200 py-2 pb-3',
             viewType !== ComposeViewTypeEnum.REPLY && 'mx-2',
             viewType !== ComposeViewTypeEnum.FORWARD && 'mx-2',
+            className,
           )}
           role="button"
           tabIndex={0}
@@ -86,7 +89,7 @@ const ComposePopupRecipient = ({
       {!viewText && (
         <div
           className={twMerge(
-            'mx-1 flex flex-col items-center border-b-[1px] border-gray-200 py-0',
+            'mx-1 my-0.5 flex flex-col items-center border-b-[1px] border-gray-200 py-0',
             _.isEmpty(selectRecipient) &&
               viewType !== ComposeViewTypeEnum.REPLY &&
               'mx-2 flex-row items-center',
@@ -94,6 +97,7 @@ const ComposePopupRecipient = ({
               viewType !== ComposeViewTypeEnum.REPLY &&
               'mx-2 flex-row items-center',
             (isShowBccInput || isShowCcInput) && 'mx-1 flex-col ',
+            className,
           )}
         >
           <SelectMultiEmail

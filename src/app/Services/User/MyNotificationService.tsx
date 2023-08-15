@@ -4,7 +4,7 @@ const dataNotification = [
   {
     uuid: 1,
     content: 'this is notification 1',
-    read: true,
+    read: false,
     type: 'sent',
   },
   {
@@ -22,7 +22,7 @@ const dataNotification = [
   {
     uuid: 4,
     content: 'this is notification 4',
-    read: true,
+    read: false,
     type: 'inbox',
   },
 ];

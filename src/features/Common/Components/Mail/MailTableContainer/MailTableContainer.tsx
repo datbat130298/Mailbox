@@ -2,11 +2,13 @@ import _ from 'lodash';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { twMerge } from 'tailwind-merge';
-import { setMailItemStyle } from '../../../../../app/Slices/layoutSlice';
+import { setIsShowFullSidebar, setMailItemStyle } from '../../../../../app/Slices/layoutSlice';
 import { MailType } from '../../../../../app/Types/commonTypes';
 import useDispatch from '../../../../Hooks/useDispatch';
 import useSelector from '../../../../Hooks/useSelector';
+import ComposeModalMobile from '../../../WorkSpace/ButtonComposeFixed/ComposeModalMobile';
 import EmptyData from '../../EmptyData/EmptyData';
+import { EmailType } from '../../SelectMultiEmail/SelectMultiEmail';
 import HeaderMailTable from '../HeaderMailTable';
 import MailTable from '../MailTable';
 import ViewMailMobile from '../ViewMailMobile';
@@ -23,6 +25,9 @@ const MailTableContainer = ({ mailData, isLoading }: MailTableContainerProp) => 
   const [selectRows, setSelectRows] = useState<Array<number>>([]);
   const [selectedMail, setSelectedMail] = useState<MailType | null>(null);
   const [isShowShadow, setIsShowShadow] = useState(false);
+  const [isShowComposeMobile, setIsShowComposeMobile] = useState(false);
+  const [emailReply, setEmailReply] = useState<Array<EmailType>>([]);
+  const [contentForward, setContentForward] = useState('');
 
   const containerRef = useRef<HTMLDivElement>(null);
   const tableRef = useRef<HTMLDivElement>(null);
@@ -32,6 +37,7 @@ const MailTableContainer = ({ mailData, isLoading }: MailTableContainerProp) => 
   const isClicked = useRef(false);
 
   const isShowFullSideBar = useSelector((state) => state.layout.isShowFullSidebar);
+  const emailUser = useSelector((state) => state.user.email);
 
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -43,13 +49,21 @@ const MailTableContainer = ({ mailData, isLoading }: MailTableContainerProp) => 
 
   const handleSelectMail = (mail: MailType) => {
     setSelectedMail(mail);
-    if (window.innerWidth < 1280) {
+    if (window.innerWidth < 1024) {
       setIsShowViewMailMobile(true);
       return;
     }
+    if (window.innerWidth < 1280 && window.innerWidth >= 1024) {
+      dispatch(setIsShowFullSidebar(false));
+    }
     setIsShowViewMailSpace(true);
     if (tableRef.current !== null) {
-      tableRef.current.style.width = '50%';
+      if (window.innerWidth < 1280) {
+        tableRef.current.style.width = '33.3%';
+      }
+      if (window.innerWidth >= 1280) {
+        tableRef.current.style.width = '50%';
+      }
     }
   };
 
@@ -118,7 +132,12 @@ const MailTableContainer = ({ mailData, isLoading }: MailTableContainerProp) => 
 
   useEffect(() => {
     if (isShowViewMailSpace && headerTableRef.current !== null) {
-      headerTableRef.current.style.width = '50%';
+      if (window.innerWidth < 1280) {
+        headerTableRef.current.style.width = '33.3%';
+      }
+      if (window.innerWidth >= 1280) {
+        headerTableRef.current.style.width = '50%';
+      }
     }
     if (!isShowViewMailSpace && headerTableRef.current !== null) {
       headerTableRef.current.style.width = '100%';
@@ -161,12 +180,27 @@ const MailTableContainer = ({ mailData, isLoading }: MailTableContainerProp) => 
     }
   }, [headerTableRef]);
 
+  useEffect(() => {
+    if (isShowFullSideBar && window.innerWidth < 1280 && window.innerWidth >= 1024) {
+      handleClose();
+    }
+  }, [isShowFullSideBar]);
+
+  const contentDefaultForward = `<br><br><p>---------- Forwarded message -------- <br> From: ${selectedMail?.from_user?.email} <br>Date: ${selectedMail?.time}<br>Subject: ${selectedMail?.subject}<br>To: ${emailUser}</p>`;
+
   return (
     <div
       className={twMerge('h-full w-full text-center', isShowViewMailSpace && 'flex overflow-hidden')}
       ref={containerRef}
     >
-      <div className={twMerge('h-full w-full pt-14', isShowViewMailSpace && 'w-1/2')} ref={tableRef}>
+      <div
+        className={twMerge(
+          'h-full w-full pt-14',
+          isShowViewMailSpace && 'w-1/2',
+          isShowViewMailSpace && window.innerWidth < 1280 && 'w-1/3',
+        )}
+        ref={tableRef}
+      >
         <div className={twMerge('', tableRef.current && `w-${tableRef.current.style.width}`)}>
           <HeaderMailTable
             // isShowViewMailSpace={isShowViewMailMobile}
@@ -203,7 +237,30 @@ const MailTableContainer = ({ mailData, isLoading }: MailTableContainerProp) => 
       <ViewMailMobile
         mailData={selectedMail}
         isOpen={isShowViewMailMobile}
-        onClose={() => setIsShowViewMailMobile(false)}
+        onClose={() => {
+          setIsShowViewMailMobile(false);
+          setContentForward('');
+          setEmailReply([]);
+        }}
+        onClickForward={() => {
+          setIsShowComposeMobile(true);
+          setContentForward(`${contentDefaultForward} <br><br> ${selectedMail?.content}`);
+        }}
+        onClickReply={() => {
+          setIsShowComposeMobile(true);
+          setEmailReply([{ email: selectedMail?.address || '' }]);
+        }}
+        onClickReplyAll={() => setIsShowComposeMobile(true)}
+      />
+      <ComposeModalMobile
+        recipient={emailReply}
+        isOpen={isShowComposeMobile}
+        onClose={() => {
+          setIsShowComposeMobile(false);
+          setContentForward('');
+          setEmailReply([]);
+        }}
+        dataForward={contentForward}
       />
     </div>
   );

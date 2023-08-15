@@ -59,7 +59,7 @@ const HeaderNotificationFilter = ({ onChange }: HeaderNotificationFilterProp) =>
       <button
         type="button"
         className={twMerge(
-          'flex h-10 cursor-pointer items-center space-x-2 rounded-md border-2 border-gray-100 bg-white pl-3 pr-2 duration-100 hover:bg-gray-50',
+          'flex h-10 cursor-pointer items-center space-x-2 rounded-md border-2 border-white bg-white pl-3 pr-2 duration-100 hover:bg-gray-50 sm:border-gray-100',
           // isShowDropdown && get("dropdown.selected")
         )}
         onFocus={handleFocusButton}
