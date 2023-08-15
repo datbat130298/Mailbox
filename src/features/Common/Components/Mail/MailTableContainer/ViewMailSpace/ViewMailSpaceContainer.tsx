@@ -30,8 +30,8 @@ const ViewMailSpaceContainer = ({ mailData }: ViewMailSpaceContainerProp) => {
 
   return (
     <>
-      <div className={twMerge('ml-0.5 flex h-12 items-center px-5', isShowShadow && '')}>
-        <p className="line-clamp-1 text-ellipsis text-left text-base font-medium">{`Re: ${subjectRe}`}</p>
+      <div className={twMerge('ml-0.5 flex items-center px-5 py-3', isShowShadow && '')}>
+        <p className="h-max text-left text-base font-medium">{`Re: ${subjectRe}`}</p>
       </div>
       <div className="ml-1 h-[calc(100%-110px)] overflow-y-auto" onScroll={(e) => handleScroll(e)}>
         {mailData?.inbox && mailData?.inbox.length ? (

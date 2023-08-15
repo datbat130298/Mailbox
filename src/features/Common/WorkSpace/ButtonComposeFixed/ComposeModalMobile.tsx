@@ -1,23 +1,31 @@
-import _ from 'lodash';
-import { useCallback, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import ComposePopup from '../../Components/ComposePopup/Components/ComposePopup';
+import { IoArrowBack, IoLink } from 'react-icons/io5';
+import { MdMoreVert } from 'react-icons/md';
+import { TbSend } from 'react-icons/tb';
+import { twMerge } from 'tailwind-merge';
+import useSelector from '../../../Hooks/useSelector';
+import ComposePopupInput from '../../Components/ComposePopup/Components/ComposePopupInput';
+import ComposePopupRecipient from '../../Components/ComposePopup/Components/ComposePopupRecipient/ComposePopupRecipient';
+import WriterCompose from '../../Components/ComposePopup/Components/EditorWriterCompose';
 import Modal from '../../Components/Modal/Modal';
 import { EmailType } from '../../Components/SelectMultiEmail/SelectMultiEmail';
+import Tooltip from '../../Components/Tooltip/Tooltip';
 
 interface ComposeModalMobileProp {
   isOpen: boolean;
   onClose: () => void;
+  dataForward?: string;
+  recipient?: Array<EmailType>;
 }
 
-const ComposeModalMobile = ({ isOpen, onClose }: ComposeModalMobileProp) => {
+const ComposeModalMobile = ({ isOpen, onClose, dataForward, recipient }: ComposeModalMobileProp) => {
   const [subject, setSubject] = useState<string>('');
-  const [debounceSubject, setDebounceSubject] = useState<string>('');
   const [selectedRecipient, setSelectedRecipient] = useState<Array<EmailType>>([]);
   const [selectedCcRecipient, setSelectedCcRecipient] = useState<Array<EmailType>>([]);
   const [selectedBccRecipient, setSelectedBccRecipient] = useState<Array<EmailType>>([]);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [content, setContent] = useState<any>(' ');
+  const [content, setContent] = useState('');
+  const userEmail = useSelector((state) => state.user.email);
 
   const { t } = useTranslation();
 
@@ -37,17 +45,47 @@ const ComposeModalMobile = ({ isOpen, onClose }: ComposeModalMobileProp) => {
     setContent(value);
   };
 
-  const debounceInput = useCallback(
-    _.debounce((_searchVal: string) => {
-      setDebounceSubject(_searchVal);
-    }, 1000),
-    [],
-  );
-
   const onChangeSubjectInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSubject(e.target.value);
-    debounceInput(e.target.value);
   };
+
+  useEffect(() => {
+    if (isOpen) {
+      const delayVisibleToolbar = setTimeout(() => {
+        const toolbar = document.querySelector<HTMLDivElement>('.ck.ck-toolbar');
+        if (toolbar) {
+          toolbar.style.display = 'none';
+        }
+      }, 300);
+      return () => clearTimeout(delayVisibleToolbar);
+    }
+    return undefined;
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (isOpen) {
+      if (recipient) {
+        setSelectedBccRecipient(recipient);
+      }
+      const delaySetContent = setTimeout(() => {
+        if (dataForward) {
+          setContent(dataForward);
+        }
+      }, 100);
+      return () => clearTimeout(delaySetContent);
+    }
+    return undefined;
+  }, [isOpen, dataForward, recipient]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setContent('');
+      setSubject('');
+      setSelectedRecipient([]);
+      setSelectedBccRecipient([]);
+      setSelectedCcRecipient([]);
+    }
+  }, [isOpen]);
 
   return (
     <Modal
@@ -58,39 +96,57 @@ const ComposeModalMobile = ({ isOpen, onClose }: ComposeModalMobileProp) => {
       className="overflow-hidden rounded-none"
       contentContainerClassName="p-0 h-screen w-screen rounded-none"
     >
-      <div className="flex h-10 w-full items-center justify-between border-b-[0.5px] px-2">
-        <div className="line-clamp-1 w-[calc(100%-50px)] truncate text-ellipsis break-all pl-2 text-sm font-semibold">
-          {debounceSubject || t('new_message')}
+      <div className="flex h-full w-full flex-col">
+        <div className="flex items-center justify-between bg-slate-100 p-3 text-gray-800">
+          <div className="flex items-center space-x-3">
+            <div role="button" tabIndex={0} onClick={onClose}>
+              <IoArrowBack size={22} className="mt-0.5" />
+            </div>
+            <p className="text-lg ">{t('compose')}</p>
+          </div>
+          <div className="flex items-center space-x-3 text-gray-800">
+            <Tooltip position="bottom" title="insert link">
+              <IoLink className="" size={22} />
+            </Tooltip>
+            <Tooltip position="bottom" title="sent">
+              <TbSend size={20} className="ml-1 rotate-45" />
+            </Tooltip>
+            <Tooltip position="bottom" title="more">
+              <MdMoreVert size={22} />
+            </Tooltip>
+          </div>
         </div>
-        <div
-          className="flex h-6 w-fit items-center justify-center rounded-full text-sm underline hover:bg-slate-200"
-          role="button"
-          tabIndex={0}
-          onClick={onClose}
-        >
-          Back
+        <div className="mx-4 mt-1 flex gap-3 border-b-[0.5px] py-3 text-sm">
+          <p className="text-[#9CA3AF]">From</p>
+          <p className="text-slate-800">{userEmail}</p>
+        </div>
+        <ComposePopupInput
+          placeholder={t('subject')}
+          value={subject}
+          onChange={onChangeSubjectInput}
+          className="mx-4"
+        />
+        <ComposePopupRecipient
+          selectRecipient={selectedRecipient}
+          selectedCcRecipient={selectedCcRecipient}
+          selectedBccRecipient={selectedBccRecipient}
+          onChangeSelectRecipient={handleOnChangeRecipient}
+          onChangeSelectCcRecipient={handleOnChangeCcRecipient}
+          onChangeSelectBccRecipient={handleOnChangeBccRecipient}
+          className="mx-4"
+        />
+        <div className={twMerge('mx-2 flex-1 overflow-auto')}>
+          <WriterCompose
+            isShowToolbar={false}
+            id="compose"
+            data={content}
+            handleChangeEditor={handleChangeEditor}
+            handleChangeBlur={undefined}
+            isLoading={undefined}
+            isDisabled={undefined}
+          />
         </div>
       </div>
-      <ComposePopup
-        onZoom={() => null}
-        onClose={onClose}
-        content={content}
-        onChangeEditor={handleChangeEditor}
-        selectRecipient={selectedRecipient}
-        selectedCcRecipient={selectedCcRecipient}
-        selectedBccRecipient={selectedBccRecipient}
-        onChangeSelectRecipient={handleOnChangeRecipient}
-        onChangeSelectCcRecipient={handleOnChangeCcRecipient}
-        onChangeSelectBccRecipient={handleOnChangeBccRecipient}
-        onChangeSubjectInput={onChangeSubjectInput}
-        debounceSubject={debounceSubject}
-        isShowToolbar
-        subject={subject}
-        composePopupStyle={{
-          containerClassName: 'h-[calc(100%-52px)] w-full rounded-t-none shadow-none',
-          composeClassName: 'h-[calc(100%-140px)]',
-        }}
-      />
     </Modal>
   );
 };

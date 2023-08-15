@@ -23,7 +23,7 @@ const HeaderNotificationTabItem = ({
   return (
     <div
       className={twMerge(
-        'group -mb-px flex cursor-pointer items-center space-x-3 border-b-2 border-gray-100 pb-4 pt-2 font-semibold',
+        'group -mb-px flex cursor-pointer items-center justify-center space-x-3 border-gray-100 pb-3 pt-3 font-semibold lg:pb-4 lg:pt-2',
         isSelected && 'border-primary-700',
       )}
       role="button"

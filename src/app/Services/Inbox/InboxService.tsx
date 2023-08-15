@@ -6,7 +6,8 @@ const dataInbox = [
     uuid: 1,
     read: false,
     author: 'Khoi Trannnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnmnnnnnnnnnnnnnnn',
-    subject: 'Hello from KhoiTran',
+    subject:
+      'Nghe đồn anh thích màu xanh? Còn em thì lại thích anh chẳng rời.Hình như anh thích bầu trời?Còn em thì thích một đời bên anh.',
     type: TypeChat.INBOX,
     inbox: [
       {

@@ -1,4 +1,5 @@
 import { DefaultTFuncReturn } from 'i18next';
+import _ from 'lodash';
 import { cloneElement, ReactElement, useMemo } from 'react';
 import { RxDotFilled } from 'react-icons/rx';
 import { Link, useLocation } from 'react-router-dom';
@@ -15,6 +16,7 @@ interface SidebarItemProps {
   title?: DefaultTFuncReturn;
   quantity?: number;
   isShowSidebar?: boolean;
+  onCloseMobile?: () => void;
 }
 
 const SidebarItem = ({
@@ -25,6 +27,7 @@ const SidebarItem = ({
   tooltipText,
   quantity,
   isShowSidebar = true,
+  onCloseMobile,
 }: SidebarItemProps) => {
   const { pathname } = useLocation();
   const isShowFullSidebar = useSelector((state) => state.layout.isShowFullSidebar);
@@ -38,6 +41,7 @@ const SidebarItem = ({
 
   const handleClickSidebarItem = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (_.isFunction(onCloseMobile)) onCloseMobile();
     if (window.screen.width <= 620) {
       dispatch(setIsShowFullSidebar(false));
     }

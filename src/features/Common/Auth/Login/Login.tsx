@@ -89,17 +89,17 @@ const Login = () => {
       });
   };
   return (
-    <div className="flex sm:pb-10 sm:pt-16">
-      <div className="w-full max-w-screen-sm rounded-2xl border-gray-100 bg-white px-2 py-6 xs:px-4 sm:m-auto sm:border-2 sm:px-20 sm:py-12 sm:shadow-md">
-        <Logo imageClassName="mx-auto mb-8 hidden h-14 md:block" />
+    <div className="flex sm:pb-10 sm:pt-16 ">
+      <div className="w-full max-w-screen-sm rounded-2xl border-gray-100 bg-inherit px-2 py-6 xs:px-4 sm:m-auto sm:border-2 sm:bg-white sm:px-20 sm:py-12 sm:shadow-md">
+        <Logo imageClassName="mx-auto mb-2 sm:mb-8 h-14 hidden sm:block" />
 
-        <div className="mt-4 md:text-center">
-          <div className="text-xl font-bold sm:text-3xl">Hi, Welcome Back!</div>
+        <div className="text-center sm:mt-4">
+          <div className="text-2xl font-bold sm:text-3xl">Hi, Welcome Back!</div>
           <div className="mt-1 text-sm font-semibold text-gray-400 sm:mt-3 sm:text-base">
             Login to your SENDGPT account to continue
           </div>
         </div>
-        <form action="" className="mt-10 sm:mt-14" onSubmit={handleSubmit}>
+        <form action="" className="mt-7 sm:mt-14" onSubmit={handleSubmit}>
           {error && (
             <Alert
               title="Username or password have arror. Please check it again"
@@ -135,7 +135,7 @@ const Login = () => {
             label="Password"
             id="password"
             name="password"
-            className="mt-1 w-full md:mt-4 lg:mt-5"
+            className="mt-3 w-full md:mt-4 lg:mt-5"
             value={password}
             onChange={handleChangePassword}
             disabled={isSubmitting}
@@ -148,7 +148,7 @@ const Login = () => {
               Forgot Password
             </Link>
           </div>
-          <div className="box-border w-full">
+          <div className="mt-6 box-border w-full sm:mt-0">
             <Button
               type="submit"
               className="mt-4 w-full"
@@ -160,11 +160,11 @@ const Login = () => {
           </div>
         </form>
         <div className="text-center sm:mt-4">
-          <div className="mt-8 text-center sm:mt-12">
+          <div className="mt-5 text-center sm:mt-12">
             Do not have an account?{' '}
             <Link
               to={`/auth/register?redirect=${encodeURIComponent(searchParams.get('redirect') || '')}`}
-              className="block font-semibold underline hover:text-primary-700 sm:inline-block"
+              className="block font-semibold underline hover:text-primary-700 sm:inline-block "
             >
               Create Account
             </Link>

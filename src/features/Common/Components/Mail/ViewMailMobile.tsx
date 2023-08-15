@@ -1,30 +1,44 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import dayjs from 'dayjs';
 import _ from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CgMailForward, CgMailReply } from 'react-icons/cg';
+import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
+import { IoArrowBack } from 'react-icons/io5';
+import { LuForward, LuReply, LuReplyAll } from 'react-icons/lu';
+import { MdMoreVert } from 'react-icons/md';
+import { RiDeleteBin6Line, RiMailDownloadLine } from 'react-icons/ri';
 import { useParams } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 import { getMailById } from '../../../../app/Services/Inbox/InboxService';
 import { MailType } from '../../../../app/Types/commonTypes';
-import useSelector from '../../../Hooks/useSelector';
-import Button from '../Button';
 import Modal from '../Modal/Modal';
+import Tooltip from '../Tooltip/Tooltip';
 import MailTag from './MailTag';
 
 interface ViewMailMobileProps {
   mailData: MailType | null;
   isOpen: boolean;
   onClose: () => void;
+  onClickReply?: () => void;
+  onClickForward?: () => void;
+  onClickReplyAll?: () => void;
 }
 
-const ViewMailMobile = ({ mailData, isOpen, onClose }: ViewMailMobileProps) => {
+const ViewMailMobile = ({
+  mailData,
+  isOpen,
+  onClose,
+  onClickForward,
+  onClickReply,
+  onClickReplyAll,
+}: ViewMailMobileProps) => {
   const { t } = useTranslation();
   const [, setIsShowCompose] = useState(false);
   const [mail, setMail] = useState<MailType>();
+  const [isActiveStar, setIsActiveStar] = useState(false);
+  const [emailReply, setEmailReply] = useState({});
   const { uuid } = useParams();
-
-  const emailUser = useSelector((state) => state.user.email);
 
   const fetchDataMail = useCallback((mailId: string | undefined) => {
     const data = getMailById(Number(mailId));
@@ -43,6 +57,7 @@ const ViewMailMobile = ({ mailData, isOpen, onClose }: ViewMailMobileProps) => {
 
   const handleClickReply = () => {
     onClose();
+    setEmailReply({ email: mailData?.address });
     setIsShowCompose(true);
   };
 
@@ -55,9 +70,9 @@ const ViewMailMobile = ({ mailData, isOpen, onClose }: ViewMailMobileProps) => {
     setIsShowCompose(false);
   };
 
-  const contentDefaultForward = `<br><br><p>---------- Forwarded message -------- <br> From: ${mailData?.from_user?.email} <br>Date: ${mailData?.time}<br>Subject: ${mailData?.subject}<br>To: ${emailUser}</p>`;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const contentForward = `${contentDefaultForward} <br><br> ${mailData?.content}`;
+  const handleClickStar = () => {
+    setIsActiveStar((prev) => !prev);
+  };
 
   return (
     <Modal
@@ -68,78 +83,92 @@ const ViewMailMobile = ({ mailData, isOpen, onClose }: ViewMailMobileProps) => {
       className="overflow-hidden rounded-none"
       contentContainerClassName="p-0 h-screen w-screen rounded-none"
     >
-      <div className="overflow-overlay z-49 h-full w-full overflow-hidden overflow-y-auto">
-        <div className=" flex h-10 w-full items-center justify-between px-2 text-xl shadow-bottom">
-          <div className="flex max-w-[256px] items-center justify-start gap-x-2">
-            <div className="max-w-[220px] flex-shrink-0 truncate">{mail?.subject}</div>
+      <div className="h-full w-full overflow-hidden bg-white">
+        <div className="fixed flex w-full items-center justify-between bg-slate-100 p-3">
+          <div className="flex items-center justify-center space-x-3">
+            <div role="button" tabIndex={0} onClick={onClose}>
+              <IoArrowBack size={22} className="mt-0.5" />
+            </div>
             <MailTag />
-          </div>
-          <div
-            className="flex h-6 w-6 flex-shrink-0  items-center justify-center rounded-full text-sm font-normal underline hover:bg-slate-200"
-            role="button"
-            tabIndex={0}
-            onClick={onClose}
-          >
-            Back
-          </div>
-        </div>
-        <div className="mb-2 mt-2 flex h-12 w-full px-2">
-          <div className="flex h-12 w-fit flex-shrink-0 items-center justify-center">
-            <div
-              className={twMerge(
-                'flex h-full w-12 flex-shrink-0  items-center justify-center rounded-full bg-cyan-500 drop-shadow',
+            <div tabIndex={0} role="button" onClick={handleClickStar} className="basic-2/12">
+              {!isActiveStar ? (
+                <AiOutlineStar className="text-slate-700" size={22} />
+              ) : (
+                <AiFillStar className="text-primary-500" size={22} />
               )}
-            >
-              <p className="text-xl font-semibold">{mail?.author.slice(0, 1)}</p>
             </div>
-          </div>
-          <div className="flex h-full w-[calc(100%-48px)] justify-between pl-2">
-            <div>
-              <div className="flex h-6 w-fit justify-start ">
-                <div className="text-sm font-semibold leading-6">{mail?.author}</div>
-                <div className="px-1 text-xs leading-6 text-gray-700">{`<${mail?.address}>`}</div>
-              </div>
-              <div className="h-fit w-fit pr-2 text-xs ">
-                {dayjs(mail?.time).format('MMMM D, YYYY HH:mm A')}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="h-fit pl-16">
-          <div className="h-fit w-full text-left">
-            <div
-              // eslint-disable-next-line react/no-danger
-              dangerouslySetInnerHTML={{ __html: mailData ? mailData.content : ' ' }}
-            />
           </div>
 
-          <div className="mt-8 flex h-fit w-full justify-start gap-x-3 pb-8">
-            <Button
-              className="h-8 rounded-2xl border-none bg-white text-gray-700 ring-1"
-              size="sm"
-              color="light"
-              onClick={handleClickReply}
-            >
-              <div className="mx-1 flex min-w-[64px] items-center justify-center gap-x-2">
-                <div>
-                  <CgMailReply size={18} />
+          <div className="-mr-1 flex items-center space-x-3 text-gray-800">
+            <Tooltip position="bottom" title={t('storage')}>
+              <RiMailDownloadLine size={19} className="ml-1" />
+            </Tooltip>
+            <Tooltip position="bottom" title={t('trash')}>
+              <RiDeleteBin6Line size={19} className="ml-1" />
+            </Tooltip>
+            <Tooltip position="bottom" title={t('more')}>
+              <MdMoreVert size={22} />
+            </Tooltip>
+          </div>
+        </div>
+
+        {/* content */}
+        <div className="mt-[53px] h-full w-full overflow-auto pb-16 md:px-[30px]">
+          <div className=" flex justify-start gap-2 bg-white px-4 pt-3">
+            {/* <p className="flex h-full justify-start font-medium">Subject:</p> */}
+            <p className="font-normal italic underline"> {mail?.subject}</p>
+          </div>
+          <div className="w-full bg-white px-3 py-2 ">
+            <div className="flex w-full justify-between space-x-3">
+              <div className="flex w-3/4 ">
+                <div
+                  className={twMerge(
+                    'flex h-12 w-12 flex-shrink-0  items-center justify-center rounded-full bg-cyan-500 drop-shadow',
+                  )}
+                >
+                  <p className="text-xl font-semibold">{mail?.author.slice(0, 1)}</p>
                 </div>
-                <div className="text-sm">{t('reply')}</div>
-              </div>
-            </Button>
-            <Button
-              className="h-8 w-max rounded-2xl border-none bg-white text-gray-700 ring-1"
-              size="sm"
-              color="light"
-              onClick={handleClickForward}
-            >
-              <div className="mx-1 flex min-w-[64px] items-center justify-center gap-x-2">
-                <div>
-                  <CgMailForward size={18} className="h-full w-fit" />
+                <div className="ml-2 flex w-[calc(100%-48px)] flex-col justify-between py-0.5">
+                  <div className="truncate font-medium">{mail?.author}</div>
+                  <div className="h-fit w-fit text-xs">
+                    {dayjs(mail?.time).format('MMMM D, YYYY HH:mm A')}
+                  </div>
                 </div>
-                <div className="text-sm">{t('forward')}</div>
               </div>
-            </Button>
+              <div className="flex h-12 w-1/4 items-center justify-end space-x-2">
+                <div role="button" className="my-auto w-5" tabIndex={0} onClick={() => null}>
+                  <LuReply size={18} />
+                </div>
+                <div role="button" className="my-auto w-5" tabIndex={0} onClick={() => null}>
+                  <MdMoreVert size={20} />
+                </div>
+              </div>
+            </div>
+            {/*  content mail */}
+            <div className="px-1 pt-3 text-justify text-sm">
+              {/* eslint-disable-next-line react/no-danger */}
+              <div dangerouslySetInnerHTML={{ __html: mailData ? mailData.content : ' ' }} />
+            </div>
+          </div>
+          <div className="mb-4 mt-2 flex w-full justify-center space-x-4">
+            <div className="flex h-14 w-24 items-center justify-center rounded-4xl border border-gray-700">
+              <div className="text-sm" role="button" tabIndex={0} onClick={onClickReply}>
+                <LuReply size={19} className="mx-auto -mb-1" />
+                Reply
+              </div>
+            </div>
+            <div className="flex h-14 w-24 items-center justify-center rounded-4xl border border-gray-700">
+              <div className="text-sm" role="button" tabIndex={0} onClick={onClickReplyAll}>
+                <LuReplyAll size={19} className="mx-auto -mb-1" />
+                Reply all
+              </div>
+            </div>
+            <div className="flex h-14 w-24 items-center justify-center rounded-4xl border border-gray-700">
+              <div className="text-sm" role="button" tabIndex={0} onClick={onClickForward}>
+                <LuForward size={19} className="mx-auto -mb-1" />
+                Forward
+              </div>
+            </div>
           </div>
         </div>
       </div>

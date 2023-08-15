@@ -59,11 +59,11 @@ const MailItem = ({ mail, onChangeSelectRow, onClickShowMail, selected, selected
               onChange={(e) => onChangeSelectRow(mail.uuid, e.target.checked)}
             />
           </div>
-          <div className="hidden w-10 items-center justify-center md:flex">
+          <div className="hidden w-10 items-center justify-center xl:flex">
             {isRead ? (
-              <LuMailOpen size={20} className="ml-3 text-gray-300" />
+              <LuMailOpen size={20} className=" ml-3 text-gray-300" />
             ) : (
-              <IoMailOutline size={21} className="ml-3 text-blue-700" />
+              <IoMailOutline size={21} className=" ml-3 text-blue-700" />
             )}
           </div>
         </div>
@@ -85,7 +85,7 @@ const MailItem = ({ mail, onChangeSelectRow, onClickShowMail, selected, selected
           tabIndex={0}
           onClick={() => onClickShowMail(mail)}
           className={twMerge(
-            'relative h-full w-[calc(100%-52px)] pl-2 pr-24',
+            'relative h-full w-[calc(100%-52px)] pl-2 pr-24 xl:pl-2',
             itemMailStyle === 'classic' && 'py-1',
           )}
         >
@@ -116,18 +116,21 @@ const MailItem = ({ mail, onChangeSelectRow, onClickShowMail, selected, selected
 
           <div
             className={twMerge(
-              'z-5 z-5 absolute right-0 top-0 h-full w-12 text-xs font-semibold lg:w-32',
+              'z-5 z-5 absolute right-0 top-0 h-full w-12  text-xs font-semibold lg:w-32',
               itemMailStyle === 'classic' && 'py-1',
+              selectedMail && '!w-20',
+              selectedMail && 'xl:!w-32 ',
             )}
           >
             <div
               className={twMerge(
                 'line-clamp-1 hidden h-full items-center text-ellipsis break-all text-gray-500 lg:flex lg:items-center lg:justify-center lg:text-center',
-                // style?.height,
                 !isRead && ' text-gray-800',
               )}
             >
-              {dayjs(mail.time).format('ddd, MMM D, h:mm A')}
+              {window.innerWidth < 1280 && window.innerWidth >= 1024 && selectedMail
+                ? dayjs(mail.time).format('MMM D, h:mm')
+                : dayjs(mail.time).format('ddd, MMM D, h:mm A')}
             </div>
             <div
               className={twMerge(
