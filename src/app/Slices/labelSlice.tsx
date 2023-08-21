@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { BiSend } from 'react-icons/bi';
 import { BsChatLeftText, BsMailbox, BsPersonLinesFill } from 'react-icons/bs';
 import { FiTrash2 } from 'react-icons/fi';
 import {
@@ -6,7 +7,6 @@ import {
   MdOutlineContactMail,
   MdOutlineDiscount,
   MdOutlineDrafts,
-  MdOutlineScheduleSend,
   MdOutlineStarBorder,
   MdOutlineSystemUpdateAlt,
   MdOutlineWatchLater,
@@ -146,7 +146,7 @@ const systemLabels = [
     id: 6,
     to: '/sent',
     name: 'sent',
-    icon: <MdOutlineScheduleSend size={21} />,
+    icon: <BiSend size={21} className="rotate-45" />,
     display: [
       {
         hide: false,

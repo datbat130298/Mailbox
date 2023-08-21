@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
+import Cookies from 'universal-cookie';
 // eslint-disable-next-line import/no-cycle
 
+const cookie = new Cookies();
 declare module 'axios' {
   export interface AxiosRequestConfig {
     redirectWhenError?: boolean;
@@ -15,14 +17,14 @@ const axiosInstance = axios.create({
   responseEncoding: 'utf8',
   headers: {
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${window.localStorage.getItem('access_token')}`,
+    Authorization: `Bearer ${cookie.get('access_token')}`,
   },
   withCredentials: true,
 });
 
 axiosInstance.interceptors.request.use((request) => {
   request.headers['Content-Type'] = 'application/json';
-  request.headers.Authorization = `Bearer ${window.localStorage.getItem('access_token')}`;
+  request.headers.Authorization = `Bearer ${cookie.get('access_token')}`;
   return request;
 });
 

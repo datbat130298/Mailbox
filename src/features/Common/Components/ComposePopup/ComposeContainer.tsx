@@ -43,9 +43,7 @@ const ComposePopupContainer = ({
   const [selectedCcRecipient, setSelectedCcRecipient] = useState<Array<EmailType>>([]);
   const [selectedBccRecipient, setSelectedBccRecipient] = useState<Array<EmailType>>([]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [content, setContent] = useState<any>(
-    composeViewType === ComposeViewTypeEnum.FORWARD ? contentInbox : ' ',
-  );
+  const [body, setBody] = useState<any>(composeViewType === ComposeViewTypeEnum.FORWARD ? contentInbox : ' ');
 
   const dispatch = useDraftsDispatch();
 
@@ -60,10 +58,10 @@ const ComposePopupContainer = ({
     setSelectedBccRecipient(selectedOptions);
 
   const handleChangeEditor = (value: string) => {
-    if (content) {
+    if (body) {
       return;
     }
-    setContent(value);
+    setBody(value);
   };
 
   const debounceInput = useCallback(
@@ -85,7 +83,7 @@ const ComposePopupContainer = ({
         type: DraftActionEnum.CHANGE_VIEW,
         uuid: compose?.uuid,
         viewType: ComposeViewTypeEnum.ZOOM_OUT,
-        content,
+        body,
         recipientBcc: selectedBccRecipient,
         recipient: selectedRecipient,
         recipientCc: selectedCcRecipient,
@@ -97,7 +95,7 @@ const ComposePopupContainer = ({
       type: DraftActionEnum.CHANGE_VIEW,
       uuid: compose?.uuid,
       viewType: ComposeViewTypeEnum.POPUP,
-      content,
+      body,
       recipientBcc: selectedBccRecipient,
       recipient: selectedRecipient,
       recipientCc: selectedCcRecipient,
@@ -111,7 +109,7 @@ const ComposePopupContainer = ({
       type: DraftActionEnum.CHANGE_VIEW,
       uuid: compose?.uuid,
       viewType: ComposeViewTypeEnum.MODAL,
-      content,
+      body,
       recipientBcc: selectedBccRecipient,
       recipient: selectedRecipient,
       recipientCc: selectedCcRecipient,
@@ -132,7 +130,7 @@ const ComposePopupContainer = ({
       type: DraftActionEnum.DELETE,
       uuid: compose?.uuid,
       viewType: ComposeViewTypeEnum.POPUP,
-      content,
+      body,
       recipientBcc: selectedBccRecipient,
       recipient: selectedRecipient,
       recipientCc: selectedCcRecipient,
@@ -146,7 +144,7 @@ const ComposePopupContainer = ({
       setSelectedCcRecipient(compose.recipientCc || []);
       setSelectedRecipient(compose.recipient || []);
       setDebounceSubject(compose.subject || '');
-      setContent(compose.content || ' ');
+      setBody(compose.body || ' ');
       setSubject(compose.subject || '');
     }
   }, [compose]);
@@ -162,12 +160,12 @@ const ComposePopupContainer = ({
   }, [fromMail, composeViewType]);
 
   const handleClickInsertContent = (contentText: string) => {
-    setContent(contentText);
+    setBody(contentText);
   };
 
   useEffect(() => {
     if (composeViewType === ComposeViewTypeEnum.FORWARD) {
-      setContent(contentInbox);
+      setBody(contentInbox);
     }
   }, [composeViewType]);
 
@@ -181,7 +179,7 @@ const ComposePopupContainer = ({
             id={id}
             contentInbox={contentInbox}
             handleClickInsertContent={handleClickInsertContent}
-            content={content}
+            body={body}
             onChangeEditor={handleChangeEditor}
             selectRecipient={selectedRecipient || undefined}
             selectedCcRecipient={selectedCcRecipient || undefined}
@@ -204,7 +202,7 @@ const ComposePopupContainer = ({
       {compose && compose.viewType === ComposeViewTypeEnum.POPUP && (
         <ComposePopup
           id={id}
-          content={content}
+          body={body}
           onChangeEditor={handleChangeEditor}
           selectRecipient={selectedRecipient || undefined}
           selectedCcRecipient={selectedCcRecipient || undefined}
@@ -233,7 +231,7 @@ const ComposePopupContainer = ({
         >
           <ComposePopup
             id={id}
-            content={content}
+            body={body}
             onChangeEditor={handleChangeEditor}
             selectRecipient={selectedRecipient}
             selectedCcRecipient={selectedCcRecipient}

@@ -56,9 +56,9 @@ const MailTable = ({
           data?.map((item) => (
             <MailItem
               selectedMail={selectedMail}
-              key={item.uuid}
+              key={item.id}
               mail={item}
-              selected={_.includes(selectRows, item.uuid)}
+              selected={_.includes(selectRows, item.id)}
               onChangeSelectRow={onChangeSelectRows}
               onClickShowMail={onClickShowMail || (() => null)}
             />

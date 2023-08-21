@@ -38,16 +38,16 @@ const ViewMailSpaceContainer = ({ mailData }: ViewMailSpaceContainerProp) => {
           <>
             <ViewMailSpaceItem
               mail={mailData}
-              isActive={selectedMail.uuid === mailData.uuid}
+              isActive={selectedMail.id === mailData.id}
               handleSelectMail={handleSelectMail}
               isArray
               isFirstOpen
             />
             {mailData.inbox.map((mail) => (
               <ViewMailSpaceItem
-                key={mail.uuid}
+                key={mail.id}
                 mail={mail}
-                isActive={selectedMail.uuid === mail.uuid}
+                isActive={selectedMail.id === mail.id}
                 isArray
                 handleSelectMail={handleSelectMail}
               />

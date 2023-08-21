@@ -25,7 +25,7 @@ import ComposePopupToolbarItem from './ComposePopupToolbarItem';
 import WriterCompose from './EditorWriterCompose';
 
 export interface ComposePopupProps {
-  content: string;
+  body: string;
   onChangeEditor: (value: string) => void;
   selectRecipient: Array<EmailType>;
   selectedCcRecipient: Array<EmailType>;
@@ -56,7 +56,7 @@ const ComposePopup = ({
   handleClickInsertContent,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   setComposeViewType,
-  content,
+  body,
   onChangeEditor,
   selectRecipient,
   selectedCcRecipient,
@@ -139,7 +139,7 @@ const ComposePopup = ({
         type: DraftActionEnum.CHANGE_VIEW,
         uuid: id,
         viewType: ComposeViewTypeEnum.MODAL,
-        content,
+        body,
         recipientBcc: selectedBccRecipient,
         recipient: selectRecipient,
         recipientCc: selectedCcRecipient,
@@ -151,7 +151,7 @@ const ComposePopup = ({
       type: DraftActionEnum.CHANGE_VIEW,
       uuid: id,
       viewType: ComposeViewTypeEnum.POPUP,
-      content,
+      body,
       recipientBcc: selectedBccRecipient,
       recipient: selectRecipient,
       recipientCc: selectedCcRecipient,
@@ -191,7 +191,7 @@ const ComposePopup = ({
   }, [viewType]);
 
   const handleFormat = () => {
-    onChangeEditor(striptags(content));
+    onChangeEditor(striptags(body));
   };
 
   const handleClick = () => {
@@ -211,7 +211,7 @@ const ComposePopup = ({
     dispatch({
       type: DraftActionEnum.ADD_COMPOSE,
       viewType: ComposeViewTypeEnum.POPUP,
-      content,
+      body,
       recipientBcc: selectedBccRecipient,
       recipient: selectRecipient,
       recipientCc: selectedCcRecipient,
@@ -272,7 +272,7 @@ const ComposePopup = ({
           <WriterCompose
             isShowToolbar={isShowToolbar}
             id={id}
-            data={content}
+            data={body}
             handleChangeEditor={onChangeEditor}
             handleChangeBlur={undefined}
             isLoading={undefined}
@@ -329,7 +329,7 @@ const ComposePopup = ({
                 />
               )}
               <ComposePopupButtonMore
-                content={content}
+                content={body}
                 onClickFormat={handleFormat}
                 onClickTest={handleClick}
                 title={t('more')}

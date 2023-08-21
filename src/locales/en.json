@@ -114,5 +114,7 @@
   "share_email": "Share Email",
   "close": "Close",
   "popup": "Popup",
-  "notification_plural": "Notifications"
+  "notification_plural": "Notifications",
+  "delivered": "Delivered",
+  "in_progress": "In progress"
 }

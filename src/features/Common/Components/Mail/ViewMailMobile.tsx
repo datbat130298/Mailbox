@@ -38,7 +38,7 @@ const ViewMailMobile = ({
   const [mail, setMail] = useState<MailType>();
   const [isActiveStar, setIsActiveStar] = useState(false);
   const [emailReply, setEmailReply] = useState({});
-  const { uuid } = useParams();
+  const { id } = useParams();
 
   const fetchDataMail = useCallback((mailId: string | undefined) => {
     const data = getMailById(Number(mailId));
@@ -51,9 +51,9 @@ const ViewMailMobile = ({
     if (!_.isEmpty(mailData)) {
       setMail(mailData);
     } else {
-      fetchDataMail(uuid);
+      fetchDataMail(id);
     }
-  }, [uuid, mailData, fetchDataMail]);
+  }, [id, mailData, fetchDataMail]);
 
   const handleClickReply = () => {
     onClose();
@@ -131,7 +131,7 @@ const ViewMailMobile = ({
                 <div className="ml-2 flex w-[calc(100%-48px)] flex-col justify-between py-0.5">
                   <div className="truncate font-medium">{mail?.author}</div>
                   <div className="h-fit w-fit text-xs">
-                    {dayjs(mail?.time).format('MMMM D, YYYY HH:mm A')}
+                    {dayjs(mail?.created_at).format('MMMM D, YYYY HH:mm A')}
                   </div>
                 </div>
               </div>
@@ -147,7 +147,7 @@ const ViewMailMobile = ({
             {/*  content mail */}
             <div className="px-1 pt-3 text-justify text-sm">
               {/* eslint-disable-next-line react/no-danger */}
-              <div dangerouslySetInnerHTML={{ __html: mailData ? mailData.content : ' ' }} />
+              <div dangerouslySetInnerHTML={{ __html: mailData ? mailData.body : ' ' }} />
             </div>
           </div>
           <div className="mb-4 mt-2 flex w-full justify-center space-x-4">
