@@ -1,13 +1,12 @@
 import dayjs from 'dayjs';
 import { useMemo } from 'react';
-import { IoMailOutline } from 'react-icons/io5';
-import { LuMailOpen } from 'react-icons/lu';
 import { twMerge } from 'tailwind-merge';
 import { MailType } from '../../../../app/Types/commonTypes';
 import useSelector from '../../../Hooks/useSelector';
 import { convertHtmlToString } from '../../../utils/helpers';
 import Checkbox from '../Form/Checkbox';
 import MailItemAction from './MailItemAction';
+import MailItemStatus from './MailItemStatus';
 
 interface MailItemProps {
   mail: MailType;
@@ -47,7 +46,7 @@ const MailItem = ({ mail, onChangeSelectRow, onClickShowMail, selected, selected
           'shadow-bottom-2 flex  w-full overflow-hidden border-b-[0.5px] px-2 text-sm group-hover:bg-slate-100',
           selected && 'bg-slate-100',
           // isRead && 'bg-gray-50',
-          selectedMail?.uuid === mail.uuid && 'bg-slate-100',
+          selectedMail?.id === mail.id && 'bg-slate-100',
           style?.height,
         )}
       >
@@ -56,15 +55,11 @@ const MailItem = ({ mail, onChangeSelectRow, onClickShowMail, selected, selected
             <Checkbox
               className=""
               checked={selected}
-              onChange={(e) => onChangeSelectRow(mail.uuid, e.target.checked)}
+              onChange={(e) => onChangeSelectRow(mail.id, e.target.checked)}
             />
           </div>
           <div className="hidden w-10 items-center justify-center xl:flex">
-            {isRead ? (
-              <LuMailOpen size={20} className=" ml-3 text-gray-300" />
-            ) : (
-              <IoMailOutline size={21} className=" ml-3 text-blue-700" />
-            )}
+            <MailItemStatus data={mail} />
           </div>
         </div>
         <div className="flex items-center justify-center md:hidden ">
@@ -109,7 +104,7 @@ const MailItem = ({ mail, onChangeSelectRow, onClickShowMail, selected, selected
                 {mail.subject && `${mail.subject} - `}
               </div>
               <div className="line-clamp-1 h-full text-ellipsis break-all pl-1 text-left text-gray-500">
-                {`${convertHtmlToString(mail.content)}`}
+                {`${convertHtmlToString(mail.body)}`}
               </div>
             </div>
           </div>
@@ -129,8 +124,8 @@ const MailItem = ({ mail, onChangeSelectRow, onClickShowMail, selected, selected
               )}
             >
               {window.innerWidth < 1280 && window.innerWidth >= 1024 && selectedMail
-                ? dayjs(mail.time).format('MMM D, h:mm')
-                : dayjs(mail.time).format('ddd, MMM D, h:mm A')}
+                ? dayjs(mail.created_at).format('MMM D, h:mm')
+                : dayjs(mail.created_at).format('ddd, MMM D, h:mm A')}
             </div>
             <div
               className={twMerge(
@@ -138,7 +133,7 @@ const MailItem = ({ mail, onChangeSelectRow, onClickShowMail, selected, selected
                 !isRead && ' text-gray-800',
               )}
             >
-              {dayjs(mail.time).format('MMM D')}
+              {dayjs(mail.created_at).format('MMM D')}
             </div>
             <p
               className={twMerge(

@@ -18,7 +18,7 @@ interface DraftAction {
   recipientCc?: EmailType[];
   recipientBcc?: EmailType[];
   subject?: string;
-  content?: string;
+  body?: string;
   viewType: ComposeViewTypeEnum;
 }
 
@@ -39,7 +39,7 @@ const handleAddCompose = (state: ComposeType[], newCompose: ComposeType) => {
         recipientBcc: newCompose.recipientBcc,
         recipientCc: newCompose.recipientCc,
         subject: newCompose.subject,
-        content: newCompose.content,
+        body: newCompose.body,
       },
     ];
     return newArr;
@@ -66,7 +66,7 @@ const handleAddCompose = (state: ComposeType[], newCompose: ComposeType) => {
         recipientBcc: newCompose.recipientBcc,
         recipientCc: newCompose.recipientCc,
         subject: newCompose.subject,
-        content: newCompose.content,
+        body: newCompose.body,
       },
     ];
   }
@@ -92,7 +92,7 @@ const handleAddCompose = (state: ComposeType[], newCompose: ComposeType) => {
       recipientBcc: newCompose.recipientBcc,
       recipientCc: newCompose.recipientCc,
       subject: newCompose.subject,
-      content: newCompose.content,
+      body: newCompose.body,
     },
   ];
 };
@@ -134,7 +134,7 @@ const handleChangeView = (state: ComposeType[], compose: ComposeType) => {
           recipientBcc: compose.recipientBcc,
           recipientCc: compose.recipientCc,
           subject: compose.subject,
-          content: compose.content,
+          body: compose.body,
         };
       });
       return newArr;
@@ -150,7 +150,7 @@ const handleChangeView = (state: ComposeType[], compose: ComposeType) => {
         recipientBcc: compose.recipientBcc,
         recipientCc: compose.recipientCc,
         subject: compose.subject,
-        content: compose.content,
+        body: compose.body,
       };
     });
     return newArr;
@@ -167,7 +167,7 @@ const handleChangeView = (state: ComposeType[], compose: ComposeType) => {
         recipientBcc: compose.recipientBcc,
         recipientCc: compose.recipientCc,
         subject: compose.subject,
-        content: compose.content,
+        body: compose.body,
       };
     });
     return newArr;

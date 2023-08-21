@@ -83,7 +83,7 @@ const MailTableContainer = ({ mailData, isLoading }: MailTableContainerProp) => 
   };
 
   const handleSelectAll = (checked: boolean) => {
-    const selectAll = mailData.map((item) => item?.uuid);
+    const selectAll = mailData.map((item) => item?.id);
     if (checked) {
       return setSelectRows(selectAll);
     }
@@ -186,7 +186,7 @@ const MailTableContainer = ({ mailData, isLoading }: MailTableContainerProp) => 
     }
   }, [isShowFullSideBar]);
 
-  const contentDefaultForward = `<br><br><p>---------- Forwarded message -------- <br> From: ${selectedMail?.from_user?.email} <br>Date: ${selectedMail?.time}<br>Subject: ${selectedMail?.subject}<br>To: ${emailUser}</p>`;
+  const contentDefaultForward = `<br><br><p>---------- Forwarded message -------- <br> From: ${selectedMail?.from_user?.email} <br>Date: ${selectedMail?.created_at}<br>Subject: ${selectedMail?.subject}<br>To: ${emailUser}</p>`;
 
   return (
     <div
@@ -244,7 +244,7 @@ const MailTableContainer = ({ mailData, isLoading }: MailTableContainerProp) => 
         }}
         onClickForward={() => {
           setIsShowComposeMobile(true);
-          setContentForward(`${contentDefaultForward} <br><br> ${selectedMail?.content}`);
+          setContentForward(`${contentDefaultForward} <br><br> ${selectedMail?.body}`);
         }}
         onClickReply={() => {
           setIsShowComposeMobile(true);

@@ -25,3 +25,7 @@ export enum TypeChat {
   DRAFT = 'draft',
   TRASH = 'trash',
 }
+
+export enum StatusSent {
+  DONE = 'DONE',
+}

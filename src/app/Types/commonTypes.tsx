@@ -2,7 +2,7 @@ import { PaginationState } from '@tanstack/react-table';
 import { AxiosError, AxiosResponse } from 'axios';
 import { Dayjs } from 'dayjs';
 import { EmailType } from '../../features/Common/Components/SelectMultiEmail/SelectMultiEmail';
-import { ComposeViewTypeEnum } from '../Enums/commonEnums';
+import { ComposeViewTypeEnum, StatusSent } from '../Enums/commonEnums';
 import { TableColumnFilterState } from './elementTypes';
 import { UserDataType } from './userTypes';
 
@@ -113,16 +113,18 @@ export interface DatePickerRangeType {
 }
 
 export interface MailType {
-  uuid: number;
+  id: number;
   author: string;
   subject: string;
-  content: string;
-  time: string;
+  body: string;
+  created_at: string;
   address: string;
   read?: boolean;
   type?: string;
   from_user?: UserDataType;
   inbox?: Array<MailType>;
+  status?: StatusSent;
+  sent_email_address?: Array<number>;
 }
 
 export interface FlagType {
@@ -151,6 +153,6 @@ export interface ComposeType {
   recipientCc?: EmailType[];
   recipientBcc?: EmailType[];
   subject?: string;
-  content?: string;
+  body?: string;
   viewType: ComposeViewTypeEnum;
 }

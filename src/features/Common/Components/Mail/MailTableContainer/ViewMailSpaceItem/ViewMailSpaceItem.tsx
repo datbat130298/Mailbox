@@ -36,12 +36,12 @@ const ViewMailSpaceItem = ({
 
   const userEmail = useSelector((state) => state.user.email);
   const dateMail = dayjs();
-  const dateCurrent = dayjs(mail?.time);
+  const dateCurrent = dayjs(mail?.created_at);
   const emailUser = useSelector((state) => state.user.email);
   const dispatch = useDraftsDispatch();
 
-  const contentDefaultForward = `<br><br><p>---------- Forwarded message -------- <br> From: ${mail?.from_user?.email} <br>Date: ${mail?.time}<br>Subject: ${mail?.subject}<br>To: ${emailUser}</p>`;
-  const contentForward = `${contentDefaultForward} <br><br> ${mail?.content}`;
+  const contentDefaultForward = `<br><br><p>---------- Forwarded message -------- <br> From: ${mail?.from_user?.email} <br>Date: ${mail?.created_at}<br>Subject: ${mail?.subject}<br>To: ${emailUser}</p>`;
+  const contentForward = `${contentDefaultForward} <br><br> ${mail?.body}`;
 
   const handleClickHeaderMailItem = (mailCurrent: MailType) => {
     setIsShowComposeWrite(false);
@@ -91,7 +91,7 @@ const ViewMailSpaceItem = ({
       type: DraftActionEnum.ADD_COMPOSE,
       uuid: nanoid(),
       viewType: ComposeViewTypeEnum.POPUP,
-      content: contentForward,
+      body: contentForward,
     });
   };
 
@@ -158,8 +158,8 @@ const ViewMailSpaceItem = ({
               </div>
               <p className="text-xs text-gray-600">
                 {dateMail.diff(dateCurrent, 'D')
-                  ? dayjs(mail?.time).format('ddd, MMM D, YYYY h:mm A')
-                  : dayjs(mail?.time).format('h:mm A')}
+                  ? dayjs(mail?.created_at).format('ddd, MMM D, YYYY h:mm A')
+                  : dayjs(mail?.created_at).format('h:mm A')}
               </p>
               <p
                 className={twMerge(
@@ -178,7 +178,7 @@ const ViewMailSpaceItem = ({
         <>
           <div className="mx-4 break-all border-y-[0.5px] py-4 text-left text-base">
             {/* eslint-disable-next-line react/no-danger */}
-            <div dangerouslySetInnerHTML={{ __html: mail?.content ? mail.content : ' ' }} />
+            <div dangerouslySetInnerHTML={{ __html: mail?.body ? mail.body : ' ' }} />
           </div>
           <ViewMailSpaceGroupButtonFooter
             onClickReply={handleClickReply}
@@ -188,7 +188,7 @@ const ViewMailSpaceItem = ({
           {isShowComposeWrite && (
             <div className="pb-3">
               <ComposePopupContainer
-                contentInbox={viewType === ComposeViewTypeEnum.FORWARD ? contentForward : mail?.content}
+                contentInbox={viewType === ComposeViewTypeEnum.FORWARD ? contentForward : mail?.body}
                 handleClickChangeView={handleClickChangeView}
                 isShowComposeReplyOrForward={isShowComposeWrite}
                 composeViewType={viewType}

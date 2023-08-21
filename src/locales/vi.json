@@ -114,5 +114,7 @@
   "share_email": "Chia sẻ Email",
   "close": "Đóng",
   "popup": "Nhảy ra",
-  "notification_plural": "Thông báo"
+  "notification_plural": "Thông báo",
+  "delivered": "Delivered",
+  "in_progress": "In progress"
 }

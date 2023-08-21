@@ -28,7 +28,7 @@ const ViewMailSpaceItemInfoCollapse = ({
   isOpen,
 }: ViewMailSpaceItemInfoCollapseProp) => {
   const dateMail = dayjs();
-  const dateCurrent = dayjs(mail?.time);
+  const dateCurrent = dayjs(mail?.created_at);
 
   const subjectRe = useMemo(() => {
     if (mail?.subject) {
@@ -54,8 +54,8 @@ const ViewMailSpaceItemInfoCollapse = ({
           <div className="flex items-center justify-center">
             <p className="text-ellipsis text-xs text-gray-600">
               {dateMail.diff(dateCurrent, 'D')
-                ? dayjs(mail?.time).format('ddd, MMM D, h:mm A')
-                : dayjs(mail?.time).format('h:mm A')}
+                ? dayjs(mail?.created_at).format('ddd, MMM D, h:mm A')
+                : dayjs(mail?.created_at).format('h:mm A')}
             </p>
             <p
               className={twMerge(
@@ -80,7 +80,7 @@ const ViewMailSpaceItemInfoCollapse = ({
       >
         <p className="line-clamp-1 w-fit text-ellipsis text-left text-sm">{`Re: ${subjectRe}`}</p>
         <p className={twMerge('line-clamp-1 flex w-full text-ellipsis text-sm text-gray-600')}>
-          {!_.isEmpty(mail?.content) && `- ${convertHtmlToString(mail?.content)}`}
+          {!_.isEmpty(mail?.body) && `- ${convertHtmlToString(mail?.body)}`}
         </p>
       </div>
     </div>
