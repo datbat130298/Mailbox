@@ -126,7 +126,7 @@ const ViewMailMobile = ({
                     'flex h-12 w-12 flex-shrink-0  items-center justify-center rounded-full bg-cyan-500 drop-shadow',
                   )}
                 >
-                  <p className="text-xl font-semibold">{mail?.author.slice(0, 1)}</p>
+                  <p className="text-xl font-semibold">{mail?.author?.slice(0, 1)}</p>
                 </div>
                 <div className="ml-2 flex w-[calc(100%-48px)] flex-col justify-between py-0.5">
                   <div className="truncate font-medium">{mail?.author}</div>

@@ -6,9 +6,13 @@ import ViewMailSpaceHeader from './ViewMailSpaceHeader';
 interface ViewMailSpaceProp {
   handleClose: () => void;
   mailData: MailType | null;
+  type: string;
 }
 
-const ViewMailSpace = ({ handleClose, mailData }: ViewMailSpaceProp, ref: ForwardedRef<HTMLDivElement>) => {
+const ViewMailSpace = (
+  { handleClose, mailData, type }: ViewMailSpaceProp,
+  ref: ForwardedRef<HTMLDivElement>,
+) => {
   return (
     <div className="flex h-full justify-start bg-slate-50 shadow-left">
       <div className="w-2 flex-shrink-0 hover:cursor-col-resize" ref={ref}>
@@ -16,7 +20,7 @@ const ViewMailSpace = ({ handleClose, mailData }: ViewMailSpaceProp, ref: Forwar
       </div>
       <div className="h-full flex-1">
         <ViewMailSpaceHeader handleClose={handleClose} />
-        <ViewMailSpaceContainer mailData={mailData} />
+        <ViewMailSpaceContainer mailData={mailData} type={type} />
       </div>
     </div>
   );

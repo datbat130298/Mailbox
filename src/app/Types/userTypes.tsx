@@ -31,6 +31,7 @@ export interface UserDataType {
   username: string;
   first_name: string;
   last_name: string;
+  full_name?: string;
   email: string;
   banned_at?: string;
   avatar_img?: string;

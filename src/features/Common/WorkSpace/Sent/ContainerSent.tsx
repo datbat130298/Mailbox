@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getSends } from '../../../../app/Services/Sent/SentService';
+import { TypeChat } from '../../../../app/Enums/commonEnums';
+import { getSents } from '../../../../app/Services/Sent/SentService';
 import { MailType } from '../../../../app/Types/commonTypes';
 import MailTableContainer from '../../Components/Mail/MailTableContainer/MailTableContainer';
 
@@ -12,7 +13,7 @@ const ContainerSent = () => {
 
   const fetchData = useCallback(() => {
     setIsLoading(true);
-    getSends()
+    getSents()
       .then((data: Array<MailType>) => {
         setSendMailData(data);
       })
@@ -34,7 +35,7 @@ const ContainerSent = () => {
   }, []);
   return (
     <div className="relative h-full w-full rounded-t-lg">
-      <MailTableContainer isLoading={isLoading} mailData={sentMailData} />
+      <MailTableContainer isLoading={isLoading} mailData={sentMailData} type={TypeChat.SENT} />
     </div>
   );
 };

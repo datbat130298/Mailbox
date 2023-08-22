@@ -35,7 +35,7 @@ const ContainerInbox = () => {
 
   return (
     <div className="relative h-full w-full rounded-t-lg">
-      <MailTableContainer isLoading={isLoading} mailData={inboxData} />
+      <MailTableContainer isLoading={isLoading} mailData={inboxData} type="inbox" />
     </div>
   );
 };

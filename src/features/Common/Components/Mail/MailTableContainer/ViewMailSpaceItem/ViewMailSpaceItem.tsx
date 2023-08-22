@@ -21,6 +21,7 @@ interface ViewMailSpaceItemProp {
   isArray?: boolean;
   handleSelectMail?: (mail: MailType) => void;
   isFirstOpen?: boolean;
+  type: string;
 }
 
 const ViewMailSpaceItem = ({
@@ -29,6 +30,7 @@ const ViewMailSpaceItem = ({
   isArray,
   handleSelectMail,
   isFirstOpen,
+  type,
 }: ViewMailSpaceItemProp) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isShowComposeWrite, setIsShowComposeWrite] = useState(false);
@@ -38,6 +40,7 @@ const ViewMailSpaceItem = ({
   const dateMail = dayjs();
   const dateCurrent = dayjs(mail?.created_at);
   const emailUser = useSelector((state) => state.user.email);
+  const fullName = useSelector((state) => state.user.full_name);
   const dispatch = useDraftsDispatch();
 
   const contentDefaultForward = `<br><br><p>---------- Forwarded message -------- <br> From: ${mail?.from_user?.email} <br>Date: ${mail?.created_at}<br>Subject: ${mail?.subject}<br>To: ${emailUser}</p>`;
@@ -117,7 +120,7 @@ const ViewMailSpaceItem = ({
           )}
         >
           <p className="text-lg font-semibold">
-            {userEmail === mail?.from_user?.email ? 'ME' : mail?.author.slice(0, 1)}
+            {'sent_email_address' in mail ? 'ME' : mail?.author.slice(0, 1)}
           </p>
         </div>
         {!isOpen && (
@@ -133,9 +136,7 @@ const ViewMailSpaceItem = ({
         {isOpen && (
           <div className="ml-4 flex flex-col gap-1">
             <div className="flex items-center justify-start gap-4">
-              <p className="max-w-[150px] truncate">
-                {userEmail === mail?.from_user?.email ? 'Me' : mail?.author}
-              </p>
+              <p className="max-w-[150px] truncate">{type === TypeChat.SENT ? fullName : mail?.author}</p>
               <div className="flex items-center gap-0.5">
                 <GoDotFill size={10} className="mx-1 mt-0.5 text-gray-300" />
                 <div className="flex h-7 w-7 items-center justify-center rounded-md text-gray-500 hover:bg-slate-100 hover:text-black">
@@ -168,7 +169,7 @@ const ViewMailSpaceItem = ({
                 )}
               >
                 <GoDotFill size={10} className="mx-1.5 mt-0.5 text-gray-300" />
-                {mail?.type}
+                {mail?.status}
               </p>
             </div>
           </div>
