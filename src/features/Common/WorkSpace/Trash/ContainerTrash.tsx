@@ -34,7 +34,7 @@ const ContainerTrash = () => {
   }, []);
   return (
     <div className="relative h-full w-full rounded-t-lg">
-      <MailTableContainer isLoading={isLoading} mailData={trashData} />
+      <MailTableContainer isLoading={isLoading} mailData={trashData} type="trash" />
     </div>
   );
 };

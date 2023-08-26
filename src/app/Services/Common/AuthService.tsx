@@ -10,6 +10,8 @@ import {
 import { UserDataType } from '../../Types/userTypes';
 import { getQueryURL } from './CommonService';
 
+const cookie = new Cookies();
+
 // user__user_detail
 const getMe = (): Promise<AxiosResponseType<UserDataType>> =>
   axiosInstance.get(
@@ -22,7 +24,7 @@ const getMe = (): Promise<AxiosResponseType<UserDataType>> =>
   );
 
 const getAccessTokens = () => ({
-  accessToken: window.localStorage.getItem('accessToken') || '',
+  accessToken: cookie.get('access_token') || '',
   refreshToken: window.localStorage.getItem('refreshToken') || '',
 });
 
@@ -86,7 +88,6 @@ const logOut = async () => {
 };
 
 const getLoginStatus = async () => {
-  const cookie = new Cookies();
   const isLogged = cookie.get('logged');
   if (!isLogged) throw Error();
   return true;

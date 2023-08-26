@@ -35,7 +35,7 @@ const ContainerDrafts = () => {
 
   return (
     <div className="relative h-full w-full rounded-t-lg">
-      <MailTableContainer isLoading={isLoading} mailData={draftData} />
+      <MailTableContainer isLoading={isLoading} mailData={draftData} type="trash" />
     </div>
   );
 };

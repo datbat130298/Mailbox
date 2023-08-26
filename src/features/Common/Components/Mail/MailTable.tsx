@@ -15,9 +15,11 @@ interface MailTableProps {
   selectRows: Array<number>;
   onClickShowMail?: (mail: MailType) => void;
   selectedMail: MailType | null;
+  type: string;
 }
 
 const MailTable = ({
+  type,
   data,
   isLoading,
   emptyComponent,
@@ -55,6 +57,7 @@ const MailTable = ({
           !isLoading &&
           data?.map((item) => (
             <MailItem
+              type={type}
               selectedMail={selectedMail}
               key={item.id}
               mail={item}

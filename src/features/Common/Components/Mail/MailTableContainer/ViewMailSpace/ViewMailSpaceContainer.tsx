@@ -5,9 +5,10 @@ import ViewMailSpaceItem from '../ViewMailSpaceItem/ViewMailSpaceItem';
 
 interface ViewMailSpaceContainerProp {
   mailData: MailType | null;
+  type: string;
 }
 
-const ViewMailSpaceContainer = ({ mailData }: ViewMailSpaceContainerProp) => {
+const ViewMailSpaceContainer = ({ mailData, type }: ViewMailSpaceContainerProp) => {
   const [isShowShadow, setIsShowShadow] = useState(false);
   const [selectedMail, setSelectedMail] = useState<MailType>(mailData || ({} as MailType));
 
@@ -37,6 +38,7 @@ const ViewMailSpaceContainer = ({ mailData }: ViewMailSpaceContainerProp) => {
         {mailData?.inbox && mailData?.inbox.length ? (
           <>
             <ViewMailSpaceItem
+              type={type}
               mail={mailData}
               isActive={selectedMail.id === mailData.id}
               handleSelectMail={handleSelectMail}
@@ -45,6 +47,7 @@ const ViewMailSpaceContainer = ({ mailData }: ViewMailSpaceContainerProp) => {
             />
             {mailData.inbox.map((mail) => (
               <ViewMailSpaceItem
+                type={type}
                 key={mail.id}
                 mail={mail}
                 isActive={selectedMail.id === mail.id}
@@ -54,7 +57,7 @@ const ViewMailSpaceContainer = ({ mailData }: ViewMailSpaceContainerProp) => {
             ))}
           </>
         ) : (
-          <ViewMailSpaceItem mail={mailData || ({} as unknown as MailType)} isActive />
+          <ViewMailSpaceItem mail={mailData || ({} as unknown as MailType)} isActive type={type} />
         )}
       </div>
     </>

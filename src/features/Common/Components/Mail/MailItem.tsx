@@ -14,13 +14,22 @@ interface MailItemProps {
   onClickShowMail: (mail: MailType) => void;
   selected: boolean;
   selectedMail: MailType | null;
+  type: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const MailItem = ({ mail, onChangeSelectRow, onClickShowMail, selected, selectedMail }: MailItemProps) => {
+const MailItem = ({
+  mail,
+  onChangeSelectRow,
+  onClickShowMail,
+  selected,
+  selectedMail,
+  type,
+}: MailItemProps) => {
   const isRead = mail?.read;
   const { itemMailStyle } = useSelector((state) => state.layout);
   const userEmail = useSelector((state) => state.user.email);
+  const fullName = useSelector((state) => state.user.full_name);
 
   const style = useMemo(() => {
     if (itemMailStyle === 'compact')
@@ -70,7 +79,7 @@ const MailItem = ({ mail, onChangeSelectRow, onClickShowMail, selected, selected
             )}
           >
             <p className="text-lg font-semibold">
-              {userEmail === mail?.from_user?.email ? 'ME' : mail?.author.slice(0, 1)}
+              {'sent_email_address' in mail ? 'ME' : mail?.author.slice(0, 1)}
             </p>
           </div>
         </div>
@@ -92,7 +101,7 @@ const MailItem = ({ mail, onChangeSelectRow, onClickShowMail, selected, selected
                 style?.height_top,
               )}
             >
-              {mail?.author}
+              {type === 'sent' ? fullName : mail?.author}
             </div>
             <div className={twMerge('flex h-full w-fit justify-start', style?.height_bottom)}>
               <div

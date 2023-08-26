@@ -17,9 +17,10 @@ import ViewMailSpace from './ViewMailSpace/ViewMailSpace';
 interface MailTableContainerProp {
   mailData: Array<MailType>;
   isLoading: boolean;
+  type: string;
 }
 
-const MailTableContainer = ({ mailData, isLoading }: MailTableContainerProp) => {
+const MailTableContainer = ({ mailData, isLoading, type }: MailTableContainerProp) => {
   const [isShowViewMailSpace, setIsShowViewMailSpace] = useState(false);
   const [isShowViewMailMobile, setIsShowViewMailMobile] = useState(false);
   const [selectRows, setSelectRows] = useState<Array<number>>([]);
@@ -217,6 +218,7 @@ const MailTableContainer = ({ mailData, isLoading }: MailTableContainerProp) => 
           />
         </div>
         <MailTable
+          type={type}
           isLoading={isLoading}
           data={mailData}
           onChangeShowShadow={setIsShowShadow}
@@ -230,8 +232,8 @@ const MailTableContainer = ({ mailData, isLoading }: MailTableContainerProp) => 
         />
       </div>
       {isShowViewMailSpace && (
-        <div className="h-full w-full flex-1 bg-white" ref={viewMailRef}>
-          <ViewMailSpace handleClose={handleClose} mailData={selectedMail} ref={dragBarSide} />
+        <div className="z-10 h-full w-full flex-1 bg-white" ref={viewMailRef}>
+          <ViewMailSpace handleClose={handleClose} mailData={selectedMail} ref={dragBarSide} type={type} />
         </div>
       )}
       <ViewMailMobile

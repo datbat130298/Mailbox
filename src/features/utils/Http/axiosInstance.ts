@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
-import Cookies from 'universal-cookie';
-// eslint-disable-next-line import/no-cycle
+import _ from 'lodash';
+import { AuthService } from '../../../app/Services';
+import errorHandler from './errorHandler';
 
-const cookie = new Cookies();
 declare module 'axios' {
   export interface AxiosRequestConfig {
     redirectWhenError?: boolean;
@@ -17,15 +16,28 @@ const axiosInstance = axios.create({
   responseEncoding: 'utf8',
   headers: {
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${cookie.get('access_token')}`,
+    Accept: 'application/json',
   },
   withCredentials: true,
 });
 
-axiosInstance.interceptors.request.use((request) => {
-  request.headers['Content-Type'] = 'application/json';
-  request.headers.Authorization = `Bearer ${cookie.get('access_token')}`;
-  return request;
-});
+axiosInstance.interceptors.request.use(
+  (request) => {
+    if (
+      request.headers &&
+      !_.isEmpty(AuthService.getAccessTokens().accessToken) &&
+      !_.isUndefined(AuthService.getAccessTokens().accessToken)
+    ) {
+      request.headers.Authorization = `Bearer ${AuthService.getAccessTokens().accessToken}`;
+    }
+    return request;
+  },
+  (error) => Promise.reject(error),
+);
+
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => errorHandler(error, axiosInstance),
+);
 
 export default axiosInstance;
