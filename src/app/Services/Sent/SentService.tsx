@@ -180,9 +180,9 @@ const getSends = () => {
   });
 };
 
-const getSent = async () => {
+const getSents = async () => {
   const response = await axiosInstance.get(`/mailbox/sents`);
   return response.data.data;
 };
 
-export { getSends, getSent };
+export { getSends, getSents };
