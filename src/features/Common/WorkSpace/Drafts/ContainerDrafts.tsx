@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { TypeChat } from '../../../../app/Enums/commonEnums';
 import { getDrafts } from '../../../../app/Services/Drafts/DraftsService';
 import { MailType } from '../../../../app/Types/commonTypes';
 import MailTableContainer from '../../Components/Mail/MailTableContainer/MailTableContainer';
@@ -35,7 +36,7 @@ const ContainerDrafts = () => {
 
   return (
     <div className="relative h-full w-full rounded-t-lg">
-      <MailTableContainer isLoading={isLoading} mailData={draftData} type="trash" />
+      <MailTableContainer isLoading={isLoading} mailData={draftData} type={TypeChat.DRAFT} />
     </div>
   );
 };

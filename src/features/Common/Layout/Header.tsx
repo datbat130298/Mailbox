@@ -12,7 +12,6 @@ import { triggerClickOutside } from '../../utils/helpers';
 import AdvancedSearch from '../Components/AdvancedSearch/AdvancedSearch';
 import Button from '../Components/Button';
 import ChooseLanguage from '../Components/ChooseLanguage/ChooseLanguage';
-import HeaderNotification from '../Components/Header/HeaderNotificaton';
 // eslint-disable-next-line import/no-named-as-default
 import SidebarResponsive from '../Components/Sidebar/SidebarResponsive/SidebarResponsive';
 import UserDropdown from '../Components/UserDropdown/UserDropdown';
@@ -100,12 +99,12 @@ const Header = () => {
               <div className="mr-1 hidden border-r-2 border-gray-200 pr-4 lg:block">
                 <ChooseLanguage language={language} onChangeLanguage={handChangeLanguage} />
               </div>
-              {user?.uuid && (
+              {/* {user?.uuid && (
                 <>
                   <HeaderNotification />
                   <div className="h-5 w-0.5 bg-gray-200 lg:mx-1" />
                 </>
-              )}
+              )} */}
               <div className="lg:m-l4 ml-3 flex h-full w-fit flex-shrink-0 items-center justify-center">
                 <div
                   className="relative h-9 w-9 cursor-pointer rounded-full lg:h-11 lg:w-11"

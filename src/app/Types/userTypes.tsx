@@ -33,6 +33,7 @@ export interface UserDataType {
   last_name: string;
   full_name?: string;
   email: string;
+  email_address?: string;
   banned_at?: string;
   avatar_img?: string;
   avatar_img_absolute?: string;

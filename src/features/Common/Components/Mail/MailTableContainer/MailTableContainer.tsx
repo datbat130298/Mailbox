@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { twMerge } from 'tailwind-merge';
+import { TypeChat } from '../../../../../app/Enums/commonEnums';
 import { setIsShowFullSidebar, setMailItemStyle } from '../../../../../app/Slices/layoutSlice';
 import { MailType } from '../../../../../app/Types/commonTypes';
 import useDispatch from '../../../../Hooks/useDispatch';
@@ -17,7 +18,7 @@ import ViewMailSpace from './ViewMailSpace/ViewMailSpace';
 interface MailTableContainerProp {
   mailData: Array<MailType>;
   isLoading: boolean;
-  type: string;
+  type: TypeChat;
 }
 
 const MailTableContainer = ({ mailData, isLoading, type }: MailTableContainerProp) => {
@@ -239,6 +240,7 @@ const MailTableContainer = ({ mailData, isLoading, type }: MailTableContainerPro
       <ViewMailMobile
         mailData={selectedMail}
         isOpen={isShowViewMailMobile}
+        type={type}
         onClose={() => {
           setIsShowViewMailMobile(false);
           setContentForward('');

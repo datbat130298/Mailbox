@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { TypeChat } from '../../../../app/Enums/commonEnums';
 import { getTrash } from '../../../../app/Services/Trash/TrashService';
 import { MailType } from '../../../../app/Types/commonTypes';
 import MailTableContainer from '../../Components/Mail/MailTableContainer/MailTableContainer';
@@ -34,7 +35,7 @@ const ContainerTrash = () => {
   }, []);
   return (
     <div className="relative h-full w-full rounded-t-lg">
-      <MailTableContainer isLoading={isLoading} mailData={trashData} type="trash" />
+      <MailTableContainer isLoading={isLoading} mailData={trashData} type={TypeChat.TRASH} />
     </div>
   );
 };

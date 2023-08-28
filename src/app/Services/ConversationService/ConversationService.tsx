@@ -1,3 +1,4 @@
+import axiosInstance from '../../../features/utils/Http/axios';
 import { TypeChat } from '../../Enums/commonEnums';
 import { MailType } from '../../Types/commonTypes';
 
@@ -334,4 +335,14 @@ const getMailById = (id: number) => {
   return data;
 };
 
-export { getInbox, getMailById };
+const getConversationById = async (id: number) => {
+  const response = await axiosInstance.get(`/mailbox/conversation/${id}`);
+  return response.data.data;
+};
+
+const getListEmail = async () => {
+  const response = await axiosInstance.get(`/mailbox/emails`);
+  return response.data.data;
+};
+
+export { getInbox, getMailById, getConversationById, getListEmail };
