@@ -24,6 +24,7 @@ const MailItem = ({
   onClickShowMail,
   selected,
   selectedMail,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   type,
 }: MailItemProps) => {
   const isRead = mail?.read;
@@ -75,11 +76,11 @@ const MailItem = ({
           <div
             className={twMerge(
               'ml-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-cyan-500',
-              userEmail === mail?.from_user?.email && 'bg-sky-300 italic opacity-40',
+              userEmail === mail?.email_account?.email_address && 'bg-sky-300 italic opacity-60',
             )}
           >
-            <p className="text-lg font-semibold">
-              {'sent_email_address' in mail ? 'ME' : mail?.author.slice(0, 1)}
+            <p className="text-lg font-semibold uppercase">
+              {mail?.email_account?.email_address?.slice(0, 1)}
             </p>
           </div>
         </div>
@@ -101,7 +102,9 @@ const MailItem = ({
                 style?.height_top,
               )}
             >
-              {type === 'sent' ? fullName : mail?.author}
+              {userEmail === mail?.email_account?.email_address
+                ? fullName
+                : mail?.email_account?.email_address}
             </div>
             <div className={twMerge('flex h-full w-fit justify-start', style?.height_bottom)}>
               <div

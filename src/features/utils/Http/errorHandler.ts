@@ -48,7 +48,7 @@ const errorHandler = async (
           redirectURL = '/error/403';
           break;
         case StatusCodes.INTERNAL_SERVER_ERROR:
-          redirectURL = '/error/500';
+          // redirectURL = '/error/500';
           break;
         case StatusCodes.SERVICE_UNAVAILABLE:
           redirectURL = '/error/503';
