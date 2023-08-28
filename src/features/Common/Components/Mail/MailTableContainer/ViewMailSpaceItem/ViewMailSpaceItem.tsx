@@ -22,6 +22,7 @@ interface ViewMailSpaceItemProp {
   handleSelectMail?: (mail: MailType) => void;
   isFirstOpen?: boolean;
   type: string;
+  selectedMail: MailType;
 }
 
 const ViewMailSpaceItem = ({
@@ -30,17 +31,17 @@ const ViewMailSpaceItem = ({
   isArray,
   handleSelectMail,
   isFirstOpen,
+  selectedMail,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   type,
 }: ViewMailSpaceItemProp) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isShowComposeWrite, setIsShowComposeWrite] = useState(false);
   const [viewType, setViewType] = useState<ComposeViewTypeEnum>();
-
   const userEmail = useSelector((state) => state.user.email);
   const dateMail = dayjs();
   const dateCurrent = dayjs(mail?.created_at);
   const emailUser = useSelector((state) => state.user.email);
-  const fullName = useSelector((state) => state.user.full_name);
   const dispatch = useDraftsDispatch();
 
   const contentDefaultForward = `<br><br><p>---------- Forwarded message -------- <br> From: ${mail?.from_user?.email} <br>Date: ${mail?.created_at}<br>Subject: ${mail?.subject}<br>To: ${emailUser}</p>`;
@@ -103,6 +104,7 @@ const ViewMailSpaceItem = ({
       className={twMerge(
         'mr-4 h-fit flex-col items-center justify-start border-b-[0.5px]',
         isActive && 'border-l-2 border-l-blue-500 bg-white',
+        mail.id === selectedMail.id && 'border-l-2 border-l-blue-500 bg-white',
         isOpen && 'bg-white',
         !isOpen && 'group',
       )}
@@ -116,11 +118,13 @@ const ViewMailSpaceItem = ({
         <div
           className={twMerge(
             'ml-1 flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-cyan-500',
-            userEmail === mail?.from_user?.email && 'bg-sky-300 italic opacity-40',
+            userEmail === mail?.email_account?.email_address && 'bg-sky-300 italic opacity-40',
           )}
         >
-          <p className="text-lg font-semibold">
-            {'sent_email_address' in mail ? 'ME' : mail?.author.slice(0, 1)}
+          <p className="text-lg font-semibold uppercase">
+            {mail?.email_account?.email_address === userEmail
+              ? 'ME'
+              : mail?.email_account?.email_address?.slice(0, 1)}
           </p>
         </div>
         {!isOpen && (
@@ -136,7 +140,9 @@ const ViewMailSpaceItem = ({
         {isOpen && (
           <div className="ml-4 flex flex-col gap-1">
             <div className="flex items-center justify-start gap-4">
-              <p className="max-w-[150px] truncate">{type === TypeChat.SENT ? fullName : mail?.author}</p>
+              <p className="truncate">
+                {mail?.email_account?.email_address === userEmail ? 'Me' : mail?.email_account?.email_address}
+              </p>
               <div className="flex items-center gap-0.5">
                 <GoDotFill size={10} className="mx-1 mt-0.5 text-gray-300" />
                 <div className="flex h-7 w-7 items-center justify-center rounded-md text-gray-500 hover:bg-slate-100 hover:text-black">
