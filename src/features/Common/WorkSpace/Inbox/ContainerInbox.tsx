@@ -1,11 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { TypeChat } from '../../../../app/Enums/commonEnums';
-import {
-  getInbox,
-  // getConversationById,
-  getListEmail,
-} from '../../../../app/Services/ConversationService/ConversationService';
+import { getInbox } from '../../../../app/Services/Inbox/InboxService';
 import { MailType } from '../../../../app/Types/commonTypes';
 import MailTableContainer from '../../Components/Mail/MailTableContainer/MailTableContainer';
 
@@ -15,7 +10,6 @@ const ContainerInbox = () => {
 
   const { t } = useTranslation();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const fetchData = useCallback(() => {
     setIsLoading(true);
     getInbox()
@@ -27,20 +21,8 @@ const ContainerInbox = () => {
       });
   }, []);
 
-  const fetchDataListEmail = useCallback(() => {
-    setIsLoading(true);
-    getListEmail()
-      .then((res) => {
-        setInboxData(res);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []);
-
   useEffect(() => {
-    // fetchData();
-    fetchDataListEmail();
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -53,7 +35,7 @@ const ContainerInbox = () => {
 
   return (
     <div className="relative h-full w-full rounded-t-lg">
-      <MailTableContainer isLoading={isLoading} mailData={inboxData} type={TypeChat.INBOX} />
+      <MailTableContainer isLoading={isLoading} mailData={inboxData} type="inbox" />
     </div>
   );
 };

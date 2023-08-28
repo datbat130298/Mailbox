@@ -125,9 +125,6 @@ export interface MailType {
   inbox?: Array<MailType>;
   status?: StatusSent;
   sent_email_address?: Array<number>;
-  email_address?: string;
-  email?: MailType;
-  email_account?: UserDataType;
 }
 
 export interface FlagType {

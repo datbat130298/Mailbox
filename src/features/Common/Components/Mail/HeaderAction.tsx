@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { BsTrash } from 'react-icons/bs';
 import { IoArchiveOutline } from 'react-icons/io5';
-import { MdOutlineMoreVert } from 'react-icons/md';
+import { MdOutlineMoreVert, MdOutlineReport } from 'react-icons/md';
 import FilterDropdown from '../FilterDropdown/FilterDropdown';
 
 interface HeaderActionProps {
@@ -38,12 +38,12 @@ const HeaderAction = ({ showAction }: HeaderActionProps) => {
             </div>
             <div className="ml-1 text-sm leading-8">{t('delete')}</div>
           </div>
-          {/* <div className="my-3 ml-1 flex h-8 w-fit rounded-md px-2  hover:bg-gray-100 hover:text-primary-700">
+          <div className="my-3 ml-1 flex h-8 w-fit rounded-md px-2  hover:bg-gray-100 hover:text-primary-700">
             <div className="flex-center h-full w-max">
               <MdOutlineReport size={18} />
             </div>
             <div className="ml-1 text-sm leading-8">{t('report')}</div>
-          </div> */}
+          </div>
         </>
       )}
       <div className="-ml-1">
