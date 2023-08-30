@@ -24,7 +24,7 @@ const ContainerWorkSpace = () => {
   }, []);
 
   return (
-    <div className="flex h-full w-full justify-end overflow-x-hidden bg-slate-100 pl-2 pr-2 lg:pl-4">
+    <div className="-ml-1 flex h-full w-full justify-end overflow-x-hidden bg-slate-100 pl-2 pr-2 lg:pl-4">
       <Sidebar />
       <div
         className={twMerge(

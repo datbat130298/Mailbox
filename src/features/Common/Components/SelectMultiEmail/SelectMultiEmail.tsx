@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import _ from 'lodash';
 import { nanoid } from 'nanoid';
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { forwardRef, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { getMyContact } from '../../../../app/Services/Contact/Contact';
 import { UserDataType } from '../../../../app/Types/userTypes';
@@ -67,27 +68,38 @@ const SelectMultiEmail = ({ className, label, onChange, selectedValue }: SelectM
     );
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (_.isEmpty(value)) return;
-    if (e.key === 'Enter' && !!validateEmail(value)) {
-      setArrayEmail((prev) => [...prev, { id: nanoid(), email: value }]);
-      onChange(arrayEmail);
-      setValue('');
-      return;
-    }
-    if (e.key === 'Enter' && !validateEmail(value) && !_.isEmpty(options)) {
-      e.preventDefault();
-      setArrayEmail((prev) => [...prev, { id: options[0].uuid.toString(), email: options[0].email }]);
-      setValue('');
-      onChange(arrayEmail);
-    }
-  };
-
   const handleClickRemove = (id: string) => {
     let array = [];
     array = arrayEmail.filter((item) => item.id !== id);
     setArrayEmail(array);
   };
+
+  const handleKeyUp = useCallback(
+    (e: React.KeyboardEvent) => {
+      const { key } = e;
+      if (_.isEmpty(value)) {
+        if (key === 'Backspace') {
+          if (arrayEmail.length >= 1) {
+            const { id } = arrayEmail[arrayEmail.length - 1];
+            handleClickRemove(id || '');
+          }
+        }
+      }
+      if (key === 'Enter' && !!validateEmail(value)) {
+        setArrayEmail((prev) => [...prev, { id: nanoid(), email: value }]);
+        onChange(arrayEmail);
+        setValue('');
+        return;
+      }
+      if (key === 'Enter' && !validateEmail(value) && !_.isEmpty(options)) {
+        e.preventDefault();
+        setArrayEmail((prev) => [...prev, { id: options[0].uuid.toString(), email: options[0].email }]);
+        setValue('');
+        onChange(arrayEmail);
+      }
+    },
+    [value],
+  );
 
   const handleClickInput = () => {
     if (inputRef.current !== null) {
@@ -113,23 +125,6 @@ const SelectMultiEmail = ({ className, label, onChange, selectedValue }: SelectM
       inputRef.current.focus();
     }
   }, []);
-
-  useEffect(() => {
-    handleClickInput();
-    window.addEventListener('keydown', (e) => {
-      const { key } = e;
-      if (key === 'Backspace') {
-        if (arrayEmail.length >= 1) {
-          const { id } = arrayEmail[arrayEmail.length - 1];
-          handleClickRemove(id || '');
-        }
-      }
-    });
-    return window.removeEventListener('keydown', (e) => {
-      const { key } = e;
-      console.log(key);
-    });
-  }, [arrayEmail]);
 
   return (
     <div
@@ -163,8 +158,8 @@ const SelectMultiEmail = ({ className, label, onChange, selectedValue }: SelectM
           ref={inputRef}
           value={value}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value)}
-          className="h-full py-1 outline-none"
-          onKeyDown={handleKeyDown}
+          className="h-full flex-1 py-1 outline-none"
+          onKeyUp={handleKeyUp}
         />
       </div>
       {!isLoading && !_.isEmpty(options) && !_.isEmpty(value) && (
@@ -180,4 +175,4 @@ const SelectMultiEmail = ({ className, label, onChange, selectedValue }: SelectM
   );
 };
 
-export default SelectMultiEmail;
+export default forwardRef(SelectMultiEmail);

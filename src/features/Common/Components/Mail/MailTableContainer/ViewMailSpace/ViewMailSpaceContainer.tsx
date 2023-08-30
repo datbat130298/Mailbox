@@ -46,7 +46,9 @@ const ViewMailSpaceContainer = ({ mailData, type }: ViewMailSpaceContainerProp) 
   useEffect(() => {
     if (type === TypeChat.INBOX && mailData) {
       fetchDataConversation(mailData.id);
+      return;
     }
+    setIsLoading(false);
   }, [mailData, type]);
 
   return (

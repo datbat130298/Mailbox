@@ -4,7 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { twMerge } from 'tailwind-merge';
 import { ComposeViewTypeEnum } from '../../../../../../app/Enums/commonEnums';
 import { triggerClickOutside } from '../../../../../utils/helpers';
-import SelectMultiEmail, { EmailType } from '../../../SelectMultiEmail/SelectMultiEmail';
+import { EmailType } from '../../../SelectMultiEmail/SelectMultiEmail';
+import ComposePopupRecipientInput from './ComposePopupRecipientInput';
 
 interface ComposePopupRecipientProps {
   selectRecipient: Array<EmailType>;
@@ -28,19 +29,9 @@ const ComposePopupRecipient = ({
   onChangeSelectBccRecipient,
 }: ComposePopupRecipientProps) => {
   const [viewText, setViewText] = useState<boolean>(true);
-  const [isShowCcInput, setIsShowCcInput] = useState<boolean>(false);
-  const [isShowBccInput, setIsShowBccInput] = useState<boolean>(false);
   const recipientRef = useRef<HTMLDivElement>(null);
 
   const { t } = useTranslation();
-
-  const handleClickCc = () => {
-    setIsShowCcInput(true);
-  };
-
-  const handleClickBcc = () => {
-    setIsShowBccInput(true);
-  };
 
   const handleClickRecipient = () => {
     setViewText(false);
@@ -55,15 +46,6 @@ const ComposePopupRecipient = ({
     const string = array?.map((item: EmailType) => item.email);
     return string?.join(', ');
   }, [selectRecipient, selectedCcRecipient, selectedBccRecipient]);
-
-  useEffect(() => {
-    if (_.isEmpty(selectedCcRecipient)) {
-      setIsShowCcInput(false);
-    }
-    if (_.isEmpty(selectedBccRecipient)) {
-      setIsShowBccInput(false);
-    }
-  }, [viewText]);
 
   return (
     <div ref={recipientRef}>
@@ -87,59 +69,17 @@ const ComposePopupRecipient = ({
         </div>
       )}
       {!viewText && (
-        <div
-          className={twMerge(
-            'mx-1 my-0.5 flex flex-col items-center border-b-[1px] border-gray-200 py-0',
-            _.isEmpty(selectRecipient) &&
-              viewType !== ComposeViewTypeEnum.REPLY &&
-              'mx-2 flex-row items-center',
-            _.isEmpty(selectRecipient) &&
-              viewType !== ComposeViewTypeEnum.REPLY &&
-              'mx-2 flex-row items-center',
-            (isShowBccInput || isShowCcInput) && 'mx-1 flex-col ',
-            className,
-          )}
-        >
-          <SelectMultiEmail
-            label={t('to')}
-            selectedValue={selectRecipient || []}
-            onChange={onChangeSelectRecipient}
-          />
-          {isShowCcInput && (
-            <SelectMultiEmail
-              className="-mt-1"
-              label={t('cc')}
-              selectedValue={selectedCcRecipient || []}
-              onChange={onChangeSelectCcRecipient}
-            />
-          )}
-          {isShowBccInput && (
-            <SelectMultiEmail
-              className="-mt-1"
-              label={t('bcc')}
-              selectedValue={selectedBccRecipient || []}
-              onChange={onChangeSelectBccRecipient}
-            />
-          )}
-          <div className="ml-auto flex justify-end gap-1 text-sm text-slate-700">
-            <div
-              role="button"
-              tabIndex={0}
-              className={twMerge('hover:underline', isShowCcInput && 'hidden')}
-              onClick={handleClickCc}
-            >
-              {t('cc')}
-            </div>
-            <div
-              role="button"
-              tabIndex={0}
-              className={twMerge('hover:underline', isShowBccInput && 'hidden')}
-              onClick={handleClickBcc}
-            >
-              {t('bcc')}
-            </div>
-          </div>
-        </div>
+        <ComposePopupRecipientInput
+          viewText={viewText}
+          selectRecipient={selectRecipient || []}
+          onChangeSelectRecipient={onChangeSelectRecipient}
+          selectedCcRecipient={selectedCcRecipient || []}
+          onChangeSelectCcRecipient={onChangeSelectCcRecipient}
+          selectedBccRecipient={selectedBccRecipient || []}
+          onChangeSelectBccRecipient={onChangeSelectBccRecipient}
+          className={className}
+          viewType={viewType}
+        />
       )}
     </div>
   );

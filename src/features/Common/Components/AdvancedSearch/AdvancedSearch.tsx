@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { HiOutlineSearch } from 'react-icons/hi';
 import { IoOptionsSharp } from 'react-icons/io5';
 import { twMerge } from 'tailwind-merge';
+import { search } from '../../../../app/Services/Search/SearchService';
 import useSelector from '../../../Hooks/useSelector';
 import { triggerClickOutside } from '../../../utils/helpers';
 import Button from '../Button';
@@ -40,6 +41,10 @@ const AdvancedSearch = () => {
 
   const searchTerm = useSelector((state) => state.labelSidebar.searchTerm);
 
+  const handleSearch = () => {
+    search({ subject: searchTearm }).then((res) => console.log(res));
+  };
+
   useEffect(() => {
     if (searchTerm !== null) {
       setSearchTearm(`${searchTerm.key}:${searchTerm.value}`);
@@ -56,7 +61,12 @@ const AdvancedSearch = () => {
   return (
     <div ref={dropdownSearchTabRef} className="relative w-0 py-0 md:w-fit lg:py-3.5">
       <div className="flex h-12 w-0 items-center justify-start rounded-4xl bg-slate-200 p-0 md:ml-6 md:w-[450px] md:pl-1.5 lg:p-1.5 xl:w-[720px]">
-        <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-gray-700 hover:bg-gray-300">
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={handleSearch}
+          className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-gray-700 hover:bg-gray-300"
+        >
           <HiOutlineSearch size={18} className="hidden md:block" />
         </div>
         <Input

@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import _ from 'lodash';
 import { useMemo } from 'react';
 import { GoDotFill } from 'react-icons/go';
@@ -17,6 +18,7 @@ interface ViewMailSpaceItemInfoCollapseProp {
   isOpen: boolean;
   onClickReply: (e: React.MouseEvent) => void;
   onClickForward: (e: React.MouseEvent) => void;
+  type: string;
 }
 
 const ViewMailSpaceItemInfoCollapse = ({
@@ -26,7 +28,10 @@ const ViewMailSpaceItemInfoCollapse = ({
   isArray,
   isActive,
   isOpen,
+  type,
 }: ViewMailSpaceItemInfoCollapseProp) => {
+  dayjs.extend(utc);
+
   const dateMail = dayjs();
   const dateCurrent = dayjs(mail?.created_at);
 
@@ -40,9 +45,7 @@ const ViewMailSpaceItemInfoCollapse = ({
   const emailUser = useSelector((state) => state.user.email);
 
   return (
-    <div
-      className={twMerge('ml-4 flex h-12 w-full flex-col gap-1 ', mail?.type === TypeChat.SENT && 'italic')}
-    >
+    <div className={twMerge('ml-4 flex h-12 w-full flex-col gap-1 ', type === TypeChat.SENT && 'italic')}>
       <div className={twMerge('flex flex-row items-center justify-between')}>
         <div className="flex items-center justify-start gap-1.5">
           <p className="max-w-[50%] truncate text-base font-normal not-italic text-black">
@@ -54,7 +57,7 @@ const ViewMailSpaceItemInfoCollapse = ({
           <div className="flex items-center justify-center">
             <p className="text-ellipsis text-xs text-gray-600">
               {dateMail.diff(dateCurrent, 'D')
-                ? dayjs(mail?.created_at).format('ddd, MMM D, h:mm A')
+                ? dayjs.utc(mail?.created_at).local().format('ddd, MMM D, h:mm A')
                 : dayjs(mail?.created_at).format('h:mm A')}
             </p>
             <p
@@ -64,7 +67,7 @@ const ViewMailSpaceItemInfoCollapse = ({
               )}
             >
               <GoDotFill size={10} className={twMerge('mx-1 mt-0.5 uppercase text-gray-400')} />
-              {mail?.type}
+              {type}
             </p>
           </div>
         </div>

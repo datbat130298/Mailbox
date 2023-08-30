@@ -4,6 +4,8 @@ import { IoArrowBack, IoLink } from 'react-icons/io5';
 import { MdMoreVert } from 'react-icons/md';
 import { TbSend } from 'react-icons/tb';
 import { twMerge } from 'tailwind-merge';
+import { sendEmail } from '../../../../app/Services/Sent/SentService';
+import useNotify from '../../../Hooks/useNotify';
 import useSelector from '../../../Hooks/useSelector';
 import ComposePopupInput from '../../Components/ComposePopup/Components/ComposePopupInput';
 import ComposePopupRecipient from '../../Components/ComposePopup/Components/ComposePopupRecipient/ComposePopupRecipient';
@@ -25,9 +27,11 @@ const ComposeModalMobile = ({ isOpen, onClose, dataForward, recipient }: Compose
   const [selectedCcRecipient, setSelectedCcRecipient] = useState<Array<EmailType>>([]);
   const [selectedBccRecipient, setSelectedBccRecipient] = useState<Array<EmailType>>([]);
   const [content, setContent] = useState('');
+  const [, setIsSubmitting] = useState(false);
   const userEmail = useSelector((state) => state.user.email);
 
   const { t } = useTranslation();
+  const toast = useNotify();
 
   const handleOnChangeRecipient = (selectedOptions: Array<EmailType>) =>
     setSelectedRecipient(selectedOptions);
@@ -39,14 +43,33 @@ const ComposeModalMobile = ({ isOpen, onClose, dataForward, recipient }: Compose
     setSelectedBccRecipient(selectedOptions);
 
   const handleChangeEditor = (value: string) => {
-    if (content) {
-      return;
-    }
+    // if (content) {
+    //   return;
+    // }
     setContent(value);
   };
 
   const onChangeSubjectInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSubject(e.target.value);
+  };
+
+  const handleClickSend = () => {
+    setIsSubmitting(true);
+    const emailArray = selectedRecipient.map((item) => item.email);
+    const dataSubmit = {
+      email_address: [...emailArray],
+      files: [],
+      body: content,
+      type: 'SEND_MAIL',
+      subject,
+    };
+    sendEmail(dataSubmit)
+      .then(() => {
+        toast.success('sent_success');
+        onClose();
+      })
+      .catch(() => toast.error('sent_error'))
+      .finally(() => setIsSubmitting(false));
   };
 
   useEffect(() => {
@@ -108,8 +131,11 @@ const ComposeModalMobile = ({ isOpen, onClose, dataForward, recipient }: Compose
             <Tooltip position="bottom" title="insert link">
               <IoLink className="" size={22} />
             </Tooltip>
+
             <Tooltip position="bottom" title="sent">
-              <TbSend size={20} className="ml-1 rotate-45" />
+              <div className="" role="button" tabIndex={0} onClick={handleClickSend}>
+                <TbSend size={20} className="ml-1 rotate-45" />
+              </div>
             </Tooltip>
             <Tooltip position="bottom" title="more">
               <MdMoreVert size={22} />
