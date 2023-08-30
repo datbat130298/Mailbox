@@ -116,5 +116,7 @@
   "popup": "Popup",
   "notification_plural": "Notifications",
   "delivered": "Delivered",
-  "in_progress": "In progress"
+  "in_progress": "In progress",
+  "sent_success": "Send email success",
+  "sent_error": "An error occurred during sending"
 }

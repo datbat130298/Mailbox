@@ -252,7 +252,7 @@ const MailTableContainer = ({ mailData, isLoading, type }: MailTableContainerPro
         }}
         onClickReply={() => {
           setIsShowComposeMobile(true);
-          setEmailReply([{ email: selectedMail?.address || '' }]);
+          setEmailReply([{ email: selectedMail?.email_account?.email_address || '' }]);
         }}
         onClickReplyAll={() => setIsShowComposeMobile(true)}
       />

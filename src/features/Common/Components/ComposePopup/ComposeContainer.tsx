@@ -4,7 +4,9 @@ import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'reac
 import { twMerge } from 'tailwind-merge';
 import { DraftActionEnum, useDraftsDispatch } from '../../../../app/Context/DraftContext';
 import { ComposeViewTypeEnum } from '../../../../app/Enums/commonEnums';
+import { sendEmail } from '../../../../app/Services/Sent/SentService';
 import { ComposePopupStyleType, ComposeType, MailType } from '../../../../app/Types/commonTypes';
+import useNotify from '../../../Hooks/useNotify';
 import Modal from '../Modal/Modal';
 import { EmailType } from '../SelectMultiEmail/SelectMultiEmail';
 import ComposePopup from './Components/ComposePopup';
@@ -42,8 +44,11 @@ const ComposePopupContainer = ({
   const [selectedRecipient, setSelectedRecipient] = useState<Array<EmailType>>([]);
   const [selectedCcRecipient, setSelectedCcRecipient] = useState<Array<EmailType>>([]);
   const [selectedBccRecipient, setSelectedBccRecipient] = useState<Array<EmailType>>([]);
+  // const [body, setBody] = useState<any>(composeViewType === ComposeViewTypeEnum.FORWARD ? contentInbox : ' ');
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [body, setBody] = useState<any>(composeViewType === ComposeViewTypeEnum.FORWARD ? contentInbox : ' ');
+  const [body, setBody] = useState<any>(' ');
+  const toast = useNotify();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const dispatch = useDraftsDispatch();
 
@@ -58,10 +63,18 @@ const ComposePopupContainer = ({
     setSelectedBccRecipient(selectedOptions);
 
   const handleChangeEditor = (value: string) => {
-    if (body) {
-      return;
-    }
+    // if (body) {
+    //   return;
+    // }
     setBody(value);
+  };
+
+  const handleClose = () => {
+    // handleClickCloseComposeItem(id || 0);
+    dispatch({ type: DraftActionEnum.DELETE, viewType: ComposeViewTypeEnum.POPUP, uuid: id });
+    if (_.isFunction(onClear)) {
+      onClear();
+    }
   };
 
   const debounceInput = useCallback(
@@ -101,6 +114,27 @@ const ComposePopupContainer = ({
       recipientCc: selectedCcRecipient,
       subject,
     });
+  };
+
+  const handleClickSend = () => {
+    setIsSubmitting(true);
+    const emailArray = selectedRecipient
+      .concat(selectedBccRecipient, selectedCcRecipient)
+      .map((item) => item.email);
+    const dataSubmit = {
+      email_address: [...emailArray],
+      files: [],
+      body,
+      type: 'SEND_MAIL',
+      subject,
+    };
+    sendEmail(dataSubmit)
+      .then(() => {
+        toast.success('sent_success');
+        handleClose();
+      })
+      .catch(() => toast.error('sent_error'))
+      .finally(() => setIsSubmitting(false));
   };
 
   const handleChangeViewTypeToModal = (e: React.MouseEvent) => {
@@ -175,6 +209,8 @@ const ComposePopupContainer = ({
         (composeViewType === ComposeViewTypeEnum.REPLY ||
           composeViewType === ComposeViewTypeEnum.FORWARD) && (
           <ComposePopup
+            isSubmitting={isSubmitting}
+            onClickSend={handleClickSend}
             handleClickChangeView={handleClickChangeView}
             id={id}
             contentInbox={contentInbox}
@@ -201,6 +237,8 @@ const ComposePopupContainer = ({
         )}
       {compose && compose.viewType === ComposeViewTypeEnum.POPUP && (
         <ComposePopup
+          isSubmitting={isSubmitting}
+          onClickSend={handleClickSend}
           id={id}
           body={body}
           onChangeEditor={handleChangeEditor}
@@ -230,6 +268,8 @@ const ComposePopupContainer = ({
           contentContainerClassName="w-[80vw] h-[90vh] bg-white p-0 rounded-lg"
         >
           <ComposePopup
+            isSubmitting={isSubmitting}
+            onClickSend={handleClickSend}
             id={id}
             body={body}
             onChangeEditor={handleChangeEditor}

@@ -49,6 +49,8 @@ export interface ComposePopupProps {
   handleClickInsertContent?: (text: string) => void;
   handleClickChangeView?: () => void;
   isShowToolbar?: boolean;
+  onClickSend: () => void;
+  isSubmitting: boolean;
 }
 
 const ComposePopup = ({
@@ -71,6 +73,7 @@ const ComposePopup = ({
   fromMail,
   composePopupStyle,
   id,
+  isSubmitting,
   onChangeSubjectInput,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onClose,
@@ -78,6 +81,7 @@ const ComposePopup = ({
   onClear,
   contentInbox,
   isShowToolbar = false,
+  onClickSend,
 }: ComposePopupProps) => {
   const [isVisibleToolbar, setIsVisibleToolbar] = useState<boolean>(false);
   const [isShowSelectTimeModal, setIsShowSelectTimeModal] = useState<boolean>(false);
@@ -112,8 +116,7 @@ const ComposePopup = ({
   };
 
   const handleClickSend = () => {
-    // eslint-disable-next-line no-console
-    console.log('mailbox');
+    onClickSend();
   };
 
   const handleClickArrow = () => {
@@ -289,6 +292,7 @@ const ComposePopup = ({
         >
           <div className="flex justify-start gap-4">
             <ComposePopupButtonSend
+              isSubmitting={isSubmitting}
               onClickSend={handleClickSend}
               onClickArrow={handleClickArrow}
               onClickSendWithTime={handleClickSendWihTime}

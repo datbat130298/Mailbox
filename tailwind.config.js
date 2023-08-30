@@ -89,9 +89,15 @@ module.exports = {
             opacity: '0',
           },
         },
+        loading: {
+          to: {
+            transform: 'rotate(360deg)',
+          },
+        },
       },
       animation: {
         blink: 'blink 1s infinite',
+        loading: 'loading linear infinite',
       },
     },
     screens: {

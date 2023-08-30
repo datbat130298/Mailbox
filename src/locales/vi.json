@@ -116,5 +116,7 @@
   "popup": "Nhảy ra",
   "notification_plural": "Thông báo",
   "delivered": "Delivered",
-  "in_progress": "In progress"
+  "in_progress": "In progress",
+  "sent_success": "Send email success",
+  "sent_error": "An error occurred during sending"
 }

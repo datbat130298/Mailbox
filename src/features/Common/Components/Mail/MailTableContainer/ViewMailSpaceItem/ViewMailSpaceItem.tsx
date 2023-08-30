@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import _ from 'lodash';
 import { nanoid } from 'nanoid';
 import { useEffect, useState } from 'react';
@@ -32,7 +33,6 @@ const ViewMailSpaceItem = ({
   handleSelectMail,
   isFirstOpen,
   selectedMail,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   type,
 }: ViewMailSpaceItemProp) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -43,6 +43,7 @@ const ViewMailSpaceItem = ({
   const dateCurrent = dayjs(mail?.created_at);
   const emailUser = useSelector((state) => state.user.email);
   const dispatch = useDraftsDispatch();
+  dayjs.extend(utc);
 
   const contentDefaultForward = `<br><br><p>---------- Forwarded message -------- <br> From: ${mail?.from_user?.email} <br>Date: ${mail?.created_at}<br>Subject: ${mail?.subject}<br>To: ${emailUser}</p>`;
   const contentForward = `${contentDefaultForward} <br><br> ${mail?.body}`;
@@ -129,6 +130,7 @@ const ViewMailSpaceItem = ({
         </div>
         {!isOpen && (
           <ViewMailSpaceItemInfoCollapse
+            type={type}
             isArray={isArray}
             mail={mail}
             isActive={isActive}
@@ -165,8 +167,8 @@ const ViewMailSpaceItem = ({
               </div>
               <p className="text-xs text-gray-600">
                 {dateMail.diff(dateCurrent, 'D')
-                  ? dayjs(mail?.created_at).format('ddd, MMM D, YYYY h:mm A')
-                  : dayjs(mail?.created_at).format('h:mm A')}
+                  ? dayjs.utc(mail?.created_at).local().format('ddd, MMM D, YYYY h:mm A')
+                  : dayjs.utc(mail?.created_at).local().format('h:mm A')}
               </p>
               <p
                 className={twMerge(
@@ -175,7 +177,7 @@ const ViewMailSpaceItem = ({
                 )}
               >
                 <GoDotFill size={10} className="mx-1.5 mt-0.5 text-gray-300" />
-                {mail?.status}
+                {type}
               </p>
             </div>
           </div>
