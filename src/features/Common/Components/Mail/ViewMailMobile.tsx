@@ -155,12 +155,12 @@ const ViewMailMobile = ({
         </div>
 
         {/* content */}
-        <div className="h-full w-full overflow-auto pt-[86px] md:px-[30px]">
+        <div className="h-full w-full overflow-auto pt-[86px]">
           {!isLoading && (
             <div className="h-full w-full overflow-auto">
               {mailData && !_.isEmpty(conversation) ? (
                 <>
-                  <ViewMailSpaceItemMobile
+                  {/* <ViewMailSpaceItemMobile
                     isActive={selectedMail.id === mailData?.id}
                     isArray
                     mail={mailData}
@@ -170,7 +170,7 @@ const ViewMailMobile = ({
                     handleSelectMail={handleSelectMail}
                     selectedEmail={selectedMail}
                     type={type}
-                  />
+                  /> */}
                   {conversation.map((item) => (
                     <ViewMailSpaceItemMobile
                       isArray

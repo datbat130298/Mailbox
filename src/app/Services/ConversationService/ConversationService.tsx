@@ -336,7 +336,7 @@ const getMailById = (id: number) => {
 };
 
 const getConversationById = async (id: number) => {
-  const response = await axiosInstance.get(`/mailbox/conversation/${id}`);
+  const response = await axiosInstance.get(`/mailbox/email/get-email-conversation/${id}`);
   return response.data.data;
 };
 

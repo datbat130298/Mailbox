@@ -11,6 +11,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 }
 
 const Button = ({
+  onClick,
   isLoading,
   children,
   className,
@@ -72,6 +73,7 @@ const Button = ({
       )}
       disabled={disabled}
       {...anotherProps}
+      onClick={onClick}
     >
       {isLoading && (
         <div

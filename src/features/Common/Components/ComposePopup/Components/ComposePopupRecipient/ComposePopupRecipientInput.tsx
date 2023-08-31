@@ -57,7 +57,12 @@ const ComposePopupRecipientInput = ({
         'mx-1 my-0.5 flex flex-col items-center border-b-[1px] border-gray-200 py-0',
         _.isEmpty(selectRecipient) && viewType !== ComposeViewTypeEnum.REPLY && 'mx-2 flex-row items-center',
         _.isEmpty(selectRecipient) && viewType !== ComposeViewTypeEnum.REPLY && 'mx-2 flex-row items-center',
-        (isShowBccInput || isShowCcInput) && 'mx-1 flex-col ',
+        (isShowBccInput ||
+          isShowCcInput ||
+          !_.isEmpty(selectedCcRecipient) ||
+          !_.isEmpty(selectedBccRecipient)) &&
+          'mx-1 flex-col ',
+
         className,
       )}
       ref={recipientRef}
@@ -67,7 +72,7 @@ const ComposePopupRecipientInput = ({
         selectedValue={selectRecipient || []}
         onChange={onChangeSelectRecipient}
       />
-      {isShowCcInput && (
+      {(isShowCcInput || !_.isEmpty(selectedCcRecipient)) && (
         <SelectMultiEmail
           className="-mt-1"
           label={t('cc')}
@@ -75,7 +80,7 @@ const ComposePopupRecipientInput = ({
           onChange={onChangeSelectCcRecipient}
         />
       )}
-      {isShowBccInput && (
+      {(isShowBccInput || !_.isEmpty(selectedBccRecipient)) && (
         <SelectMultiEmail
           className="-mt-1"
           label={t('bcc')}
@@ -87,7 +92,10 @@ const ComposePopupRecipientInput = ({
         <div
           role="button"
           tabIndex={0}
-          className={twMerge('hover:underline', isShowCcInput && 'hidden')}
+          className={twMerge(
+            'hover:underline',
+            (isShowCcInput || !_.isEmpty(selectedCcRecipient)) && 'hidden',
+          )}
           onClick={handleClickCc}
         >
           {t('cc')}
@@ -95,7 +103,10 @@ const ComposePopupRecipientInput = ({
         <div
           role="button"
           tabIndex={0}
-          className={twMerge('hover:underline', isShowBccInput && 'hidden')}
+          className={twMerge(
+            'hover:underline',
+            (isShowBccInput || !_.isEmpty(selectedBccRecipient)) && 'hidden',
+          )}
           onClick={handleClickBcc}
         >
           {t('bcc')}

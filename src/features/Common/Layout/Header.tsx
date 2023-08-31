@@ -12,6 +12,7 @@ import { triggerClickOutside } from '../../utils/helpers';
 import AdvancedSearch from '../Components/AdvancedSearch/AdvancedSearch';
 import Button from '../Components/Button';
 import ChooseLanguage from '../Components/ChooseLanguage/ChooseLanguage';
+import LoadingHeader from '../Components/Loading/LoadingHeader';
 // eslint-disable-next-line import/no-named-as-default
 import SidebarResponsive from '../Components/Sidebar/SidebarResponsive/SidebarResponsive';
 import UserDropdown from '../Components/UserDropdown/UserDropdown';
@@ -20,6 +21,7 @@ const Header = () => {
   const [language, setLanguage] = useState('en');
   const [isUserTabVisible, setUserTabVisible] = useState(false);
   const [isShowSidebarMobile, setIsShowSidebarMobile] = useState(false);
+  const [isShowLoading, setIsShowLoading] = useState(false);
 
   const userTabRef = useRef<HTMLDivElement>(null);
   const user = useSelector((state) => state.user);
@@ -83,7 +85,7 @@ const Header = () => {
           <div className="flex h-full w-fit flex-shrink-0 items-center justify-start pl-0 lg:w-[185px] lg:pl-4">
             <img className="h-6 max-w-[120px] lg:h-[28px] lg:w-[120px]" src={logoText} alt="Workflow" />
           </div>
-          {user?.uuid !== 0 && <AdvancedSearch />}
+          {user?.uuid !== 0 && <AdvancedSearch setIsShowLoading={setIsShowLoading} />}
         </div>
         <div className="flex h-full w-fit flex-shrink-0 items-center justify-center">
           {user?.uuid === 0 ? (
@@ -126,6 +128,7 @@ const Header = () => {
             </>
           )}
         </div>
+        <LoadingHeader isShow={isShowLoading} />
       </div>
       <SidebarResponsive isOpen={isShowSidebarMobile} onClose={handleShowSidebarMobile} />
     </>

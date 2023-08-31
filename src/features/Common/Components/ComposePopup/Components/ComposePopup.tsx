@@ -50,7 +50,6 @@ export interface ComposePopupProps {
   handleClickChangeView?: () => void;
   isShowToolbar?: boolean;
   onClickSend: () => void;
-  isSubmitting: boolean;
 }
 
 const ComposePopup = ({
@@ -73,7 +72,6 @@ const ComposePopup = ({
   fromMail,
   composePopupStyle,
   id,
-  isSubmitting,
   onChangeSubjectInput,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onClose,
@@ -292,7 +290,6 @@ const ComposePopup = ({
         >
           <div className="flex justify-start gap-4">
             <ComposePopupButtonSend
-              isSubmitting={isSubmitting}
               onClickSend={handleClickSend}
               onClickArrow={handleClickArrow}
               onClickSendWithTime={handleClickSendWihTime}

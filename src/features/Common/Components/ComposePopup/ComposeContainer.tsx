@@ -1,12 +1,13 @@
 import _ from 'lodash';
 import { nanoid } from 'nanoid';
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { DraftActionEnum, useDraftsDispatch } from '../../../../app/Context/DraftContext';
 import { ComposeViewTypeEnum } from '../../../../app/Enums/commonEnums';
 import { sendEmail } from '../../../../app/Services/Sent/SentService';
 import { ComposePopupStyleType, ComposeType, MailType } from '../../../../app/Types/commonTypes';
 import useNotify from '../../../Hooks/useNotify';
+import ErrorModal from '../ErrorModal/ErrorModal';
 import Modal from '../Modal/Modal';
 import { EmailType } from '../SelectMultiEmail/SelectMultiEmail';
 import ComposePopup from './Components/ComposePopup';
@@ -47,8 +48,8 @@ const ComposePopupContainer = ({
   // const [body, setBody] = useState<any>(composeViewType === ComposeViewTypeEnum.FORWARD ? contentInbox : ' ');
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [body, setBody] = useState<any>(' ');
+  const [isShowErrorModal, setIsShowErrorModal] = useState(false);
   const toast = useNotify();
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const dispatch = useDraftsDispatch();
 
@@ -116,8 +117,17 @@ const ComposePopupContainer = ({
     });
   };
 
+  const isAllowSend = useMemo(() => {
+    if (!_.isEmpty(selectedRecipient) || !_.isEmpty(selectedBccRecipient) || !_.isEmpty(selectedCcRecipient))
+      return true;
+    return false;
+  }, [selectedRecipient, selectedBccRecipient, selectedCcRecipient]);
+
   const handleClickSend = () => {
-    setIsSubmitting(true);
+    if (!isAllowSend) {
+      setIsShowErrorModal(true);
+      return;
+    }
     const emailArray = selectedRecipient
       .concat(selectedBccRecipient, selectedCcRecipient)
       .map((item) => item.email);
@@ -133,8 +143,11 @@ const ComposePopupContainer = ({
         toast.success('sent_success');
         handleClose();
       })
-      .catch(() => toast.error('sent_error'))
-      .finally(() => setIsSubmitting(false));
+      .catch((err) => {
+        console.log(err.response.data.errors.body);
+        toast.error('sent_error');
+        handleClose();
+      });
   };
 
   const handleChangeViewTypeToModal = (e: React.MouseEvent) => {
@@ -186,7 +199,9 @@ const ComposePopupContainer = ({
   useEffect(() => {
     if (!_.isEmpty(fromMail)) {
       if (composeViewType === ComposeViewTypeEnum.REPLY) {
-        setSelectedRecipient([{ id: nanoid(), email: fromMail.address }]);
+        setSelectedRecipient([
+          { id: nanoid(), email: fromMail?.email_account?.email_address || fromMail.email_address || '' },
+        ]);
       }
       setSubject(fromMail.subject);
       setDebounceSubject(fromMail.subject);
@@ -209,7 +224,6 @@ const ComposePopupContainer = ({
         (composeViewType === ComposeViewTypeEnum.REPLY ||
           composeViewType === ComposeViewTypeEnum.FORWARD) && (
           <ComposePopup
-            isSubmitting={isSubmitting}
             onClickSend={handleClickSend}
             handleClickChangeView={handleClickChangeView}
             id={id}
@@ -237,7 +251,6 @@ const ComposePopupContainer = ({
         )}
       {compose && compose.viewType === ComposeViewTypeEnum.POPUP && (
         <ComposePopup
-          isSubmitting={isSubmitting}
           onClickSend={handleClickSend}
           id={id}
           body={body}
@@ -268,7 +281,6 @@ const ComposePopupContainer = ({
           contentContainerClassName="w-[80vw] h-[90vh] bg-white p-0 rounded-lg"
         >
           <ComposePopup
-            isSubmitting={isSubmitting}
             onClickSend={handleClickSend}
             id={id}
             body={body}
@@ -303,6 +315,7 @@ const ComposePopupContainer = ({
           />
         </div>
       )}
+      <ErrorModal isOpen={isShowErrorModal} onClose={() => setIsShowErrorModal(false)} />
     </>
   );
 };

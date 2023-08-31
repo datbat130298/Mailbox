@@ -123,7 +123,7 @@ const Input = (
   }, [type]);
 
   return (
-    <div>
+    <div className="w-full">
       <label
         htmlFor={id}
         style={style}

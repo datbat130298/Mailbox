@@ -86,7 +86,7 @@ const Modal = (
 
             <motion.div variants={modalVariants} initial="hidden" animate="visible" exit="exit">
               <div className="relative z-20 w-full md:m-auto md:rounded-lg">
-                <div className={twMerge('h-fit w-fit bg-white', isShowHeader && 'pt-7')}>
+                <div className={twMerge('h-fit w-fit rounded-md bg-white', isShowHeader && 'pt-7')}>
                   <div className="">
                     {isShowHeader && (
                       <div className={twMerge('mx-8 flex justify-between')}>
