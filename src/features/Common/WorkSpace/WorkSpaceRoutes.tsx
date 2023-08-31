@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import ContainerDrafts from './Drafts/ContainerDrafts';
 import ContainerInbox from './Inbox/ContainerInbox';
+import SearchPage from './SearchPage/SearchPage';
 import ContainerSent from './Sent/ContainerSent';
 import SettingsManagement from './Settings/SettingsManagement';
 import ContainerTrash from './Trash/ContainerTrash';
@@ -13,6 +14,7 @@ const WorkSpaceRoutes = () => {
       <Route path="/drafts/*" element={<ContainerDrafts />} />
       <Route path="/trash/*" element={<ContainerTrash />} />
       <Route path="/settings" element={<SettingsManagement />} />
+      <Route path="/search" element={<SearchPage />} />
     </Routes>
   );
 };

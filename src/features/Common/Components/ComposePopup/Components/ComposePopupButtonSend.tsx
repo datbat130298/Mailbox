@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { RiArrowUpSFill } from 'react-icons/ri';
 import { twMerge } from 'tailwind-merge';
 import ComposePopupSelectStatusSend from './ComposePopupSelectStatusSend';
@@ -9,11 +8,9 @@ interface ComposePopupButtonSendProps {
   onClickSend: () => void;
   onClickArrow: () => void;
   onClickSendWithTime: () => void;
-  isSubmitting: boolean;
 }
 
 const ComposePopupButtonSend = ({
-  isSubmitting,
   onClickSend,
   onClickArrow,
   onClickSendWithTime,
@@ -37,7 +34,6 @@ const ComposePopupButtonSend = ({
       <div
         className={twMerge(
           'item-center relative flex translate-y-[4px] rounded-full bg-primary-500 text-white',
-          isSubmitting && 'opacity-60',
         )}
       >
         <div
@@ -46,13 +42,7 @@ const ComposePopupButtonSend = ({
           role="button"
           onClick={onClickSend}
         >
-          {!isSubmitting ? (
-            t('send')
-          ) : (
-            <div className="flex h-full w-full animate-spin items-center justify-center transition-all">
-              <AiOutlineLoading3Quarters size={19} />
-            </div>
-          )}
+          {t('send')}
         </div>
         <div
           className="py-auto flex items-center rounded-r-full px-2 hover:bg-primary-700"

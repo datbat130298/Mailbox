@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import labelReducer from './Slices/labelSlice';
 import layoutReducer from './Slices/layoutSlice';
+import mailReducer from './Slices/mailSlice';
 import userReducer from './Slices/userSlice';
 
 export const store = configureStore({
@@ -8,6 +9,7 @@ export const store = configureStore({
     user: userReducer,
     layout: layoutReducer,
     labelSidebar: labelReducer,
+    mail: mailReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

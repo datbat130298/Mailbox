@@ -98,7 +98,7 @@ const SelectMultiEmail = ({ className, label, onChange, selectedValue }: SelectM
         onChange(arrayEmail);
       }
     },
-    [value],
+    [value, options],
   );
 
   const handleClickInput = () => {
@@ -143,7 +143,7 @@ const SelectMultiEmail = ({ className, label, onChange, selectedValue }: SelectM
         onClick={handleClickInput}
       >
         {!_.isEmpty(arrayEmail) && (
-          <div className="mb-1 flex max-h-max flex-wrap gap-2">
+          <div className=" flex max-h-max flex-wrap gap-2">
             {arrayEmail.map((item: EmailType) => (
               <SelectedItem
                 key={item.id}
