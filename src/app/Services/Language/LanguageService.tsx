@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import Cookies from 'universal-cookie';
-import axiosInstance from '../../../features/utils/Http/axiosInstance';
+import axiosInstance from '../../../features/utils/Http/axios';
 import { generateParamString } from '../Common/CommonService';
 
 interface LanguageType {

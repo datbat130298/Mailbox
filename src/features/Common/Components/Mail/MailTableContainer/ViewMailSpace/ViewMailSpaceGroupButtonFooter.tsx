@@ -28,7 +28,6 @@ const ViewMailSpaceGroupButtonFooter = ({
       )}
     >
       <ViewMailSpaceButtonFooterItem onClick={onClickReply} className="-ml-2" title={t('reply')} />
-      <ViewMailSpaceButtonFooterItem onClick={handleClick} title={t('reply_all')} />
       <ViewMailSpaceButtonFooterItem onClick={onClickForward} title={t('forward')} />
       <ViewMailSpaceButtonFooterItem onClick={handleClick} title={t('edit_as_new')} />
       <ViewMailSpaceButtonFooterItem onClick={handleClick} title={t('share_email')} />

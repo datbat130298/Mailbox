@@ -1,11 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TypeChat } from '../../../../app/Enums/commonEnums';
-import {
-  getInbox,
-  // getConversationById,
-  getListEmail,
-} from '../../../../app/Services/ConversationService/ConversationService';
+import { getListEmail } from '../../../../app/Services/ConversationService/ConversationService';
 import { MailType } from '../../../../app/Types/commonTypes';
 import MailTableContainer from '../../Components/Mail/MailTableContainer/MailTableContainer';
 
@@ -14,18 +10,6 @@ const ContainerInbox = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const { t } = useTranslation();
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const fetchData = useCallback(() => {
-    setIsLoading(true);
-    getInbox()
-      .then((data: Array<MailType>) => {
-        setInboxData(data);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []);
 
   const fetchDataListEmail = useCallback(() => {
     setIsLoading(true);
@@ -39,7 +23,6 @@ const ContainerInbox = () => {
   }, []);
 
   useEffect(() => {
-    // fetchData();
     fetchDataListEmail();
   }, []);
 

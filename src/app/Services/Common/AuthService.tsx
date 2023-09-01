@@ -1,5 +1,5 @@
 import Cookies from 'universal-cookie';
-import axiosInstance from '../../../features/utils/Http/axiosInstance';
+import axiosInstance from '../../../features/utils/Http/axios';
 import { COMMON_AUTH_API } from '../../Const/COMMON_API';
 import {
   AuthLoginType,

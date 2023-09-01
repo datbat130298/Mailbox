@@ -1,27 +1,17 @@
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdAdd } from 'react-icons/md';
 import { twMerge } from 'tailwind-merge';
 import useSelector from '../../../Hooks/useSelector';
 import Tooltip from '../Tooltip/Tooltip';
-import AddLabelsModal from './AddLabelsModal';
 
 interface ButtonAddLabelProp {
   isShowSidebar: boolean;
+  onClickAdd: () => void;
 }
 
-const ButtonAddLabel = ({ isShowSidebar }: ButtonAddLabelProp) => {
-  const [isShowAddLabel, setIsShowAddLabel] = useState<boolean>(false);
+const ButtonAddLabel = ({ isShowSidebar, onClickAdd }: ButtonAddLabelProp) => {
   const isShowFullSidebar = useSelector((state) => state.layout.isShowFullSidebar);
   const { t } = useTranslation();
-
-  const handleClickAdd = () => {
-    setIsShowAddLabel(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsShowAddLabel(false);
-  };
 
   return (
     <Tooltip position="left" title={t('add_label')}>
@@ -40,7 +30,7 @@ const ButtonAddLabel = ({ isShowSidebar }: ButtonAddLabelProp) => {
         <div
           role="button"
           tabIndex={0}
-          onClick={handleClickAdd}
+          onClick={onClickAdd}
           className={twMerge(
             'rounded-full p-2 text-gray-700 hover:bg-slate-200',
             !isShowSidebar && 'ml-[23px]',
@@ -50,7 +40,6 @@ const ButtonAddLabel = ({ isShowSidebar }: ButtonAddLabelProp) => {
           <MdAdd size={22} />
         </div>
       </div>
-      <AddLabelsModal isOpen={isShowAddLabel} onClose={handleCloseModal} title={t('new_label')} />
     </Tooltip>
   );
 };

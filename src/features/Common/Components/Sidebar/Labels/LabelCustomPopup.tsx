@@ -3,15 +3,25 @@ import { useTranslation } from 'react-i18next';
 import { triggerClickOutside } from '../../../../utils/helpers';
 import ColorPicker from './ColorPicker';
 import LabelCustomPopupItem from './LabelCustomPopupItem';
+import { LabelType } from './LabelManagement';
 
 interface LabelCustomPopupProps {
   setIsShow: Dispatch<SetStateAction<boolean>>;
   label: string;
   id: number;
   setColorPicker: Dispatch<SetStateAction<string>>;
+  onRemove: (id: number) => void;
+  onClickEdit: (data: LabelType) => void;
 }
 
-const LabelCustomPopup = ({ setIsShow, label, id, setColorPicker }: LabelCustomPopupProps) => {
+const LabelCustomPopup = ({
+  setIsShow,
+  label,
+  id,
+  setColorPicker,
+  onRemove,
+  onClickEdit,
+}: LabelCustomPopupProps) => {
   const { t } = useTranslation();
   const labelCustomRef = useRef<HTMLDivElement>(null);
 
@@ -26,8 +36,17 @@ const LabelCustomPopup = ({ setIsShow, label, id, setColorPicker }: LabelCustomP
     console.log(1);
   };
 
+  const handleClickRemove = () => {
+    onRemove(id);
+    setIsShow(false);
+  };
+
   const handleClickRemoveColor = () => {
     setColorPicker('');
+  };
+
+  const handleClickEdit = () => {
+    onClickEdit({ id, value: label, title: label, children: [] });
   };
 
   return (
@@ -57,8 +76,8 @@ const LabelCustomPopup = ({ setIsShow, label, id, setColorPicker }: LabelCustomP
         <LabelCustomPopupItem title={t('hide')} id={3} onClick={handleClickPopupItem} />
       </div>
       <div className="border-y border-gray-100 py-1.5 text-slate-500">
-        <LabelCustomPopupItem title={t('edit')} id={1} onClick={handleClickPopupItem} />
-        <LabelCustomPopupItem title={t('remove_label')} id={2} onClick={handleClickPopupItem} />
+        <LabelCustomPopupItem title={t('edit')} id={1} onClick={handleClickEdit} />
+        <LabelCustomPopupItem title={t('remove_label')} id={2} onClick={handleClickRemove} />
         <LabelCustomPopupItem title={t('add_label')} id={3} onClick={handleClickPopupItem} />
       </div>
     </div>

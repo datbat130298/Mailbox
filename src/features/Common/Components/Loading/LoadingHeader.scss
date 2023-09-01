@@ -1,6 +1,6 @@
 li {
   list-style: none;
-  color: #80706f;
+  color: #968281;
   display: inline;
   font-size: 1rem;
   letter-spacing: 2px;
@@ -9,32 +9,32 @@ li {
 
 @keyframes pre-load {
   0% {
-    color: #80706f;
+    color: #968281;
     text-shadow: none;
   }
 
   20% {
-    color: #80706f;
+    color: #968281;
     text-shadow: none;
   }
 
   40% {
-    color: #e23e218a;
-    text-shadow: 0 0 2px #e23e21da, 0 0 2px #e23e21da;
+    color: #f34223e0;
+    text-shadow: 0 0 0 #e23e21da, 0 0 0 #e23e21da;
   }
 
   60% {
-    color: #80706f;
+    color: #968281;
     text-shadow: none;
   }
 
   80% {
-    color: #80706f;
+    color: #968281;
     text-shadow: none;
   }
 
   100% {
-    color: #80706f;
+    color: #968281;
     text-shadow: none;
   }
 }

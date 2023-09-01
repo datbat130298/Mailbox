@@ -146,6 +146,7 @@ const AdvancedSearch = ({ setIsShowLoading }: AdvancedSearchProp) => {
   useEffect(() => {
     if (searchTerm !== null) {
       setSearchTearm(`${searchTerm.key}:${searchTerm.value}`);
+      handleSearch();
     }
   }, [searchTerm]);
 
@@ -200,7 +201,7 @@ const AdvancedSearch = ({ setIsShowLoading }: AdvancedSearchProp) => {
             setSearchTearm('');
           }}
           className={twMerge(
-            'hidden h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-gray-600 hover:bg-gray-100 md:ml-auto md:mr-2',
+            'hidden h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-gray-600 transition-all duration-150 hover:bg-slate-100 hover:shadow-md md:ml-auto md:mr-2',
             !_.isEmpty(searchTearm) && 'flex',
           )}
         >
@@ -211,8 +212,8 @@ const AdvancedSearch = ({ setIsShowLoading }: AdvancedSearchProp) => {
           tabIndex={0}
           onClick={() => setIsShowDropdown((prev) => !prev)}
           className={twMerge(
-            'hidden h-0 w-0 flex-shrink-0 items-center justify-center rounded-full text-gray-700 hover:bg-gray-300 md:ml-auto md:mr-2 md:flex md:h-9 md:w-9',
-            isShowDropdown && 'bg-gray-300',
+            'hidden h-0 w-0 flex-shrink-0 items-center justify-center rounded-full text-gray-700 transition-all duration-100 hover:bg-slate-100 hover:shadow-md md:ml-auto md:mr-2 md:flex md:h-9 md:w-9',
+            isShowDropdown && 'bg-slate-100 shadow-md',
           )}
         >
           <IoOptionsSharp size={20} />

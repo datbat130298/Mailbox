@@ -99,6 +99,7 @@ const ComposePopup = ({
   }, [contentInbox, viewType]);
 
   const handleClickDeleteFooter = () => {
+    if (_.isFunction(onClose)) onClose();
     if (_.isFunction(handleClickChangeView)) handleClickChangeView();
     if (onClear) {
       onClear();
