@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import axiosInstance from '../../../features/utils/Http/axiosInstance';
+import axiosInstance from '../../../features/utils/Http/axios';
 import { generateParamString } from '../Common/CommonService';
 
 const search = async (options: any) => {

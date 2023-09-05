@@ -8,10 +8,7 @@ import { MdMoreVert } from 'react-icons/md';
 import { RiDeleteBin6Line, RiMailDownloadLine } from 'react-icons/ri';
 import { useParams } from 'react-router-dom';
 import { TypeChat } from '../../../../app/Enums/commonEnums';
-import {
-  getConversationById,
-  getMailById,
-} from '../../../../app/Services/ConversationService/ConversationService';
+import { getConversationById } from '../../../../app/Services/ConversationService/ConversationService';
 import { MailType } from '../../../../app/Types/commonTypes';
 import useNotify from '../../../Hooks/useNotify';
 import Modal from '../Modal/Modal';
@@ -50,13 +47,6 @@ const ViewMailMobile = ({
   const toast = useNotify();
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchDataMail = useCallback((mailId: string | undefined) => {
-    const data = getMailById(Number(mailId));
-    if (data) {
-      setMail(data as MailType);
-    }
-  }, []);
-
   const fetchDataConversation = useCallback(
     (idMail: number) => {
       setIsLoading(true);
@@ -77,10 +67,8 @@ const ViewMailMobile = ({
   useEffect(() => {
     if (!_.isEmpty(mailData)) {
       setMail(mailData);
-    } else {
-      fetchDataMail(id);
     }
-  }, [id, mailData, fetchDataMail]);
+  }, [id, mailData]);
 
   const subjectRe = useMemo(() => {
     if (mailData?.subject) return mailData.subject;

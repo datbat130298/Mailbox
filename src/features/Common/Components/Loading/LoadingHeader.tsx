@@ -9,8 +9,8 @@ const LoadingHeader = ({ isShow }: LoadingHeaderProp) => {
   return (
     <div
       className={twMerge(
-        'absolute left-1/2 top-2 z-50 hidden rounded-md border-2 border-red-200 bg-white px-8 py-2 shadow-md',
-        isShow && 'block',
+        'fixed left-1/2 top-2 z-50 rounded-md border-2 border-slate-500 bg-white px-8 py-2 shadow-md',
+        !isShow && 'hidden',
       )}
     >
       <ul className="flex items-center justify-center">

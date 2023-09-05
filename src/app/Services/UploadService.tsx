@@ -1,4 +1,4 @@
-import axiosInstance from '../../features/utils/Http/axiosInstance';
+import axiosInstance from '../../features/utils/Http/axios';
 import { COMMON_UPLOAD_FILE_API } from '../Const/COMMON_API';
 import { ImageType } from '../Types/commonTypes';
 

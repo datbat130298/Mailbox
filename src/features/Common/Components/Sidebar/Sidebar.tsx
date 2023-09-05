@@ -5,7 +5,6 @@ import { RiSettings3Line } from 'react-icons/ri';
 import { twMerge } from 'tailwind-merge';
 import useSelector from '../../../Hooks/useSelector';
 import { DisplayLabel } from '../../WorkSpace/Settings/LabelTable';
-import ButtonAddLabel from '../Labels/ButtonAddLabel';
 import ComposeButton from './ComposeButton';
 import LabelManagement from './Labels/LabelManagement';
 import SidebarGroup from './SidebarGroup';
@@ -19,7 +18,6 @@ const Sidebar = () => {
   const { categoryLabel } = useSelector((state) => state.labelSidebar);
 
   const sidebarElement = useRef<HTMLDivElement>(null);
-  // const dispatch = useDispatch();
 
   const categoryItemDisplay = categoryLabel.filter((item) =>
     item.display.find((displayItem) => displayItem.show === true),
@@ -47,10 +45,6 @@ const Sidebar = () => {
   const handleMouseOver = () => {
     return setIsShowSidebar(false);
   };
-
-  // const handleClickCloseMobile = () => {
-  //   dispatch(setIsShowFullSidebar(false));
-  // };
 
   return (
     <div
@@ -112,8 +106,7 @@ const Sidebar = () => {
             />
           ))}
         </SidebarGroup>
-        <ButtonAddLabel isShowSidebar={isShowSidebar} />
-        <LabelManagement />
+        <LabelManagement isShowSidebar={isShowSidebar} />
       </div>
     </div>
   );

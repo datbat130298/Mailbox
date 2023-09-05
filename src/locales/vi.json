@@ -117,6 +117,8 @@
   "notification_plural": "Thông báo",
   "delivered": "Delivered",
   "in_progress": "In progress",
-  "sent_success": "Send email success",
-  "sent_error": "An error occurred during sending"
+  "sent_success": "Gửi thư thành công",
+  "sent_error": "Quá trình gửi đã gặp vấn đề nào đó. Hãy thử lại sau",
+  "save_draft": "Lưu vào thư nháp",
+  "save_draft_error": "Lưu thư nháp lỗi"
 }

@@ -118,5 +118,10 @@
   "delivered": "Delivered",
   "in_progress": "In progress",
   "sent_success": "Send email success",
-  "sent_error": "An error occurred during sending"
+  "sent_error": "An error occurred during the sending process. Please try again later",
+  "save_draft": "Saved draft",
+  "save_draft_error": "Save draft error",
+  "action_error": "We have an error when performing this action. Please try again later.",
+  "edit_label": "Edit label",
+  "action_complete": "Request has been completed"
 }

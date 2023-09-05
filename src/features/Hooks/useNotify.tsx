@@ -1,4 +1,5 @@
 import { Id, toast, ToastOptions, TypeOptions } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import ToastMessage from '../Common/Components/ToastMessage/ToastMessage';
 
 type ToastType = 'info' | 'success' | 'warning' | 'error' | 'loading';
