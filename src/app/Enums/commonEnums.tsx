@@ -20,6 +20,7 @@ export enum ValueTableLabelEnum {
 }
 
 export enum TypeChat {
+  STARRED = 'starred',
   INBOX = 'inbox',
   SENT = 'sent',
   DRAFT = 'draft',
@@ -28,4 +29,70 @@ export enum TypeChat {
 
 export enum StatusSent {
   DONE = 'DONE',
+}
+
+export enum ImageFileExtensionEnum {
+  PNG = 'png',
+  JPG = 'jpg',
+  JPEG = 'jpeg',
+  SVG = 'svg',
+  GIF = 'gif',
+  TIFF = 'tiff',
+  EPS = 'eps',
+  RAW = 'raw',
+  BMP = 'bmp',
+  TIF = 'tif',
+}
+
+export enum VideoFileExtensionEnum {
+  MP4 = 'mp4',
+  WEBM = 'webm',
+  MKV = 'mkv',
+  MPEG4 = 'mpeg4',
+  '3GPP' = '3gpp',
+  MOV = 'mov',
+  AVI = 'avi',
+  MPEG = 'mpeg',
+  WMV = 'wmv',
+  FLV = 'flv',
+  OGG = 'ogg',
+}
+
+export enum PDFFileExtensionEnum {
+  PDF = 'pdf',
+}
+
+export enum TextFileExtensionEnum {
+  TXT = 'txt',
+}
+
+export enum WordFileExtensionEnum {
+  DOCX = 'docx',
+  DOC = 'doc',
+}
+
+export enum ExcelFileExtensionEnum {
+  XLSX = 'xlsx',
+  XLS = 'xls',
+}
+
+export enum PowerPointFileExtensionEnum {
+  PPTX = 'pptx',
+  PPT = 'ppt',
+}
+
+export enum HTMLFileExtensionEnum {
+  HTML = 'html',
+  HTM = 'htm',
+}
+
+export enum AudioFileExtensionEnum {
+  MP3 = 'mp3',
+}
+
+export enum OtherFileExtensionEnum {
+  CAB = 'cab',
+  CDA = 'cda',
+  FOLDER = 'folder',
+  ANY = 'any',
 }

@@ -1,7 +1,7 @@
 import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import _ from 'lodash';
-import { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { twMerge } from 'tailwind-merge';
 import './CKEditor.scss';
 import { UploadAdaptor } from './UploadAdaptor';
@@ -98,23 +98,32 @@ const CKEditor5 = ({
       toolbarElement.style.borderTopRightRadius = isRadiousToolbar && '6px';
     }
   };
+  // const fetchDataDebounced = useCallback(_.debounce(fetchDataUser, 500), []);
+
+  const handleChange = useCallback((_event, editor) => {
+    if (_.isEmpty(editor.getData()) || !editor.getData()) return;
+    onChange?.(editor.getData());
+  }, []);
+
+  const handleChangeDebounce = useCallback(_.debounce(handleChange, 500), []);
+
+  const handleOnReady = useCallback((editor) => {
+    editWriter(editor);
+  }, []);
+
+  const handleOnBlur = useCallback((event, editor) => onBlur?.(editor.getData()), []);
 
   const render = useMemo(() => {
     return (
       <div className={twMerge('relative h-full w-full')}>
         <CKEditor
-          id="test"
           editor={DecoupledEditor}
           data={data}
           config={config}
           disabled={isDisabled}
-          onReady={(editor) => editWriter(editor)}
-          onChange={_.debounce((_event, editor) => {
-            onChange?.(editor.getData());
-          }, 500)}
-          onBlur={(event, editor) => {
-            onBlur?.(editor.getData());
-          }}
+          onReady={handleOnReady}
+          onChange={handleChangeDebounce}
+          onBlur={handleOnBlur}
         />
       </div>
     );
@@ -122,4 +131,4 @@ const CKEditor5 = ({
 
   return render;
 };
-export default CKEditor5;
+export default React.memo(CKEditor5);

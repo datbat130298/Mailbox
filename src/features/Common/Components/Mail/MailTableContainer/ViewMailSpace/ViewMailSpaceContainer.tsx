@@ -59,16 +59,7 @@ const ViewMailSpaceContainer = ({ mailData, type }: ViewMailSpaceContainerProp) 
       {!isLoading && (
         <div className="ml-1 h-[calc(100%-110px)] overflow-y-auto" onScroll={(e) => handleScroll(e)}>
           {mailData && !_.isEmpty(conversation) ? (
-            <>
-              {/* <ViewMailSpaceItem
-                type={type}
-                mail={mailData}
-                isActive={selectedMail.id === mailData.id}
-                handleSelectMail={handleSelectMail}
-                selectedMail={selectedMail}
-                isArray
-                isFirstOpen
-              /> */}
+            <div>
               {conversation?.map((mail) => (
                 <ViewMailSpaceItem
                   selectedMail={selectedMail}
@@ -80,7 +71,7 @@ const ViewMailSpaceContainer = ({ mailData, type }: ViewMailSpaceContainerProp) 
                   handleSelectMail={handleSelectMail}
                 />
               ))}
-            </>
+            </div>
           ) : (
             <ViewMailSpaceItem
               mail={mailData || ({} as unknown as MailType)}

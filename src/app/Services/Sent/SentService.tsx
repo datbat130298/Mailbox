@@ -1,14 +1,29 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axiosInstance from '../../../features/utils/Http/axios';
+import { BaseQueryParamsType } from '../../Types/commonTypes';
+import { generateParamString } from '../Common/CommonService';
 
 const sendEmail = async (data: any) => {
   const response = await axiosInstance.post('/mailbox/send-email', data);
   return response.data.data;
 };
 
-const getSent = async () => {
-  const response = await axiosInstance.get(`/mailbox/sents`);
+const getSent = async (options: BaseQueryParamsType) => {
+  const queryParams = generateParamString({
+    per_page: options.perPage || 20,
+    page: options.page || 1,
+    'filter[created_at.from]': options?.start,
+    'filter[created_at.to]': options?.end,
+    'search_by[]': options?.searchBy,
+    search: options?.searchValue,
+  });
+  const response = await axiosInstance.get(`/mailbox/sents?${queryParams}`);
+  return response.data;
+};
+
+const deleteEmailSentById = async (ids: Array<number>) => {
+  const response = await axiosInstance.post(`/mailbox/sent/delete-sents`, { ids });
   return response.data.data;
 };
 
-export { getSent, sendEmail };
+export { getSent, sendEmail, deleteEmailSentById };

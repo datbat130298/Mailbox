@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { nanoid } from 'nanoid';
-import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { twMerge } from 'tailwind-merge';
 import { DraftActionEnum, useDraftsDispatch } from '../../../../app/Context/DraftContext';
@@ -11,6 +11,7 @@ import useNotify from '../../../Hooks/useNotify';
 import ErrorModal from '../ErrorModal/ErrorModal';
 import Modal from '../Modal/Modal';
 import { EmailType } from '../SelectMultiEmail/SelectMultiEmail';
+import { FileLoadedType } from './Components/Attachments/AttachmentsModal';
 import ComposePopup from './Components/ComposePopup';
 import ComposePopupHeader from './Components/ComposePopupHeader';
 
@@ -24,6 +25,8 @@ interface ComposePopupContainerProps {
   composeClassName?: string;
   composeViewType?: ComposeViewTypeEnum;
   setComposeViewType?: Dispatch<SetStateAction<ComposeViewTypeEnum>>;
+  setIsLoading: Dispatch<SetStateAction<boolean>>;
+  setIsShowComposeWrite?: Dispatch<SetStateAction<boolean>>;
   id?: string;
   handleClickChangeView?: () => void;
 }
@@ -40,6 +43,8 @@ const ComposePopupContainer = ({
   composePopupStyle,
   composeClassName,
   id,
+  setIsLoading,
+  setIsShowComposeWrite,
 }: ComposePopupContainerProps) => {
   const [subject, setSubject] = useState<string>('');
   const [debounceSubject, setDebounceSubject] = useState<string>('');
@@ -47,13 +52,17 @@ const ComposePopupContainer = ({
   const [selectedCcRecipient, setSelectedCcRecipient] = useState<Array<EmailType>>([]);
   const [selectedBccRecipient, setSelectedBccRecipient] = useState<Array<EmailType>>([]);
   // const [body, setBody] = useState<any>(composeViewType === ComposeViewTypeEnum.FORWARD ? contentInbox : ' ');
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [body, setBody] = useState<any>('');
+  const [body, setBody] = useState<string>('');
   const [isShowErrorModal, setIsShowErrorModal] = useState(false);
+  const [attachments, setAttachments] = useState<FileLoadedType[]>([]);
   const toast = useNotify();
   const { t } = useTranslation();
 
   const dispatch = useDraftsDispatch();
+
+  const handleChangeAttachment = (arr: FileLoadedType[]) => {
+    setAttachments(arr);
+  };
 
   const handleOnChangeRecipient = (selectedOptions: Array<EmailType>) => {
     setSelectedRecipient(selectedOptions);
@@ -65,43 +74,52 @@ const ComposePopupContainer = ({
   const handleOnChangeBccRecipient = (selectedOptions: Array<EmailType>) =>
     setSelectedBccRecipient(selectedOptions);
 
-  const handleChangeEditor = (value: string) => {
+  const handleChangeEditor = useCallback((value: string) => {
     // if (body) {
     //   return;
     // }
     setBody(value);
-  };
+  }, []);
 
-  const handleClose = () => {
+  const handleClose = (isSave?: boolean) => {
     dispatch({ type: DraftActionEnum.DELETE, viewType: ComposeViewTypeEnum.POPUP, uuid: id });
     if (_.isFunction(onClear)) {
       onClear();
     }
-    if (
-      !_.isEmpty(selectedRecipient) ||
-      !_.isEmpty(selectedBccRecipient) ||
-      !_.isEmpty(selectedCcRecipient) ||
-      !_.isEmpty(body)
-    ) {
-      const emailArray = selectedRecipient
-        .concat(selectedBccRecipient, selectedCcRecipient)
-        .map((item) => item.email);
-      const dataSubmit = {
-        email_address: [...emailArray],
-        files: [],
-        body,
-        type: 'DRAFT',
-        subject: _.isEmpty(subject) ? 'No Subject' : subject,
-      };
-      sendEmail(dataSubmit)
-        .then(() => {
-          toast.success(t('save_draft'));
-        })
-        .catch((err) => {
-          if (!_.isEmpty(err)) {
-            toast.error(t('save_draft_error'));
-          }
-        });
+    if (!isSave) {
+      if (
+        !_.isEmpty(selectedRecipient) ||
+        !_.isEmpty(selectedBccRecipient) ||
+        !_.isEmpty(selectedCcRecipient) ||
+        !_.isEmpty(body)
+      ) {
+        const emailArray = selectedRecipient
+          .concat(selectedBccRecipient, selectedCcRecipient)
+          .map((item) => item.email);
+        const dataSubmit = {
+          email_address: [...emailArray],
+          files: [],
+          body,
+          type: 'DRAFT',
+          subject: _.isEmpty(subject) ? 'No Subject' : subject,
+        };
+        sendEmail(dataSubmit)
+          .then(() => {
+            toast.success(t('save_draft'));
+          })
+          .catch((err) => {
+            if (!_.isEmpty(err)) {
+              toast.error(t('save_draft_error'));
+            }
+          });
+      }
+    }
+  };
+
+  const handleCloseSend = () => {
+    dispatch({ type: DraftActionEnum.DELETE, viewType: ComposeViewTypeEnum.POPUP, uuid: id });
+    if (_.isFunction(onClear)) {
+      onClear();
     }
   };
 
@@ -151,32 +169,39 @@ const ComposePopupContainer = ({
   }, [selectedRecipient, selectedBccRecipient, selectedCcRecipient]);
 
   const handleClickSend = () => {
+    setIsLoading(true);
     if (!isAllowSend) {
       setIsShowErrorModal(true);
+      setIsLoading(false);
       return;
     }
-    const emailArray = selectedRecipient
-      .concat(selectedBccRecipient, selectedCcRecipient)
-      .map((item) => item.email);
+    const attachmentArrayString = attachments.map((item) => item.absolute_slug);
+    const recipient = selectedRecipient.map((item) => item.email);
+    const recipientBcc = selectedBccRecipient.map((item) => item.email);
+    const recipientCc = selectedCcRecipient.map((item) => item.email);
+
     const dataSubmit = {
-      email_address: [...emailArray],
-      files: [],
+      email_address: [...recipient],
+      cc: [...recipientCc],
+      bcc: [...recipientBcc],
+      files: attachmentArrayString,
       body,
-      type: '',
-      subject: _.isEmpty(subject) ? 'No Subject' : subject,
+      type: 'PROCESSING',
+      subject,
     };
+    handleCloseSend();
     sendEmail(dataSubmit)
       .then(() => {
         toast.success(t('sent_success'));
+        if (_.isFunction(setIsShowComposeWrite)) setIsShowComposeWrite(false);
       })
       .catch((err) => {
         if (!_.isEmpty(err)) {
           toast.error(t('sent_error'));
+          handleClose();
         }
       })
-      .finally(() => {
-        handleClose();
-      });
+      .finally(() => setIsLoading(false));
   };
 
   const handleChangeViewTypeToModal = (e: React.MouseEvent) => {
@@ -243,7 +268,7 @@ const ComposePopupContainer = ({
 
   useEffect(() => {
     if (composeViewType === ComposeViewTypeEnum.FORWARD) {
-      setBody(contentInbox);
+      setBody(contentInbox || '');
     }
   }, [composeViewType]);
 
@@ -253,6 +278,8 @@ const ComposePopupContainer = ({
         (composeViewType === ComposeViewTypeEnum.REPLY ||
           composeViewType === ComposeViewTypeEnum.FORWARD) && (
           <ComposePopup
+            attachments={attachments}
+            onChangeAttachment={handleChangeAttachment}
             onClickSend={handleClickSend}
             handleClickChangeView={handleClickChangeView}
             id={id}
@@ -281,6 +308,8 @@ const ComposePopupContainer = ({
         )}
       {compose && compose.viewType === ComposeViewTypeEnum.POPUP && (
         <ComposePopup
+          attachments={attachments}
+          onChangeAttachment={handleChangeAttachment}
           onClickSend={handleClickSend}
           id={id}
           onClose={handleClose}
@@ -312,6 +341,8 @@ const ComposePopupContainer = ({
           contentContainerClassName="w-[80vw] h-[90vh] bg-white p-0 rounded-lg"
         >
           <ComposePopup
+            attachments={attachments}
+            onChangeAttachment={handleChangeAttachment}
             onClickSend={handleClickSend}
             id={id}
             body={body}
@@ -352,4 +383,4 @@ const ComposePopupContainer = ({
   );
 };
 
-export default ComposePopupContainer;
+export default React.memo(ComposePopupContainer);

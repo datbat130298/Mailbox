@@ -75,7 +75,7 @@ const Header = () => {
             tabIndex={0}
             onClick={window.innerWidth >= 1024 ? handleShowFullSidebar : handleShowSidebarMobile}
             className={twMerge(
-              'mr-1 flex h-10 w-10 items-center rounded-full lg:mr-2',
+              'mr-1 flex h-10 w-10 items-center rounded-full active:bg-slate-50 active:drop-shadow-sm lg:mr-2',
               isShowFullSidebar && 'bg-slate-200',
             )}
           >

@@ -1,6 +1,7 @@
 import { Dialog } from '@headlessui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { forwardRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { RiCloseFill } from 'react-icons/ri';
 import { twMerge } from 'tailwind-merge';
 import Button from '../Button';
@@ -16,6 +17,8 @@ export interface ModalProps extends React.HTMLAttributes<HTMLDivElement> {
   onClose: () => void;
   onConfirm?: () => void;
   subTitle?: string;
+  titleConfirm?: string;
+  titleCancel?: string;
 }
 
 const Modal = (
@@ -29,12 +32,16 @@ const Modal = (
     title,
     children,
     className,
+    titleConfirm = 'confirm',
+    titleCancel = 'close',
     contentContainerClassName,
     onClose,
     onConfirm,
   }: ModalProps,
   ref: React.Ref<HTMLDivElement>,
 ) => {
+  const { t } = useTranslation();
+
   const modalVariants = {
     hidden: {
       transform: 'scale(0.95)',
@@ -120,7 +127,7 @@ const Modal = (
                         disabled={isLoading}
                         onClick={onClose}
                       >
-                        Close
+                        {t(titleCancel)}
                       </Button>
                       <Button
                         className="rounded-md border-2 border-primary-700 px-12 shadow-none ring-0 disabled:border-gray-300"
@@ -129,7 +136,7 @@ const Modal = (
                         isLoading={isLoading}
                         onClick={onConfirm}
                       >
-                        Confirm
+                        {t(titleConfirm)}
                       </Button>
                     </div>
                   )}

@@ -31,7 +31,7 @@ const LabelItem = ({ id, value, onRemove, onClickEdit }: LabelItemProps) => {
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    dispatch(addSearchTerm({ key: 'label', value }));
+    dispatch(addSearchTerm(value));
   };
 
   const handleShowLabelCustom = (e: React.MouseEvent) => {

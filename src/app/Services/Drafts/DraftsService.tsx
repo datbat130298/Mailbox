@@ -1,11 +1,22 @@
-import { MailType } from '../../Types/commonTypes';
+import axiosInstance from '../../../features/utils/Http/axios';
+import { BaseQueryParamsType } from '../../Types/commonTypes';
+import { generateParamString } from '../Common/CommonService';
 
-const getDrafts = () => {
-  return new Promise<MailType[]>((resolve) => {
-    setTimeout(() => {
-      resolve([]);
-    }, 1000);
-  });
+const getDrafts = async (options: BaseQueryParamsType) => {
+  const paramString = generateParamString(
+    {
+      'filter[type]': ['DRAFT'],
+      page: options?.page || 1,
+      per_page: options?.perPage || 20,
+      'filter[created_at.from]': options?.start,
+      'filter[created_at.to]': options?.end,
+      'search_by[]': options?.searchBy,
+      search: options?.searchValue,
+    },
+    options?.filterParams,
+  );
+  const response = await axiosInstance.get(`/mailbox/sents?${paramString}`);
+  return response.data;
 };
 
 export { getDrafts };

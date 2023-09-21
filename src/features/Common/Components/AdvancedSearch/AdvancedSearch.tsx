@@ -1,21 +1,29 @@
 import dayjs from 'dayjs';
 import _ from 'lodash';
-import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { HiOutlineSearch } from 'react-icons/hi';
 import { IoOptionsSharp } from 'react-icons/io5';
 import { MdClose } from 'react-icons/md';
-import { useNavigate } from 'react-router-dom';
+import { createSearchParams, useLocation, useNavigate } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
+import { getListEmail } from '../../../../app/Services/ConversationService/ConversationService';
+import { getDrafts } from '../../../../app/Services/Drafts/DraftsService';
 import { search } from '../../../../app/Services/Search/SearchService';
+import { getSent } from '../../../../app/Services/Sent/SentService';
+import { getStarred } from '../../../../app/Services/Starred/StarredService';
+import { getTrash } from '../../../../app/Services/Trash/TrashService';
 import { setMail } from '../../../../app/Slices/mailSlice';
+import { BaseQueryParamsType } from '../../../../app/Types/commonTypes';
 import useDispatch from '../../../Hooks/useDispatch';
+import useNotify from '../../../Hooks/useNotify';
 import useSelector from '../../../Hooks/useSelector';
-import { triggerClickOutside } from '../../../utils/helpers';
+import { queryParamsDefault, triggerClickOutside } from '../../../utils/helpers';
 import Button from '../Button';
 import Checkbox from '../Form/Checkbox';
 import Input from '../Form/Input';
 import ItemSearchAdvanced from './ItemSearchAdvanced';
+import SearchInput from './SearchInput';
 import SelectTimeRange from './SelectTimeRange';
 import SelectTypeKeyWork from './SelectTypeKeyWork';
 
@@ -25,20 +33,51 @@ interface AdvancedSearchProp {
 
 const AdvancedSearch = ({ setIsShowLoading }: AdvancedSearchProp) => {
   const { t } = useTranslation();
+  const toast = useNotify();
+
   const dropdownSearchTabRef = useRef<HTMLDivElement>(null);
   const [isShowDropdown, setIsShowDropdown] = useState(false);
-  const [fromKeyWord, setFromKeyWord] = useState('');
-  const [toKeyWord, setToKeyWord] = useState('');
+  const [fromKeyWord, setFromKeyWord] = useState<string[]>([]);
+  const [toKeyWord, setToKeyWord] = useState<string[]>([]);
   const [subjectKeyWord, setSubjectKeyWord] = useState('');
   const [haveKeyWord, setHaveKeyWork] = useState('');
-  const [notHaveKeyWork, setNotHaveKeyWork] = useState('');
+  // const [notHaveKeyWork, setNotHaveKeyWork] = useState('');
   const [timeRange, setTimeRange] = useState('1_day');
   const [typeKeyWork, setTypeKeyWork] = useState('all');
   const [dateKeyWork, setDateKeyWork] = useState('');
   const [hasAttachmentChecked, setHasAttachmentChecked] = useState(false);
   const [searchTearm, setSearchTearm] = useState('');
   const [isFocus, setIsFocus] = useState(false);
+  const [queryParam, setQueryParam] = useState<BaseQueryParamsType>({});
 
+  const searchService = useCallback(
+    async (query: BaseQueryParamsType) => {
+      if (typeKeyWork === 'inbox') {
+        return getListEmail(query);
+      }
+      if (typeKeyWork === 'sent') {
+        return getSent(query);
+      }
+      if (typeKeyWork === 'drafts') {
+        return getDrafts(query);
+      }
+      if (typeKeyWork === 'trash') {
+        return getTrash(query);
+      }
+      if (typeKeyWork === 'starred') {
+        return getStarred(query);
+      }
+      return search(query);
+    },
+    [typeKeyWork],
+  );
+
+  const searchTerm = useSelector((state) => state.labelSidebar.searchTerm);
+  const dispatch = useDispatch();
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const dataSearch = useMemo(() => {
     if (!isShowDropdown) return '';
     let keywordSearch = '';
@@ -46,7 +85,7 @@ const AdvancedSearch = ({ setIsShowLoading }: AdvancedSearchProp) => {
     if (!_.isEmpty(toKeyWord)) keywordSearch = `${keywordSearch}to: ${toKeyWord} `;
     if (!_.isEmpty(subjectKeyWord)) keywordSearch = `${keywordSearch}subject: ${subjectKeyWord} `;
     if (!_.isEmpty(haveKeyWord)) keywordSearch = `${keywordSearch}${haveKeyWord} `;
-    if (!_.isEmpty(notHaveKeyWork)) keywordSearch = `${keywordSearch}-${notHaveKeyWork} `;
+    // if (!_.isEmpty(notHaveKeyWork)) keywordSearch = `${keywordSearch}-${notHaveKeyWork} `;
 
     if (dateKeyWork) {
       if (timeRange === '1_day')
@@ -90,62 +129,71 @@ const AdvancedSearch = ({ setIsShowLoading }: AdvancedSearchProp) => {
     toKeyWord,
     subjectKeyWord,
     haveKeyWord,
-    notHaveKeyWork,
+    // notHaveKeyWork,
     timeRange,
     typeKeyWork,
     dateKeyWork,
   ]);
 
-  const dispatch = useDispatch();
-
-  const navigate = useNavigate();
-
   const handleClear = () => {
-    setFromKeyWord('');
-    setToKeyWord('');
+    setFromKeyWord([]);
+    setToKeyWord([]);
     setSubjectKeyWord('');
     setHaveKeyWork('');
-    setNotHaveKeyWork('');
+    // setNotHaveKeyWork('');
     setTimeRange('1_day');
     setTypeKeyWork('all');
     setDateKeyWork('');
   };
-
-  const searchTerm = useSelector((state) => state.labelSidebar.searchTerm);
 
   const handleCloseDropdown = () => {
     setIsShowDropdown(false);
   };
 
   const handleSearch = () => {
-    setIsShowLoading(true);
-    search({ subject: searchTearm })
-      .then((res) => {
-        dispatch(setMail(res));
-      })
-      .finally(() => {
-        navigate('search');
-        setIsShowLoading(false);
-      });
-  };
-
-  const handleApply = () => {
-    setIsShowLoading(true);
-    search({ subject: subjectKeyWord })
-      .then((res) => {
-        dispatch(setMail(res));
-      })
-      .finally(() => {
-        setSearchTearm(dataSearch);
-        navigate('search');
-        setIsShowLoading(false);
-        handleCloseDropdown();
-      });
+    setQueryParam({
+      ...queryParamsDefault,
+      searchBy: ['subject', 'body', 'email'],
+      searchValue: searchTearm,
+    });
   };
 
   useEffect(() => {
-    if (searchTerm !== null) {
-      setSearchTearm(`${searchTerm.key}:${searchTerm.value}`);
+    if (!_.isEmpty(queryParam)) {
+      setIsShowLoading(true);
+      searchService(queryParam)
+        .then((res) => {
+          navigate({
+            pathname: '/search',
+            search: createSearchParams({ from: fromKeyWord, to: toKeyWord }).toString(),
+          });
+          if (_.isArray(res)) {
+            dispatch(setMail(res));
+            return;
+          }
+          dispatch(setMail(res.data));
+        })
+        .catch(() => {
+          toast.error(t('action_error'));
+        })
+        .finally(() => {
+          setIsShowLoading(false);
+        });
+    }
+  }, [queryParam]);
+
+  const handleApply = () => {
+    setQueryParam({
+      ...queryParamsDefault,
+      searchBy: ['subject', 'body', 'email'],
+      searchValue: searchTearm,
+    });
+    setIsShowDropdown(false);
+  };
+
+  useEffect(() => {
+    if (searchTerm !== '') {
+      setSearchTearm(searchTerm);
       handleSearch();
     }
   }, [searchTerm]);
@@ -158,11 +206,21 @@ const AdvancedSearch = ({ setIsShowLoading }: AdvancedSearchProp) => {
     });
   }, [dropdownSearchTabRef]);
 
+  useEffect(() => {
+    if (isShowDropdown) {
+      setHaveKeyWork(searchTearm);
+    }
+  }, [isShowDropdown]);
+
   const handleEnter = (e: KeyboardEvent) => {
     const { key } = e;
     if (key !== 'Enter') return;
     handleSearch();
   };
+
+  useEffect(() => {
+    if (pathname !== '/search') setSearchTearm('');
+  }, [pathname]);
 
   return (
     <div ref={dropdownSearchTabRef} className="relative w-0 py-0 md:w-fit lg:py-3.5">
@@ -191,6 +249,7 @@ const AdvancedSearch = ({ setIsShowLoading }: AdvancedSearchProp) => {
           isShowPlaceholder
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           onKeyUp={(e: any) => handleEnter(e)}
+          disabled={isShowDropdown}
         />
         <div
           role="button"
@@ -221,15 +280,16 @@ const AdvancedSearch = ({ setIsShowLoading }: AdvancedSearchProp) => {
       </div>
       {isShowDropdown && (
         <div className=" absolute left-0 top-16 z-10 h-fit w-full rounded-sm border-[0.5px] bg-white px-5 py-3 shadow-box">
-          <ItemSearchAdvanced label={t('from')} value={fromKeyWord} onChange={setFromKeyWord} />
-          <ItemSearchAdvanced label={t('to')} value={toKeyWord} onChange={setToKeyWord} />
+          {/* <ItemSearchAdvanced label={t('from')} value={fromKeyWord} onChange={setFromKeyWord} /> */}
+          <SearchInput label={t('from')} value={fromKeyWord} onChange={setFromKeyWord} />
+          <SearchInput label={t('to')} value={toKeyWord} onChange={setToKeyWord} />
           <ItemSearchAdvanced label={t('subject')} value={subjectKeyWord} onChange={setSubjectKeyWord} />
           <ItemSearchAdvanced label={t('have_the_words')} value={haveKeyWord} onChange={setHaveKeyWork} />
-          <ItemSearchAdvanced
+          {/* <ItemSearchAdvanced
             label={t('does_not_have')}
             value={notHaveKeyWork}
             onChange={setNotHaveKeyWork}
-          />
+          /> */}
           <SelectTimeRange
             timeRange={timeRange}
             setTimeRange={setTimeRange}
@@ -249,14 +309,14 @@ const AdvancedSearch = ({ setIsShowLoading }: AdvancedSearchProp) => {
             </div>
           </div>
           <div className="mt-4 flex justify-end gap-x-2 py-3">
-            <Button
+            {/* <Button
               color="light"
               size="xs"
               className="w-28 bg-gray-100  py-2 text-xs text-gray-700 shadow-none ring-1"
               onClick={handleCloseDropdown}
             >
               {t('create_filter')}
-            </Button>
+            </Button> */}
             <Button size="xs" className="w-28 py-2 text-xs shadow-none ring-1" onClick={handleApply}>
               {t('apply')}
             </Button>

@@ -1,9 +1,12 @@
 import _ from 'lodash';
-import { useEffect, useRef, useState } from 'react';
+import React, { ForwardedRef, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { twMerge } from 'tailwind-merge';
 import { ComposeViewTypeEnum } from '../../../../../../app/Enums/commonEnums';
-import SelectMultiEmail, { EmailType } from '../../../SelectMultiEmail/SelectMultiEmail';
+import SelectMultiEmail, {
+  EmailType,
+  ImperativeHandleType,
+} from '../../../SelectMultiEmail/SelectMultiEmail';
 
 interface ComposePopupRecipientInputProp {
   selectRecipient: Array<EmailType>;
@@ -17,17 +20,21 @@ interface ComposePopupRecipientInputProp {
   viewText: boolean;
 }
 
-const ComposePopupRecipientInput = ({
-  viewType,
-  className,
-  selectRecipient,
-  selectedCcRecipient,
-  selectedBccRecipient,
-  onChangeSelectRecipient,
-  onChangeSelectBccRecipient,
-  onChangeSelectCcRecipient,
-  viewText,
-}: ComposePopupRecipientInputProp) => {
+const ComposePopupRecipientInput = (
+  {
+    viewType,
+    className,
+    selectRecipient,
+    selectedCcRecipient,
+    selectedBccRecipient,
+    onChangeSelectRecipient,
+    onChangeSelectBccRecipient,
+    onChangeSelectCcRecipient,
+    viewText,
+  }: ComposePopupRecipientInputProp,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ref: ForwardedRef<ImperativeHandleType>,
+) => {
   const { t } = useTranslation();
   const recipientRef = useRef(null);
 
@@ -54,26 +61,27 @@ const ComposePopupRecipientInput = ({
   return (
     <div
       className={twMerge(
-        'mx-1 my-0.5 flex flex-col items-center border-b-[1px] border-gray-200 py-0',
+        'mx-2 my-0.5 flex flex-col items-center border-b-[1px] border-gray-200 py-0',
         _.isEmpty(selectRecipient) && viewType !== ComposeViewTypeEnum.REPLY && 'mx-2 flex-row items-center',
         _.isEmpty(selectRecipient) && viewType !== ComposeViewTypeEnum.REPLY && 'mx-2 flex-row items-center',
         (isShowBccInput ||
           isShowCcInput ||
           !_.isEmpty(selectedCcRecipient) ||
           !_.isEmpty(selectedBccRecipient)) &&
-          'mx-1 flex-col ',
-
+          'mx-1 flex-col',
         className,
       )}
       ref={recipientRef}
     >
       <SelectMultiEmail
+        ref={ref}
         label={t('to')}
         selectedValue={selectRecipient || []}
         onChange={onChangeSelectRecipient}
       />
       {(isShowCcInput || !_.isEmpty(selectedCcRecipient)) && (
         <SelectMultiEmail
+          ref={ref}
           className="-mt-1"
           label={t('cc')}
           selectedValue={selectedCcRecipient || []}
@@ -82,6 +90,7 @@ const ComposePopupRecipientInput = ({
       )}
       {(isShowBccInput || !_.isEmpty(selectedBccRecipient)) && (
         <SelectMultiEmail
+          ref={ref}
           className="-mt-1"
           label={t('bcc')}
           selectedValue={selectedBccRecipient || []}
@@ -116,4 +125,4 @@ const ComposePopupRecipientInput = ({
   );
 };
 
-export default ComposePopupRecipientInput;
+export default React.forwardRef(ComposePopupRecipientInput);

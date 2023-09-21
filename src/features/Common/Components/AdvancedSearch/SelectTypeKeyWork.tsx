@@ -31,6 +31,10 @@ const SelectTypeKeyWork = ({ typeKeyWork, setTypeKeyWork }: SelectTypeKeyWorkPro
       label: t('trash'),
       value: 'trash',
     },
+    {
+      label: t('starred'),
+      value: 'starred',
+    },
   ];
 
   return (

@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { Dispatch, SetStateAction, useLayoutEffect, useRef } from 'react';
 import { useInViewport } from 'react-in-viewport';
 import { twMerge } from 'tailwind-merge';
+import { TypeChat } from '../../../../app/Enums/commonEnums';
 import { MailType } from '../../../../app/Types/commonTypes';
 import MailItem from './MailItem';
 import MailItemSkeleton from './MailItemSkeleton';
@@ -15,10 +16,19 @@ interface MailTableProps {
   selectRows: Array<number>;
   onClickShowMail?: (mail: MailType) => void;
   selectedMail: MailType | null;
-  type: string;
+  type: TypeChat;
+  onClickDeleteMail?: (id: number) => void;
+  onClickRestoreMail?: (id: number) => void;
+  onRateStar?: (id: number, value: boolean) => void;
+  unReadEmail?: (ids: Array<number>) => void;
+  onRemoveItem?: (id: number) => void;
 }
 
 const MailTable = ({
+  onRemoveItem,
+  onRateStar,
+  onClickDeleteMail,
+  onClickRestoreMail,
   type,
   data,
   isLoading,
@@ -28,6 +38,7 @@ const MailTable = ({
   onClickShowMail,
   selectRows,
   selectedMail,
+  unReadEmail,
 }: MailTableProps) => {
   const detectLoadingRef = useRef<HTMLDivElement>(null);
   const { inViewport } = useInViewport(detectLoadingRef);
@@ -57,6 +68,11 @@ const MailTable = ({
           !isLoading &&
           data?.map((item) => (
             <MailItem
+              onRemoveItem={onRemoveItem}
+              unReadEmail={unReadEmail}
+              onRateStar={onRateStar}
+              onClickDeleteMail={onClickDeleteMail}
+              onClickRestoreMail={onClickRestoreMail}
               type={type}
               selectedMail={selectedMail}
               key={item.id}

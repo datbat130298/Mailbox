@@ -1,6 +1,7 @@
 import { PaginationState } from '@tanstack/react-table';
 import { AxiosError, AxiosResponse } from 'axios';
 import { Dayjs } from 'dayjs';
+import { SentListEmailProp } from '../../features/Common/Components/Mail/MailTableContainer/MailTableContainer';
 import { EmailType } from '../../features/Common/Components/SelectMultiEmail/SelectMultiEmail';
 import { ComposeViewTypeEnum, StatusSent } from '../Enums/commonEnums';
 import { TableColumnFilterState } from './elementTypes';
@@ -77,6 +78,9 @@ export interface BaseQueryParamsType {
   filterParams?: TableColumnFiltersState;
   start?: string;
   end?: string;
+  searchBy?: string[];
+  searchValue?: string;
+  searchTerm?: string;
 }
 
 export interface FilterOptionItemType {
@@ -120,12 +124,15 @@ export interface MailType {
   created_at: string;
   address: string;
   read?: boolean;
+  star?: boolean;
   type?: string;
   from_user?: UserDataType;
   inbox?: Array<MailType>;
   status?: StatusSent;
-  sent_email_address?: Array<number>;
-  email_address?: string;
+  sents_email_address?: Array<SentListEmailProp>;
+  bcc?: Array<string>;
+  cc?: Array<string>;
+  email_address: string;
   email?: MailType;
   email_account?: UserDataType;
 }

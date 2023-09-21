@@ -55,7 +55,7 @@ const ViewMailSpaceItemInfoCollapse = ({
             <PiFlagPennantFill className="p-1" size={20} />
           </div>
           <div className="flex items-center justify-center">
-            <p className="text-ellipsis text-xs text-gray-600">
+            <p className="line-clamp-1 text-ellipsis text-xs text-gray-600">
               {dateMail.diff(dateCurrent, 'D')
                 ? dayjs.utc(mail?.created_at).local().format('ddd, MMM D, h:mm A')
                 : dayjs(mail?.created_at).format('h:mm A')}

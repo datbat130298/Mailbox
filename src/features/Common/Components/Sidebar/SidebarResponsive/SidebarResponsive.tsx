@@ -1,13 +1,22 @@
 import { Dialog, Transition } from '@headlessui/react';
 import _ from 'lodash';
-import React, { forwardRef, Fragment, useMemo, useState } from 'react';
+import React, { forwardRef, Fragment, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { BiSearch } from 'react-icons/bi';
 import { IoClose } from 'react-icons/io5';
 import { RiSettings3Line } from 'react-icons/ri';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
+import { getListEmail } from '../../../../../app/Services/ConversationService/ConversationService';
+import { setMail } from '../../../../../app/Slices/mailSlice';
+import { BaseQueryParamsType } from '../../../../../app/Types/commonTypes';
 import logoText from '../../../../../assets/image/logo_text.png';
+import useDispatch from '../../../../Hooks/useDispatch';
+import useNotify from '../../../../Hooks/useNotify';
 import useSelector from '../../../../Hooks/useSelector';
+import { queryParamsDefault } from '../../../../utils/helpers';
 import { DisplayLabel } from '../../../WorkSpace/Settings/LabelTable';
+import LoadingHeader from '../../Loading/LoadingHeader';
 import SidebarGroup from '../SidebarGroup';
 import SidebarItem from '../SidebarItem';
 
@@ -22,7 +31,11 @@ const SidebarResponsive = (
   ref: React.Ref<HTMLDivElement>,
 ) => {
   const { t } = useTranslation();
-  const [, setValueSearch] = useState('');
+  const toast = useNotify();
+
+  const [searchValue, setValueSearch] = useState('');
+  const [queryParam, setQueryParam] = useState<BaseQueryParamsType>({});
+  const [isShowLoading, setIsShowLoading] = useState(false);
 
   const { labelSystem } = useSelector((state) => state.labelSidebar);
   const { categoryLabel } = useSelector((state) => state.labelSidebar);
@@ -30,6 +43,20 @@ const SidebarResponsive = (
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValueSearch(e.target.value);
   };
+
+  const handleKeyUp = useCallback(
+    (e: React.KeyboardEvent) => {
+      const { key } = e;
+      if (key === 'Enter') {
+        setQueryParam({
+          ...queryParamsDefault,
+          searchBy: ['subject', 'body', 'email'],
+          searchValue,
+        });
+      }
+    },
+    [searchValue],
+  );
 
   const categoryItemDisplay = categoryLabel.filter((item) =>
     item.display.find((displayItem) => displayItem.show === true),
@@ -50,114 +77,159 @@ const SidebarResponsive = (
     );
   }, [labelSystem]);
 
+  const handleClickSearch = () => {
+    setQueryParam({
+      ...queryParamsDefault,
+      searchBy: ['subject', 'body', 'email'],
+      searchValue,
+    });
+  };
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!_.isEmpty(queryParam)) {
+      setIsShowLoading(true);
+      getListEmail(queryParam)
+        .then((res) => {
+          navigate({
+            pathname: '/search',
+            search: createSearchParams({ hasKeyword: searchValue }).toString(),
+          });
+          if (_.isArray(res)) {
+            dispatch(setMail(res));
+            return;
+          }
+          dispatch(setMail(res.data));
+        })
+        .catch(() => {
+          toast.error(t('action_error'));
+        })
+        .finally(() => {
+          onClose();
+          setIsShowLoading(false);
+        });
+    }
+  }, [queryParam]);
+
   return (
-    <Transition.Root show={isOpen} as={Fragment}>
-      <Dialog
-        ref={ref}
-        open={isOpen}
-        as="div"
-        className={twMerge(className, 'fixed inset-0 z-[70] flex justify-start overflow-y-auto')}
-        onClose={onClose}
-        data-is-overlay="true"
-      >
-        <div className="left-0 ml-0 flex max-h-full">
-          <Transition.Child
-            as={Fragment}
-            enter="ease-in-out duration-500"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in-out duration-500"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <Dialog.Overlay className="fixed inset-0 z-0 bg-black bg-opacity-75 transition-opacity" />
-          </Transition.Child>
+    <>
+      <Transition.Root show={isOpen} as={Fragment}>
+        <Dialog
+          ref={ref}
+          open={isOpen}
+          as="div"
+          className={twMerge(className, 'fixed inset-0 z-[70] flex justify-start overflow-y-auto')}
+          onClose={onClose}
+          data-is-overlay="true"
+        >
+          <div className="left-0 ml-0 flex max-h-full">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-in-out duration-500"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="ease-in-out duration-500"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <Dialog.Overlay className="fixed inset-0 z-0 bg-black bg-opacity-75 transition-opacity" />
+            </Transition.Child>
 
-          <Transition.Child
-            as={Fragment}
-            enter="transform transition ease-in-out duration-500 sm:duration-700"
-            enterFrom="-translate-x-full"
-            enterTo="translate-x-0"
-            leave="transform transition ease-in-out duration-500 sm:duration-700"
-            leaveFrom="translate-x-0"
-            leaveTo="-translate-x-full"
-          >
-            <div className="z-20 h-full w-[270px] bg-white">
-              <div className="mt-3 flex h-10 w-full justify-between pl-4 pr-2">
-                <div className="flex h-full w-fit flex-shrink-0 items-center justify-start pl-0 lg:w-72 lg:pl-4">
-                  <img className="h-6 max-w-[120px] lg:h-[28px] lg:w-[120px]" src={logoText} alt="Workflow" />
-                </div>
-                <div
-                  className="flex h-10 w-10 items-center justify-center rounded-full text-gray-700 active:bg-gray-200"
-                  role="button"
-                  tabIndex={0}
-                  onClick={onClose}
-                >
-                  <IoClose size={22} />
-                </div>
-              </div>
-              {/* Search  */}
-              <input
-                className="ml-4 mt-3 block h-10 w-[233px] rounded-md border border-gray-200 bg-slate-50 px-4 shadow-lg outline-slate-50 md:hidden"
-                placeholder="Search"
-                onChange={handleChangeInput}
-              />
-              <div className="overflow-hidden px-1 py-6 pr-3 hover:overflow-y-auto">
-                {visibleSide &&
-                  visibleSide.map((visibleSideItem) => (
-                    <SidebarItem
-                      onCloseMobile={onClose}
-                      key={visibleSideItem.id}
-                      to={visibleSideItem.to}
-                      title={t(visibleSideItem.name)}
-                      tooltipText={t(visibleSideItem.name)}
-                      icon={visibleSideItem.icon}
-                      quantity={visibleSideItem.quantity}
-                      isShowSidebar
+            <Transition.Child
+              as={Fragment}
+              enter="transform transition ease-in-out duration-500 sm:duration-700"
+              enterFrom="-translate-x-full"
+              enterTo="translate-x-0"
+              leave="transform transition ease-in-out duration-500 sm:duration-700"
+              leaveFrom="translate-x-0"
+              leaveTo="-translate-x-full"
+            >
+              <div className="z-20 h-full w-[270px] bg-white">
+                <div className="mt-3 flex h-10 w-full justify-between pl-4 pr-2">
+                  <div className="flex h-full w-fit flex-shrink-0 items-center justify-start pl-0 lg:w-72 lg:pl-4">
+                    <img
+                      className="h-6 max-w-[120px] lg:h-[28px] lg:w-[120px]"
+                      src={logoText}
+                      alt="Workflow"
                     />
-                  ))}
-
-                <SidebarGroup title={t('more')} isShowSidebar>
-                  {hiddenSidebar.map((hiddenSidebarItem) => (
-                    <SidebarItem
-                      onCloseMobile={onClose}
-                      key={hiddenSidebarItem.id}
-                      to={hiddenSidebarItem.to}
-                      title={t(hiddenSidebarItem.name)}
-                      tooltipText={t(hiddenSidebarItem.name)}
-                      icon={hiddenSidebarItem.icon}
-                      quantity={hiddenSidebarItem.quantity}
-                      isShowSidebar
-                    />
-                  ))}
-                  <SidebarItem
-                    to="/settings"
-                    title={t('manage_label')}
-                    tooltipText={t('manage_label')}
-                    icon={<RiSettings3Line size={18} />}
-                    isShowSidebar
+                  </div>
+                  <div
+                    className="flex h-10 w-10 items-center justify-center rounded-full text-gray-700 active:bg-gray-200"
+                    role="button"
+                    tabIndex={0}
+                    onClick={onClose}
+                  >
+                    <IoClose size={22} />
+                  </div>
+                </div>
+                {/* Search  */}
+                <div className="ml-4 mt-3 flex h-10 w-[233px] items-center justify-between rounded-md border border-gray-200 bg-slate-50 px-4 shadow-lg outline-slate-50 md:hidden">
+                  <input
+                    className="w-full flex-1 bg-inherit outline-none"
+                    placeholder="Search"
+                    onChange={handleChangeInput}
+                    onKeyUp={handleKeyUp}
                   />
-                </SidebarGroup>
-                <SidebarGroup title={t('category')} isShowSidebar>
-                  {categoryItemDisplay.map((category) => (
+                  <div className="" role="button" tabIndex={0} onClick={handleClickSearch}>
+                    <BiSearch size={22} className="text-gray-500" />
+                  </div>
+                </div>
+                <div className="overflow-hidden px-1 py-6 pr-3 hover:overflow-y-auto">
+                  {visibleSide &&
+                    visibleSide.map((visibleSideItem) => (
+                      <SidebarItem
+                        onCloseMobile={onClose}
+                        key={visibleSideItem.id}
+                        to={visibleSideItem.to}
+                        title={visibleSideItem.name}
+                        tooltipText={t(visibleSideItem.name)}
+                        quantity={visibleSideItem.quantity}
+                        isShowSidebar
+                      />
+                    ))}
+
+                  <SidebarGroup title={t('more')} isShowSidebar>
+                    {hiddenSidebar.map((hiddenSidebarItem) => (
+                      <SidebarItem
+                        onCloseMobile={onClose}
+                        key={hiddenSidebarItem.id}
+                        to={hiddenSidebarItem.to}
+                        title={hiddenSidebarItem.name}
+                        tooltipText={t(hiddenSidebarItem.name)}
+                        quantity={hiddenSidebarItem.quantity}
+                        isShowSidebar
+                      />
+                    ))}
                     <SidebarItem
-                      onCloseMobile={onClose}
-                      key={category.id}
-                      to={category.to}
-                      title={t(category.name)}
-                      tooltipText={t(category.name)}
-                      icon={category.icon}
-                      quantity={category.quantity}
+                      to="/settings"
+                      title="manage_label"
+                      tooltipText={t('manage_label')}
+                      icon={<RiSettings3Line size={18} />}
                       isShowSidebar
                     />
-                  ))}
-                </SidebarGroup>
+                  </SidebarGroup>
+                  <SidebarGroup title={t('category')} isShowSidebar>
+                    {categoryItemDisplay.map((category) => (
+                      <SidebarItem
+                        onCloseMobile={onClose}
+                        key={category.id}
+                        to={category.to}
+                        title={category.name}
+                        tooltipText={t(category.name)}
+                        quantity={category.quantity}
+                        isShowSidebar
+                      />
+                    ))}
+                  </SidebarGroup>
+                </div>
               </div>
-            </div>
-          </Transition.Child>
-        </div>
-      </Dialog>
-    </Transition.Root>
+            </Transition.Child>
+          </div>
+        </Dialog>
+      </Transition.Root>
+      <LoadingHeader isShow={isShowLoading} />
+    </>
   );
 };
 

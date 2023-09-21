@@ -37,6 +37,8 @@
   "drafts_empty_description": "Lưu bản nháp cho phép bạn giữ lại thư mà bạn chưa sẵn sàng gửi.",
   "trash_empty_message": "Không có cuộc hội thoại nào trong Thùng rác.",
   "trash_empty_description": "Thư đã ở trong Thùng rác hơn 30 ngày sẽ tự động bị xóa.",
+  "starred_empty_message": "Không có tin nhắn được gắn dấu sao.",
+  "starred_empty_description": "Dấu sao cho phép bạn đặt trạng thái đặc biệt cho tin nhắn để giúp tìm thấy chúng dễ dàng hơn. Để gắn dấu sao cho tin nhắn, hãy nhấp vào đường viền ngôi sao bên cạnh bất kỳ tin nhắn hoặc cuộc hội thoại nào.",
   "back": "Quay lại",
   "of": "của",
   "login": "Đăng nhập",
@@ -120,5 +122,15 @@
   "sent_success": "Gửi thư thành công",
   "sent_error": "Quá trình gửi đã gặp vấn đề nào đó. Hãy thử lại sau",
   "save_draft": "Lưu vào thư nháp",
-  "save_draft_error": "Lưu thư nháp lỗi"
+  "save_draft_error": "Lưu thư nháp lỗi",
+  "restore": "Khôi phục",
+  "attachment": "Tệp đính kèm",
+  "desktop": "Desktop",
+  "download": "Tải về",
+  "remove": "Xoá",
+  "drag-drop-here": "Kéo thả / Đính kèm từ máy tính của bạn",
+  "upload": "Upload",
+  "advanced_search": "Advanced search",
+  "reset_filter": "Đặt lại",
+  "not_starred": "Chưa đánh dấu"
 }

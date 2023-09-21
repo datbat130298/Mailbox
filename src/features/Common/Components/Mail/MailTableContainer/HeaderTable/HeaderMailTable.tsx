@@ -1,13 +1,15 @@
 import _ from 'lodash';
 import React, { ForwardedRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FiFilter } from 'react-icons/fi';
 import { twMerge } from 'tailwind-merge';
-import FilterDatetime from '../../WorkSpace/Sent/FilterDatetime';
-import FilterDropdown from '../FilterDropdown/FilterDropdown';
-import Checkbox from '../Form/Checkbox';
-import SelectViewStyle from '../SelectViewStyle/SelectViewStyle';
+import { TypeChat } from '../../../../../../app/Enums/commonEnums';
+import { BaseQueryParamsType } from '../../../../../../app/Types/commonTypes';
+import FilterDatetime from '../../../../WorkSpace/Sent/FilterDatetime';
+import FilterDropdown from '../../../FilterDropdown/FilterDropdown';
+import Checkbox from '../../../Form/Checkbox';
+import SelectViewStyle from '../../../SelectViewStyle/SelectViewStyle';
 import HeaderAction from './HeaderAction';
+import PaginationTable, { MetaType } from './PaginationTable';
 
 interface HeaderMailTableProps {
   actionArray: Array<string>;
@@ -16,11 +18,20 @@ interface HeaderMailTableProps {
   isShowCheckboxHeader: boolean;
   onClickSelectAll: (e: boolean) => void;
   onCloseViewMailSpace: () => void;
+  onClickReadSelectRows: () => void;
+  onClickDeleteSelectRows: () => void;
+  onClickRestoreSelectRows: () => void;
+  type: TypeChat;
   // isShowViewMailSpace?: boolean;
+  meta: MetaType;
+  onChangePage: (page: number) => void;
+  onChangeSearchTerm?: (value: BaseQueryParamsType, type: string) => void;
 }
 
 const HeaderMailTable = (
   {
+    onChangeSearchTerm,
+    meta,
     actionArray,
     isShowShadow,
     isChecked,
@@ -29,8 +40,12 @@ const HeaderMailTable = (
     onClickSelectAll,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onCloseViewMailSpace,
-  }: // isShowViewMailSpace,
-  HeaderMailTableProps,
+    onClickReadSelectRows,
+    onClickDeleteSelectRows,
+    onChangePage,
+    onClickRestoreSelectRows,
+    type,
+  }: HeaderMailTableProps,
   ref: ForwardedRef<HTMLDivElement>,
 ) => {
   const { t } = useTranslation();
@@ -52,6 +67,7 @@ const HeaderMailTable = (
     },
   ];
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const filterViewData = [
     {
       uuid: 1,
@@ -78,7 +94,7 @@ const HeaderMailTable = (
   return (
     <div
       className={twMerge(
-        'absolute left-0 top-0 z-40 flex h-14 w-full justify-between rounded-t-lg px-2 text-gray-700 ',
+        'z-40 flex h-14 w-full justify-between rounded-t-lg px-2 text-gray-700 ',
         isShowShadow ? 'shadow-bottom' : 'border-b-[0.5px]',
         // isShowViewMailSpace && 'w-1/2',
         // !isShowViewMailSpace && 'w-full',
@@ -101,26 +117,38 @@ const HeaderMailTable = (
             position="-left-6 top-10"
           />
         </div>
-        {_.includes(actionArray, 'delete_forrever') && isChecked && (
+        {/* {_.includes(actionArray, 'delete_forrever') && isChecked && (
           <div className="my-3 flex h-8 w-fit rounded-md px-2  hover:bg-gray-100 hover:text-primary-700">
             <div className="h-full w-full text-center text-sm font-semibold leading-8">
               {t('delete_forever')}
             </div>
           </div>
-        )}
-        {_.includes(actionArray, 'view') && !isChecked && (
+        )} */}
+        {/* {_.includes(actionArray, 'view') && !isChecked && (
           <FilterDropdown
             data={filterViewData}
             icon={<FiFilter size={14} />}
             label={t('view')}
             position="left-0 top-[52px]"
           />
+        )} */}
+        {_.includes(actionArray, 'datetime') && !isChecked && (
+          <FilterDatetime onChangeSearchTerm={onChangeSearchTerm} />
         )}
-        {_.includes(actionArray, 'datetime') && !isChecked && <FilterDatetime />}
-        <HeaderAction showAction={isChecked} />
+        <HeaderAction
+          type={type}
+          onClickRestoreSelectRows={onClickRestoreSelectRows}
+          showAction={isChecked}
+          onClickReadSelectRows={onClickReadSelectRows}
+          onClickDeleteSelectRows={onClickDeleteSelectRows}
+        />
       </div>
-      <div className="hidden h-full w-fit sm:flex ">
+      <div className="hidden h-full w-fit gap-1 sm:flex">
+        {!_.isEmpty(meta) && <PaginationTable meta={meta || {}} onChange={onChangePage} />}
         <SelectViewStyle />
+      </div>
+      <div className="flex h-full w-fit items-center gap-1 sm:hidden">
+        {!_.isEmpty(meta) && <PaginationTable meta={meta || {}} onChange={onChangePage} />}
       </div>
     </div>
   );

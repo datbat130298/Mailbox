@@ -1,27 +1,64 @@
 import _ from 'lodash';
+import { nanoid } from 'nanoid';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { twMerge } from 'tailwind-merge';
-import { TypeChat } from '../../../../../app/Enums/commonEnums';
+import { DraftActionEnum, useDraftsDispatch } from '../../../../../app/Context/DraftContext';
+import { ComposeViewTypeEnum, TypeChat } from '../../../../../app/Enums/commonEnums';
 import { setIsShowFullSidebar, setMailItemStyle } from '../../../../../app/Slices/layoutSlice';
-import { MailType } from '../../../../../app/Types/commonTypes';
+import { BaseQueryParamsType, MailType } from '../../../../../app/Types/commonTypes';
 import useDispatch from '../../../../Hooks/useDispatch';
+import useNotify from '../../../../Hooks/useNotify';
 import useSelector from '../../../../Hooks/useSelector';
 import ComposeModalMobile from '../../../WorkSpace/ButtonComposeFixed/ComposeModalMobile';
-import EmptyData from '../../EmptyData/EmptyData';
+import LoadingHeader from '../../Loading/LoadingHeader';
 import { EmailType } from '../../SelectMultiEmail/SelectMultiEmail';
-import HeaderMailTable from '../HeaderMailTable';
 import MailTable from '../MailTable';
-import ViewMailMobile from '../ViewMailMobile';
+import HeaderMailTable from './HeaderTable/HeaderMailTable';
+import { MetaType } from './HeaderTable/PaginationTable';
+import ViewMailMobile from './ViewMailMobile/ViewMailMobile';
 import ViewMailSpace from './ViewMailSpace/ViewMailSpace';
 
 interface MailTableContainerProp {
   mailData: Array<MailType>;
   isLoading: boolean;
   type: TypeChat;
+  readEmail?: (arrayId: Array<number>) => void;
+  unReadEmail?: (arrayId: Array<number>) => void;
+  fetchData: () => void;
+  deleteEmail?: (arrayId: Array<number>) => void;
+  meta: MetaType;
+  onChangePage: (page: number) => void;
+  onRestoreEmail?: (ids: Array<number>) => void;
+  handleChangeSearchTerm?: (query: BaseQueryParamsType, type: string) => void;
+  onRateStar?: (id: number, value: boolean) => void;
+  onRemoveItem?: (id: number) => void;
+  actionArray?: Array<string>;
+  emptyComponent?: React.ReactNode;
 }
 
-const MailTableContainer = ({ mailData, isLoading, type }: MailTableContainerProp) => {
+export interface SentListEmailProp {
+  id?: number;
+  email_address: string;
+}
+
+const MailTableContainer = ({
+  onRateStar,
+  handleChangeSearchTerm,
+  onRestoreEmail,
+  mailData,
+  isLoading,
+  type,
+  readEmail,
+  unReadEmail,
+  fetchData,
+  deleteEmail,
+  onChangePage,
+  meta,
+  onRemoveItem,
+  actionArray = ['datetime'],
+  emptyComponent,
+}: MailTableContainerProp) => {
   const [isShowViewMailSpace, setIsShowViewMailSpace] = useState(false);
   const [isShowViewMailMobile, setIsShowViewMailMobile] = useState(false);
   const [selectRows, setSelectRows] = useState<Array<number>>([]);
@@ -30,7 +67,7 @@ const MailTableContainer = ({ mailData, isLoading, type }: MailTableContainerPro
   const [isShowComposeMobile, setIsShowComposeMobile] = useState(false);
   const [emailReply, setEmailReply] = useState<Array<EmailType>>([]);
   const [contentForward, setContentForward] = useState('');
-
+  const [isShowLoading, setIsShowLoading] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const tableRef = useRef<HTMLDivElement>(null);
   const headerTableRef = useRef<HTMLDivElement>(null);
@@ -41,15 +78,43 @@ const MailTableContainer = ({ mailData, isLoading, type }: MailTableContainerPro
   const isShowFullSideBar = useSelector((state) => state.layout.isShowFullSidebar);
   const emailUser = useSelector((state) => state.user.email);
 
+  const toast = useNotify();
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const dispatch2 = useDraftsDispatch();
 
   const isChecked = useMemo(() => {
     if (!_.isEmpty(selectRows)) return true;
     return false;
   }, [selectRows]);
 
+  const convertArrayEmailString = (arrayEmail: Array<SentListEmailProp>) => {
+    return arrayEmail.map((item) => ({ email: item.email_address }));
+  };
+
+  const handleSelectMailTypeTrash = (mail: MailType) => {
+    const listEmail = convertArrayEmailString(mail.sents_email_address || []);
+    dispatch2({
+      type: DraftActionEnum.ADD_COMPOSE,
+      uuid: nanoid(),
+      viewType: ComposeViewTypeEnum.POPUP,
+      recipient: listEmail as unknown as EmailType[],
+      subject: mail.subject,
+      body: mail.body,
+    });
+  };
+
   const handleSelectMail = (mail: MailType) => {
+    if (type === TypeChat.DRAFT) {
+      if (window.innerWidth < 1024) {
+        setSelectedMail(mail);
+        setIsShowComposeMobile(true);
+        return;
+      }
+      handleSelectMailTypeTrash(mail);
+      return;
+    }
+    if (!mail?.read && _.isFunction(readEmail)) readEmail([mail.id]);
     setSelectedMail(mail);
     if (window.innerWidth < 1024) {
       setIsShowViewMailMobile(true);
@@ -90,6 +155,61 @@ const MailTableContainer = ({ mailData, isLoading, type }: MailTableContainerPro
       return setSelectRows(selectAll);
     }
     return setSelectRows([]);
+  };
+
+  const handleClickReadSelectRows = () => {
+    if (!_.isFunction(readEmail) || _.isEmpty(selectRows)) return;
+    readEmail(selectRows)
+      .then(() => {
+        setSelectRows([]);
+        fetchData();
+      })
+      .catch(() => toast.error(t('action_error')));
+  };
+
+  const handleClickDeleteMultiEmail = () => {
+    if (!_.isFunction(deleteEmail) || _.isEmpty(selectRows)) return;
+    setIsShowLoading(true);
+    deleteEmail(selectRows)
+      .then(() => {
+        setSelectRows([]);
+        fetchData();
+      })
+      .catch(() => toast.error(t('action_error')))
+      .finally(() => setIsShowLoading(false));
+  };
+
+  const handleClickDelete = (id: number) => {
+    if (!_.isFunction(deleteEmail)) return;
+    setIsShowLoading(true);
+    deleteEmail([id])
+      .then(() => {
+        setSelectedMail(null);
+        fetchData();
+      })
+      .catch(() => toast.error(t('action_error')))
+      .finally(() => setIsShowLoading(false));
+  };
+
+  const handleRestoreMailIds = () => {
+    if (!_.isFunction(onRestoreEmail) || _.isEmpty(selectRows)) return;
+    setIsShowLoading(true);
+    onRestoreEmail(selectRows)
+      .then(() => {
+        setSelectRows([]);
+        fetchData();
+      })
+      .catch(() => toast.error(t('action_error')))
+      .finally(() => setIsShowLoading(false));
+  };
+
+  const handleRestore = (id: number) => {
+    if (!_.isFunction(onRestoreEmail)) return;
+    setIsShowLoading(true);
+    onRestoreEmail([id])
+      .then(() => fetchData())
+      .catch(() => toast.error(t('action_error')))
+      .finally(() => setIsShowLoading(false));
   };
 
   const onMouseDown = useCallback((event: MouseEvent) => {
@@ -197,7 +317,7 @@ const MailTableContainer = ({ mailData, isLoading, type }: MailTableContainerPro
     >
       <div
         className={twMerge(
-          'h-full w-full pt-14',
+          'h-full w-full',
           isShowViewMailSpace && 'w-1/2',
           isShowViewMailSpace && window.innerWidth < 1280 && 'w-1/3',
         )}
@@ -205,9 +325,14 @@ const MailTableContainer = ({ mailData, isLoading, type }: MailTableContainerPro
       >
         <div className={twMerge('', tableRef.current && `w-${tableRef.current.style.width}`)}>
           <HeaderMailTable
+            onChangeSearchTerm={handleChangeSearchTerm}
+            type={type}
+            onClickRestoreSelectRows={handleRestoreMailIds}
+            onClickReadSelectRows={handleClickReadSelectRows}
+            onClickDeleteSelectRows={handleClickDeleteMultiEmail}
             // isShowViewMailSpace={isShowViewMailMobile}
             ref={headerTableRef}
-            actionArray={['datetime']}
+            actionArray={actionArray}
             isShowShadow={isShowShadow}
             isShowCheckboxHeader={isShowViewMailSpace}
             isChecked={isChecked}
@@ -216,9 +341,16 @@ const MailTableContainer = ({ mailData, isLoading, type }: MailTableContainerPro
               setIsShowViewMailSpace(false);
               setSelectedMail({} as MailType);
             }}
+            meta={meta}
+            onChangePage={onChangePage}
           />
         </div>
         <MailTable
+          onRemoveItem={onRemoveItem}
+          unReadEmail={unReadEmail}
+          onRateStar={onRateStar}
+          onClickDeleteMail={handleClickDelete}
+          onClickRestoreMail={handleRestore}
           type={type}
           isLoading={isLoading}
           data={mailData}
@@ -227,9 +359,7 @@ const MailTableContainer = ({ mailData, isLoading, type }: MailTableContainerPro
           onClickShowMail={handleSelectMail}
           selectRows={selectRows}
           selectedMail={selectedMail && selectedMail}
-          emptyComponent={
-            <EmptyData message={t('drafts_empty_message')} description={t('drafts_empty_description')} />
-          }
+          emptyComponent={emptyComponent}
         />
       </div>
       {isShowViewMailSpace && (
@@ -238,6 +368,10 @@ const MailTableContainer = ({ mailData, isLoading, type }: MailTableContainerPro
         </div>
       )}
       <ViewMailMobile
+        onClickRestoreMail={handleRestore}
+        onClickDeleteMail={handleClickDelete}
+        onRemoveItem={onRemoveItem}
+        onRateStar={onRateStar}
         mailData={selectedMail}
         isOpen={isShowViewMailMobile}
         type={type}
@@ -259,6 +393,7 @@ const MailTableContainer = ({ mailData, isLoading, type }: MailTableContainerPro
       <ComposeModalMobile
         recipient={emailReply}
         isOpen={isShowComposeMobile}
+        mail={selectedMail}
         onClose={() => {
           setIsShowComposeMobile(false);
           setContentForward('');
@@ -266,6 +401,7 @@ const MailTableContainer = ({ mailData, isLoading, type }: MailTableContainerPro
         }}
         dataForward={contentForward}
       />
+      <LoadingHeader isShow={isShowLoading} />
     </div>
   );
 };

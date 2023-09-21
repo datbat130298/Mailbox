@@ -1,5 +1,6 @@
 import { DefaultTFuncReturn } from 'i18next';
-import { cloneElement, ReactElement, useEffect, useRef, useState } from 'react';
+import _ from 'lodash';
+import React, { cloneElement, ReactElement, useEffect, useRef, useState } from 'react';
 import { FiChevronDown } from 'react-icons/fi';
 import { twMerge } from 'tailwind-merge';
 import { triggerClickOutside } from '../../../utils/helpers';
@@ -18,9 +19,20 @@ interface FilterDropdownProps {
   icon?: React.ReactNode;
   label?: DefaultTFuncReturn;
   className?: string;
+  onClickReadSelectRows?: () => void;
+  onClickDeleteSelectRows?: () => void;
 }
 
-const FilterDropdown = ({ data, position, elementStyle, icon, label, className }: FilterDropdownProps) => {
+const FilterDropdown = ({
+  data,
+  position,
+  elementStyle,
+  icon,
+  label,
+  className,
+  onClickReadSelectRows,
+  onClickDeleteSelectRows,
+}: FilterDropdownProps) => {
   const filterRef = useRef<HTMLDivElement>(null);
   const [isShowFilterDropdown, setIsShowFilterDropdown] = useState(false);
   const [selectFilterBy, setSelectFilterBy] = useState('');
@@ -86,8 +98,11 @@ const FilterDropdown = ({ data, position, elementStyle, icon, label, className }
             role="button"
             tabIndex={0}
             onClick={() => {
-              if (item.onClick) {
-                item.onClick();
+              if (item.value === 'mask_as_read' && _.isFunction(onClickReadSelectRows)) {
+                onClickReadSelectRows();
+              }
+              if (item.value === 'delete' && _.isFunction(onClickDeleteSelectRows)) {
+                onClickDeleteSelectRows();
               }
               setSelectFilterBy(item.value);
               setIsShowFilterDropdown(false);
@@ -101,4 +116,4 @@ const FilterDropdown = ({ data, position, elementStyle, icon, label, className }
   );
 };
 
-export default FilterDropdown;
+export default React.forwardRef(FilterDropdown);
