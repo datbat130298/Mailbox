@@ -1,19 +1,20 @@
-import { DefaultTFuncReturn } from 'i18next';
 import _ from 'lodash';
 import { cloneElement, ReactElement, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { RxDotFilled } from 'react-icons/rx';
 import { Link, useLocation } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 import { setIsShowFullSidebar } from '../../../../app/Slices/layoutSlice';
 import useDispatch from '../../../Hooks/useDispatch';
 import useSelector from '../../../Hooks/useSelector';
+import GetIconByKey from './Labels/GetIconByKey';
 
 interface SidebarItemProps {
   to?: string;
   tooltipText: string;
-  icon: ReactElement;
+  icon?: ReactElement;
   className?: string;
-  title?: DefaultTFuncReturn;
+  title: string;
   quantity?: number;
   isShowSidebar?: boolean;
   onCloseMobile?: () => void;
@@ -32,6 +33,7 @@ const SidebarItem = ({
   const { pathname } = useLocation();
   const isShowFullSidebar = useSelector((state) => state.layout.isShowFullSidebar);
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const isActivated = useMemo(() => {
     if (tooltipText === 'Menu' && (isShowFullSidebar || isShowSidebar)) return true;
@@ -62,10 +64,17 @@ const SidebarItem = ({
       )}
     >
       <div className="relative ml-px flex flex-shrink-0 items-center justify-center text-slate-800">
-        {cloneElement(icon, {
-          className: twMerge('flex-shrink-0 w-max '),
-        })}
-        {quantity && !isShowFullSidebar && (
+        {icon ? (
+          <div className="flex w-6 items-center justify-center">
+            {cloneElement(icon, {
+              className: twMerge(''),
+            })}
+          </div>
+        ) : (
+          <GetIconByKey name={title} />
+        )}
+
+        {title === 'Inbox' && quantity !== 0 && !isShowFullSidebar && (
           <div className="absolute -top-3 left-[9px] text-primary-600">
             <RxDotFilled size={25} />
           </div>
@@ -76,7 +85,7 @@ const SidebarItem = ({
             (isShowFullSidebar || isShowSidebar) && 'opacity-100',
           )}
         >
-          {title}
+          {t(title)}
         </div>
       </div>
       <div
@@ -85,7 +94,7 @@ const SidebarItem = ({
           (isShowFullSidebar || isShowSidebar) && 'font-semibold text-primary-700 opacity-100',
         )}
       >
-        {quantity || ''}
+        {title === 'Inbox' && quantity !== 0 && quantity}
       </div>
     </Link>
     // </Tooltip>

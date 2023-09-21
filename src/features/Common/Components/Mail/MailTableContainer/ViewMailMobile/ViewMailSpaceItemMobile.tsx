@@ -1,7 +1,8 @@
 import dayjs from 'dayjs';
 import _ from 'lodash';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { BiRightArrowCircle } from 'react-icons/bi';
 import { GoDotFill } from 'react-icons/go';
 import { PiFlagPennantFill } from 'react-icons/pi';
 import { twMerge } from 'tailwind-merge';
@@ -56,6 +57,23 @@ const ViewMailSpaceItemMobile = ({
       handleSelectMail(mailCurrent);
     }
   };
+
+  const receiver = useMemo(() => {
+    if (type !== TypeChat.SENT) {
+      return mail?.email_address;
+    }
+    if (mail.sents_email_address !== undefined && !_.isEmpty(mail.sents_email_address)) {
+      const emailArr = mail.sents_email_address.map((item) => item.email_address);
+      return emailArr.join(', ');
+    }
+    return undefined;
+  }, [mail]);
+
+  useEffect(() => {
+    if (_.isEmpty(mail?.inbox) && !isArray) {
+      setIsOpen(true);
+    }
+  }, [mail]);
 
   return (
     <div
@@ -169,6 +187,13 @@ const ViewMailSpaceItemMobile = ({
       </div>
       {isOpen && (
         <div className="flex w-full flex-col">
+          <div className="-mt-2 ml-4 flex items-center gap-10 pb-3">
+            <BiRightArrowCircle size={17} className="mx-1 mt-0.5 text-gray-600" />
+            <div className="item-center flex gap-2">
+              <p className="text-sm text-gray-500">To:</p>
+              <p className="text-sm text-gray-500">{receiver}</p>
+            </div>
+          </div>
           <div className=" bg-white px-3">
             {/*  content mail */}
             <div className="px-2 text-justify text-sm">
@@ -176,6 +201,7 @@ const ViewMailSpaceItemMobile = ({
               <div dangerouslySetInnerHTML={{ __html: mail ? mail.body : ' ' }} />
             </div>
           </div>
+          {/* {!_.isEmpty(fakeDataAttachment) && <ViewMailAttachmentMobile attachments={fakeDataAttachment} />} */}
           <div className={twMerge('mx-5 flex h-12 items-center justify-start text-blue-600')}>
             <ViewMailSpaceButtonFooterItem
               onClick={() => onClickReply()}

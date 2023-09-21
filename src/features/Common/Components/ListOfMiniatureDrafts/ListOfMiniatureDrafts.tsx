@@ -1,12 +1,14 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { useDrafts } from '../../../../app/Context/DraftContext';
 import { ComposeViewTypeEnum } from '../../../../app/Enums/commonEnums';
 import { ComposeType } from '../../../../app/Types/commonTypes';
 import ComposePopupContainer from '../ComposePopup/ComposeContainer';
+import LoadingHeader from '../Loading/LoadingHeader';
 
 const ListOfMiniatureDrafts = () => {
   const draftList = useDrafts();
+  const [isLoading, setIsLoading] = useState(false);
   const maxWidthView = useMemo(() => {
     if (draftList.length < 4) return 'max-w-[1390px]';
     if (draftList.length >= 4) {
@@ -33,10 +35,16 @@ const ListOfMiniatureDrafts = () => {
         maxWidthView,
       )}
     >
-      {draftList.map((compose: ComposeType, index: number) => (
-        // eslint-disable-next-line react/no-array-index-key
-        <ComposePopupContainer key={index} id={compose.uuid} compose={compose} composeClassName="z-[60]" />
+      {draftList.map((compose: ComposeType) => (
+        <ComposePopupContainer
+          setIsLoading={setIsLoading}
+          key={compose.uuid}
+          id={compose.uuid}
+          compose={compose}
+          composeClassName="z-[60]"
+        />
       ))}
+      <LoadingHeader isShow={isLoading} />
     </div>
   );
 };

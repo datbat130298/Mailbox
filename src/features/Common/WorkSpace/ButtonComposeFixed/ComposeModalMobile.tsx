@@ -1,3 +1,4 @@
+import { nanoid } from 'nanoid';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IoArrowBack, IoLink } from 'react-icons/io5';
@@ -5,6 +6,7 @@ import { MdMoreVert } from 'react-icons/md';
 import { TbSend } from 'react-icons/tb';
 import { twMerge } from 'tailwind-merge';
 import { sendEmail } from '../../../../app/Services/Sent/SentService';
+import { MailType } from '../../../../app/Types/commonTypes';
 import useNotify from '../../../Hooks/useNotify';
 import useSelector from '../../../Hooks/useSelector';
 import ComposePopupInput from '../../Components/ComposePopup/Components/ComposePopupInput';
@@ -17,11 +19,12 @@ import Tooltip from '../../Components/Tooltip/Tooltip';
 interface ComposeModalMobileProp {
   isOpen: boolean;
   onClose: () => void;
+  mail?: MailType | null;
   dataForward?: string;
   recipient?: Array<EmailType>;
 }
 
-const ComposeModalMobile = ({ isOpen, onClose, dataForward, recipient }: ComposeModalMobileProp) => {
+const ComposeModalMobile = ({ isOpen, onClose, dataForward, recipient, mail }: ComposeModalMobileProp) => {
   const [subject, setSubject] = useState<string>('');
   const [selectedRecipient, setSelectedRecipient] = useState<Array<EmailType>>([]);
   const [selectedCcRecipient, setSelectedCcRecipient] = useState<Array<EmailType>>([]);
@@ -53,14 +56,37 @@ const ComposeModalMobile = ({ isOpen, onClose, dataForward, recipient }: Compose
     setSubject(e.target.value);
   };
 
+  useEffect(() => {
+    if (isOpen && mail) {
+      setSubject(mail.subject);
+      setContent(mail.body);
+
+      const recipientEmail =
+        mail?.sents_email_address?.map((item) => ({
+          id: item.id || nanoid(),
+          email: item.email_address,
+        })) || [];
+      const recipientBcc = mail?.bcc?.map((item: string) => ({ id: nanoid(), email: item })) || [];
+      const recipientCc = mail.cc?.map((item: string) => ({ id: nanoid(), email: item }));
+
+      setSelectedRecipient(recipientEmail as EmailType[]);
+      setSelectedBccRecipient(recipientBcc as EmailType[]);
+      setSelectedCcRecipient(recipientCc as EmailType[]);
+    }
+  }, [isOpen, mail]);
+
   const handleClickSend = () => {
     setIsSubmitting(true);
-    const emailArray = selectedRecipient.map((item) => item.email);
+    const recipientEmail = selectedRecipient.map((item) => item.email);
+    const recipientBcc = selectedBccRecipient.map((item) => item.email);
+    const recipientCc = selectedCcRecipient.map((item) => item.email);
     const dataSubmit = {
-      email_address: [...emailArray],
+      email_address: [...recipientEmail],
+      cc: [...recipientCc],
+      bcc: [...recipientBcc],
       files: [],
       body: content,
-      type: 'SEND_MAIL',
+      type: 'PROCESSING',
       subject,
     };
     sendEmail(dataSubmit)

@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import CKEditor5 from '../../CKEditor5/CKEditor5';
 
 const editorConfiguration = {
@@ -89,4 +89,4 @@ const WriterCompose = ({
   }, [data]);
   return render;
 };
-export default WriterCompose;
+export default React.memo(WriterCompose);

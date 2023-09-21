@@ -2,10 +2,11 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import _ from 'lodash';
 import { nanoid } from 'nanoid';
-import { useEffect, useState } from 'react';
-import { BsCameraVideo, BsChatLeftText } from 'react-icons/bs';
+import { useEffect, useMemo, useState } from 'react';
+import { BiRightArrowCircle } from 'react-icons/bi';
+import { BsChatLeftText } from 'react-icons/bs';
 import { GoDotFill } from 'react-icons/go';
-import { IoCallOutline, IoSearchOutline } from 'react-icons/io5';
+import { IoSearchOutline } from 'react-icons/io5';
 import { PiFlagPennantFill } from 'react-icons/pi';
 import { twMerge } from 'tailwind-merge';
 import { DraftActionEnum, useDraftsDispatch } from '../../../../../../app/Context/DraftContext';
@@ -13,6 +14,7 @@ import { ComposeViewTypeEnum, TypeChat } from '../../../../../../app/Enums/commo
 import { MailType } from '../../../../../../app/Types/commonTypes';
 import useSelector from '../../../../../Hooks/useSelector';
 import ComposePopupContainer from '../../../ComposePopup/ComposeContainer';
+import LoadingHeader from '../../../Loading/LoadingHeader';
 import ViewMailSpaceGroupButtonFooter from '../ViewMailSpace/ViewMailSpaceGroupButtonFooter';
 import ViewMailSpaceItemInfoCollapse from './ViewMailSpaceItemInfoCollapse';
 
@@ -38,6 +40,7 @@ const ViewMailSpaceItem = ({
   const [isOpen, setIsOpen] = useState(false);
   const [isShowComposeWrite, setIsShowComposeWrite] = useState(false);
   const [viewType, setViewType] = useState<ComposeViewTypeEnum>();
+  const [isLoading, setIsLoading] = useState(false);
   const userEmail = useSelector((state) => state.user.email);
   const dateMail = dayjs();
   const dateCurrent = dayjs(mail?.created_at);
@@ -45,8 +48,19 @@ const ViewMailSpaceItem = ({
   const dispatch = useDraftsDispatch();
   dayjs.extend(utc);
 
-  const contentDefaultForward = `<br><br><p>---------- Forwarded message -------- <br> From: ${mail?.from_user?.email} <br>Date: ${mail?.created_at}<br>Subject: ${mail?.subject}<br>To: ${emailUser}</p>`;
+  const contentDefaultForward = `<br><br><p>---------- Forwarded message -------- <br> From: ${mail?.email_account?.email_address} <br>Date: ${mail?.created_at}<br>Subject: ${mail?.subject}<br>To: ${emailUser}</p>`;
   const contentForward = `${contentDefaultForward} <br><br> ${mail?.body}`;
+
+  const receiver = useMemo(() => {
+    if (type !== TypeChat.SENT) {
+      return mail?.email_address;
+    }
+    if (mail.sents_email_address !== undefined && !_.isEmpty(mail.sents_email_address)) {
+      const emailArr = mail.sents_email_address.map((item) => item.email_address);
+      return emailArr.join(', ');
+    }
+    return undefined;
+  }, [mail]);
 
   const handleClickHeaderMailItem = (mailCurrent: MailType) => {
     setIsShowComposeWrite(false);
@@ -86,7 +100,7 @@ const ViewMailSpaceItem = ({
       type: DraftActionEnum.ADD_COMPOSE,
       uuid: nanoid(),
       viewType: ComposeViewTypeEnum.POPUP,
-      recipient: [{ email: mail.address }],
+      recipient: [{ email: mail.email_address }],
     });
   };
 
@@ -150,16 +164,23 @@ const ViewMailSpaceItem = ({
                 <div className="flex h-7 w-7 items-center justify-center rounded-md text-gray-500 hover:bg-slate-100 hover:text-black">
                   <BsChatLeftText size={15} className="" />
                 </div>
-                <div className="flex h-7 w-7 items-center justify-center rounded-md text-gray-500 hover:bg-slate-100 hover:text-black">
+                {/* <div className="flex h-7 w-7 items-center justify-center rounded-md text-gray-500 hover:bg-slate-100 hover:text-black">
                   <IoCallOutline size={17} className="" />
                 </div>
                 <div className="flex h-7 w-7 items-center justify-center rounded-md text-gray-500 hover:bg-slate-100 hover:text-black">
                   <BsCameraVideo size={18} className="" />
-                </div>
+                </div> */}
                 <div className="flex h-7 w-7 items-center justify-center rounded-md text-gray-500 hover:bg-slate-100 hover:text-black">
                   <IoSearchOutline size={18} className="" />
                 </div>
               </div>
+              {/* {mail?.email_account?.email_address === userEmail && (
+                <div className="flex items-center gap-0.5">
+                  <GoDotFill size={10} className="mx-1 mt-0.5 text-gray-300" />
+                  <p className="text-sm text-gray-500">To:</p>
+                  <p className="text-sm text-gray-500">{mail?.email_address}</p>
+                </div>
+              )} */}
             </div>
             <div className="flex items-center justify-start gap-2">
               <div className="rounded-md text-gray-500 hover:bg-slate-100 hover:text-black">
@@ -185,10 +206,18 @@ const ViewMailSpaceItem = ({
       </div>
       {isOpen && (
         <>
-          <div className="mx-4 break-all border-y-[0.5px] py-4 text-left text-base">
+          <div className="-mt-2 ml-4 flex items-center gap-10 pb-3">
+            <BiRightArrowCircle size={17} className="mx-1 mt-0.5 text-gray-600" />
+            <div className="item-center flex gap-2">
+              <p className="text-sm text-gray-500">To:</p>
+              <p className="text-sm text-gray-500">{receiver}</p>
+            </div>
+          </div>
+          <div className="mx-4 break-all border-y py-4 text-left text-base">
             {/* eslint-disable-next-line react/no-danger */}
             <div dangerouslySetInnerHTML={{ __html: mail?.body ? mail.body : ' ' }} />
           </div>
+          {/* {!_.isEmpty(fakeData) && <ViewMailAttachment attachments={fakeData} />} */}
           <ViewMailSpaceGroupButtonFooter
             onClickReply={handleClickReply}
             onClickForward={handleClickForward}
@@ -197,9 +226,12 @@ const ViewMailSpaceItem = ({
           {isShowComposeWrite && (
             <div className="pb-3">
               <ComposePopupContainer
+                setIsShowComposeWrite={setIsShowComposeWrite}
+                setIsLoading={setIsLoading}
                 contentInbox={viewType === ComposeViewTypeEnum.FORWARD ? contentForward : mail?.body}
                 handleClickChangeView={handleClickChangeView}
                 isShowComposeReplyOrForward={isShowComposeWrite}
+                id="forward"
                 composeViewType={viewType}
                 fromMail={mail || ({} as MailType)}
                 composePopupStyle={{
@@ -212,6 +244,7 @@ const ViewMailSpaceItem = ({
           )}
         </>
       )}
+      <LoadingHeader isShow={isLoading} />
     </div>
   );
 };

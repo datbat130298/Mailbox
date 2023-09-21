@@ -28,11 +28,12 @@ export interface UserDetailType {
 
 export interface UserDataType {
   uuid: number;
+  id?: number;
   username: string;
   first_name: string;
   last_name: string;
   full_name?: string;
-  email: string;
+  email?: string;
   email_address?: string;
   banned_at?: string;
   avatar_img?: string;

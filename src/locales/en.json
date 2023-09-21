@@ -37,6 +37,8 @@
   "drafts_empty_description": "Saving a draft allows you to keep a message you aren't ready to send yet.",
   "trash_empty_message": "No conversations in Trash.",
   "trash_empty_description": "Messages that have been in Trash more than 30 days will be automatically deleted.",
+  "starred_empty_message": "No starred messages.",
+  "starred_empty_description": "Stars let you give messages a special status to make them easier to find. To star a message, click on the star outline beside any message or conversation.",
   "back": "Back",
   "of": "of",
   "login": "Login",
@@ -123,5 +125,15 @@
   "save_draft_error": "Save draft error",
   "action_error": "We have an error when performing this action. Please try again later.",
   "edit_label": "Edit label",
-  "action_complete": "Request has been completed"
+  "action_complete": "Request has been completed",
+  "restore": "Restore",
+  "attachment": "Attachment",
+  "desktop": "Desktop",
+  "download": "Download",
+  "remove": "Remove",
+  "drag-drop-here": "Drop a file here to upload, or click here to browser",
+  "upload": "Upload",
+  "advanced_search": "Advanced search",
+  "reset_filter": "Reset filter",
+  "not_starred": "Not starred"
 }

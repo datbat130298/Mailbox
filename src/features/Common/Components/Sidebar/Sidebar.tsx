@@ -1,8 +1,10 @@
 import _ from 'lodash';
-import { useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RiSettings3Line } from 'react-icons/ri';
 import { twMerge } from 'tailwind-merge';
+import { getCountUnread } from '../../../../app/Services/ConversationService/ConversationService';
+import useNotify from '../../../Hooks/useNotify';
 import useSelector from '../../../Hooks/useSelector';
 import { DisplayLabel } from '../../WorkSpace/Settings/LabelTable';
 import ComposeButton from './ComposeButton';
@@ -11,17 +13,31 @@ import SidebarGroup from './SidebarGroup';
 import SidebarItem from './SidebarItem';
 
 const Sidebar = () => {
+  const [isShowSidebar, setIsShowSidebar] = useState<boolean>(false);
+  const [unreadInbox, setUnreadInbox] = useState(0);
+
+  const toast = useNotify();
   const { t } = useTranslation();
   const isShowFullSidebar = useSelector((state) => state.layout.isShowFullSidebar);
-  const [isShowSidebar, setIsShowSidebar] = useState<boolean>(false);
   const { labelSystem } = useSelector((state) => state.labelSidebar);
-  const { categoryLabel } = useSelector((state) => state.labelSidebar);
 
   const sidebarElement = useRef<HTMLDivElement>(null);
 
-  const categoryItemDisplay = categoryLabel.filter((item) =>
-    item.display.find((displayItem) => displayItem.show === true),
-  );
+  const fetchDataUnread = useCallback(() => {
+    getCountUnread()
+      .then((res) => {
+        setUnreadInbox(res.count);
+      })
+      .catch(() => toast.error('action_error'));
+  }, []);
+
+  useEffect(() => {
+    fetchDataUnread();
+  }, [isShowFullSidebar]);
+
+  // const categoryItemDisplay = categoryLabel.filter((item) =>
+  //   item.display.find((displayItem) => displayItem.show === true),
+  // );
 
   const visibleSide = useMemo(() => {
     return labelSystem.filter((item) => {
@@ -65,10 +81,9 @@ const Sidebar = () => {
             <SidebarItem
               key={visibleSideItem.id}
               to={visibleSideItem.to}
-              title={t(visibleSideItem.name)}
+              title={visibleSideItem.name}
               tooltipText={t(visibleSideItem.name)}
-              icon={visibleSideItem.icon}
-              quantity={visibleSideItem.quantity}
+              quantity={unreadInbox}
               isShowSidebar={isShowSidebar}
             />
           ))}
@@ -78,34 +93,32 @@ const Sidebar = () => {
             <SidebarItem
               key={hiddenSidebarItem.id}
               to={hiddenSidebarItem.to}
-              title={t(hiddenSidebarItem.name)}
+              title={hiddenSidebarItem.name}
               tooltipText={t(hiddenSidebarItem.name)}
-              icon={hiddenSidebarItem.icon}
               quantity={hiddenSidebarItem.quantity}
               isShowSidebar={isShowSidebar}
             />
           ))}
           <SidebarItem
             to="/settings"
-            title={t('manage_label')}
+            title="manage_label"
             tooltipText={t('manage_label')}
-            icon={<RiSettings3Line size={18} />}
+            icon={<RiSettings3Line size={20} />}
             isShowSidebar={isShowSidebar}
           />
         </SidebarGroup>
-        <SidebarGroup title={t('category')} isShowSidebar={isShowSidebar}>
+        {/* <SidebarGroup title={t('category')} isShowSidebar={isShowSidebar}>
           {categoryItemDisplay.map((category) => (
             <SidebarItem
               key={category.id}
               to={category.to}
-              title={t(category.name)}
+              title={category.name}
               tooltipText={t(category.name)}
-              icon={category.icon}
               quantity={category.quantity}
               isShowSidebar={isShowSidebar}
             />
           ))}
-        </SidebarGroup>
+        </SidebarGroup> */}
         <LabelManagement isShowSidebar={isShowSidebar} />
       </div>
     </div>

@@ -10,7 +10,6 @@ import useNotify from '../../../../Hooks/useNotify';
 import AddLabelsModal from '../../Labels/AddLabelsModal';
 import ButtonAddLabel from '../../Labels/ButtonAddLabel';
 import LoadingHeader from '../../Loading/LoadingHeader';
-import SidebarGroup from '../SidebarGroup';
 import LabelGroup from './LabelGroup';
 
 export interface LabelType {
@@ -34,21 +33,6 @@ const LabelManagement = ({ isShowSidebar }: LabelManagementProp) => {
 
   const { t } = useTranslation();
   const toast = useNotify();
-
-  const arrayHiddenLabel = [
-    {
-      id: 4,
-      label: 'label4',
-      children: [],
-      to: '/label4',
-    },
-    {
-      id: 5,
-      label: 'label5',
-      children: [],
-      to: '/label5',
-    },
-  ];
 
   const fetchDataFolder = useCallback(() => {
     getAllFolder()
@@ -143,7 +127,7 @@ const LabelManagement = ({ isShowSidebar }: LabelManagementProp) => {
         />
       ))}
 
-      <SidebarGroup title={t('more')}>
+      {/* <SidebarGroup title={t('more')}>
         {arrayHiddenLabel.map((labelItem) => (
           <LabelGroup
             onClickEdit={handleClickEdit}
@@ -154,7 +138,7 @@ const LabelManagement = ({ isShowSidebar }: LabelManagementProp) => {
             childrenLabel={labelItem.children}
           />
         ))}
-      </SidebarGroup>
+      </SidebarGroup> */}
 
       <AddLabelsModal
         selectedLabel={selectedAction}

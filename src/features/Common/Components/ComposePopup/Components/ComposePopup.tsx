@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CgFormatColor } from 'react-icons/cg';
 import { FaRegTrashAlt } from 'react-icons/fa';
@@ -15,6 +15,7 @@ import { ComposeViewTypeEnum } from '../../../../../app/Enums/commonEnums';
 import { ComposePopupStyleType, MailType } from '../../../../../app/Types/commonTypes';
 import { EmailType } from '../../SelectMultiEmail/SelectMultiEmail';
 import Tooltip from '../../Tooltip/Tooltip';
+import AttachmentsModal, { FileLoadedType } from './Attachments/AttachmentsModal';
 import ComposePopupButtonMore from './ComposePopupButtonMore/ComposePopupButtonMore';
 import ComposePopupButtonSend from './ComposePopupButtonSend';
 import ComposePopupHeader from './ComposePopupHeader';
@@ -50,9 +51,13 @@ export interface ComposePopupProps {
   handleClickChangeView?: () => void;
   isShowToolbar?: boolean;
   onClickSend: () => void;
+  onChangeAttachment: (arr: FileLoadedType[]) => void;
+  attachments: FileLoadedType[];
 }
 
 const ComposePopup = ({
+  attachments,
+  onChangeAttachment,
   handleClickChangeView,
   handleClickInsertContent,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -85,6 +90,7 @@ const ComposePopup = ({
   const [isShowSelectTimeModal, setIsShowSelectTimeModal] = useState<boolean>(false);
   const [isShowOptionMore, setIsShowOptionMore] = useState<boolean>(false);
   const [isShowButtonInsertContent, setIsShowButtonInsertContent] = useState<boolean>(false);
+  const [isShowAttachmentModal, setIsShowAttachmentModal] = useState(false);
 
   const { t } = useTranslation();
 
@@ -132,6 +138,14 @@ const ComposePopup = ({
   const handleSubmitSchedule = () => {
     // eslint-disable-next-line no-console
     console.log('this is SubmitSchudule');
+  };
+
+  const handleClickImportFile = () => {
+    setIsShowAttachmentModal(true);
+  };
+
+  const handleCloseAttachmentModal = () => {
+    setIsShowAttachmentModal(false);
   };
 
   const handleChangeViewTypeCompose = (e: React.MouseEvent) => {
@@ -289,7 +303,7 @@ const ComposePopup = ({
               'relative bottom-3 w-full',
           )}
         >
-          <div className="flex justify-start gap-4">
+          <div className="relative flex justify-start gap-4">
             <ComposePopupButtonSend
               onClickSend={handleClickSend}
               onClickArrow={handleClickArrow}
@@ -306,7 +320,7 @@ const ComposePopup = ({
               <ComposePopupToolbarItem
                 title={t('attach_files')}
                 icon={<IoMdAttach size={19} />}
-                onClick={handleClickFormat}
+                onClick={handleClickImportFile}
               />
               <ComposePopupToolbarItem
                 title={t('insert_link')}
@@ -341,6 +355,24 @@ const ComposePopup = ({
                 setActive={setIsShowOptionMore}
               />
             </div>
+            <div
+              className={twMerge(
+                'absolute -left-2 bottom-10 hidden w-full bg-white px-2 py-1 text-sm font-semibold text-black shadow-md',
+                !_.isEmpty(attachments) && 'block',
+              )}
+            >
+              <div className="flex w-full items-center justify-between">
+                {`${attachments.length} ${t('attachment')}(s)`}
+                <div
+                  className="px-2 py-0.5 font-medium text-blue-400 hover:shadow-md"
+                  tabIndex={0}
+                  onClick={handleClickImportFile}
+                  role="button"
+                >
+                  {t('show')}
+                </div>
+              </div>
+            </div>
           </div>
           <div className=" flex items-center justify-center">
             {(viewType === ComposeViewTypeEnum.REPLY || viewType === ComposeViewTypeEnum.FORWARD) && (
@@ -372,8 +404,14 @@ const ComposePopup = ({
         setOpen={setIsShowSelectTimeModal}
         onSubmit={handleSubmitSchedule}
       />
+      <AttachmentsModal
+        attachments={attachments}
+        isOpen={isShowAttachmentModal}
+        onClose={handleCloseAttachmentModal}
+        onChangeAttachment={onChangeAttachment}
+      />
     </div>
   );
 };
 
-export default ComposePopup;
+export default React.memo(ComposePopup);

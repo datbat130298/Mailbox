@@ -10,7 +10,9 @@ interface ItemSearchAdvancedProps {
 const ItemSearchAdvanced = ({ label, value, onChange }: ItemSearchAdvancedProps) => {
   return (
     <div className="mb-0.5 grid h-fit w-full grid-cols-5">
-      <div className="col-span-1 h-10 text-left text-sm font-[400] leading-[48px] text-gray-600">{label}</div>
+      <div className="col-span-1 h-10 overflow-hidden text-left text-sm font-[400] leading-[48px] text-gray-600">
+        {label}
+      </div>
       <div className="col-span-4 h-10">
         <Input
           value={value}

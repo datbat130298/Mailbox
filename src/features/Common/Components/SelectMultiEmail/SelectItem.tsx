@@ -16,7 +16,7 @@ const SelectedItem = ({ avatar, id, email, onRemove }: SelectedItemProp) => {
         </div>
       ) : (
         <div className="m-px flex h-[22px] w-[22px] items-center justify-center rounded-full bg-primary-200">
-          <p className="mb-px text-sm font-semibold uppercase">{email.slice(0, 1)}</p>
+          <p className="mb-px text-sm font-semibold uppercase">{email?.slice(0, 1)}</p>
         </div>
       )}
 

@@ -1,4 +1,3 @@
-import { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 import { updateCategoryLabelDisplay, updateLabelSystemDisplay } from '../../../../app/Slices/labelSlice';
 import useDispatch from '../../../Hooks/useDispatch';
@@ -14,7 +13,6 @@ export interface ValueLabelTable {
   id: number;
   to?: string;
   name: string;
-  icon: ReactElement;
   categoryLabelItem?: ValueLabelTable[];
   display: DisplayLabel[] | [];
   quantity?: number;

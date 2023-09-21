@@ -5,8 +5,8 @@ export const mailSlice = createSlice({
   name: 'mail',
   initialState: { mail: [] as unknown },
   reducers: {
-    setMail: (state, action: PayloadAction<MailType[]>) => {
-      state.mail = [...action.payload];
+    setMail: (state, action: PayloadAction<MailType[] | null>) => {
+      state.mail = action.payload ? [...action.payload] : null;
     },
   },
 });

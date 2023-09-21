@@ -1,10 +1,10 @@
 import _ from 'lodash';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { MutableRefObject, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { twMerge } from 'tailwind-merge';
 import { ComposeViewTypeEnum } from '../../../../../../app/Enums/commonEnums';
 import { triggerClickOutside } from '../../../../../utils/helpers';
-import { EmailType } from '../../../SelectMultiEmail/SelectMultiEmail';
+import { EmailType, ImperativeHandleType } from '../../../SelectMultiEmail/SelectMultiEmail';
 import ComposePopupRecipientInput from './ComposePopupRecipientInput';
 
 interface ComposePopupRecipientProps {
@@ -30,6 +30,7 @@ const ComposePopupRecipient = ({
 }: ComposePopupRecipientProps) => {
   const [viewText, setViewText] = useState<boolean>(true);
   const recipientRef = useRef<HTMLDivElement>(null);
+  const reRef = useRef() as MutableRefObject<ImperativeHandleType>;
 
   const { t } = useTranslation();
 
@@ -38,7 +39,15 @@ const ComposePopupRecipient = ({
   };
 
   useEffect(() => {
-    triggerClickOutside(recipientRef, () => setViewText(true));
+    triggerClickOutside(recipientRef, () => {
+      if (_.isFunction(reRef?.current?.handleClickOutside)) {
+        const emailArray = reRef?.current?.handleClickOutside();
+        if (!_.isEmpty(emailArray)) {
+          onChangeSelectRecipient(emailArray);
+        }
+        setViewText(true);
+      }
+    });
   }, [recipientRef, triggerClickOutside]);
 
   const transferString = useMemo(() => {
@@ -79,6 +88,7 @@ const ComposePopupRecipient = ({
           onChangeSelectBccRecipient={onChangeSelectBccRecipient}
           className={className}
           viewType={viewType}
+          ref={reRef}
         />
       )}
     </div>

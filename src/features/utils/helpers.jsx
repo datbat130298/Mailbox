@@ -32,4 +32,21 @@ const convertHtmlToString = (html) => {
   return tempDivElement.textContent || tempDivElement.innerText || '';
 };
 
-export { triggerClickOutside, triggerClickNext, triggerClickPrev, convertHtmlToString };
+const queryParamsDefault = {
+  searchValue: '',
+  searchBy: [],
+  filterParams: [],
+  filterBy: '',
+  filterValue: '',
+  filterByDate: '',
+  filterByRelative: '',
+  filterValueRelative: '',
+  sort: '',
+  page: 1,
+  perPage: 20,
+  customId: null,
+  type: '',
+  searchTerm: '',
+};
+
+export { triggerClickOutside, triggerClickNext, triggerClickPrev, convertHtmlToString, queryParamsDefault };

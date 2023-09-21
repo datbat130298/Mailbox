@@ -4,6 +4,7 @@ import ContainerInbox from './Inbox/ContainerInbox';
 import SearchPage from './SearchPage/SearchPage';
 import ContainerSent from './Sent/ContainerSent';
 import SettingsManagement from './Settings/SettingsManagement';
+import Starred from './Starred/Starred';
 import ContainerTrash from './Trash/ContainerTrash';
 
 const WorkSpaceRoutes = () => {
@@ -15,6 +16,7 @@ const WorkSpaceRoutes = () => {
       <Route path="/trash/*" element={<ContainerTrash />} />
       <Route path="/settings" element={<SettingsManagement />} />
       <Route path="/search" element={<SearchPage />} />
+      <Route path="/starred" element={<Starred />} />
     </Routes>
   );
 };

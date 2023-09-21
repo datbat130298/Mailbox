@@ -1,13 +1,19 @@
 import dayjs from 'dayjs';
+import _ from 'lodash';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BsCalendar4 } from 'react-icons/bs';
 import { twMerge } from 'tailwind-merge';
+import { BaseQueryParamsType } from '../../../../app/Types/commonTypes';
 import { triggerClickOutside } from '../../../utils/helpers';
 import Button from '../../Components/Button';
 import Input from '../../Components/Form/Input';
 
-const FilterDatetime = () => {
+interface FilterDateTimeTermProp {
+  onChangeSearchTerm?: (value: BaseQueryParamsType, type: string) => void;
+}
+
+const FilterDatetime = ({ onChangeSearchTerm }: FilterDateTimeTermProp) => {
   const filterRef = useRef<HTMLDivElement>(null);
   const [isShowFilterDropdown, setIsShowFilterDropdown] = useState(false);
   const [selectFilterBy, setSelectFilterBy] = useState('');
@@ -43,9 +49,47 @@ const FilterDatetime = () => {
     },
   ];
 
+  const handleClickApply = () => {
+    if (_.isFunction(onChangeSearchTerm)) {
+      setIsShowFilterDropdown(false);
+      setSelectFilterBy('');
+      onChangeSearchTerm({
+        end: dayjs(endDate).format('YYYY/MM/DD'),
+        start: dayjs(startDate).format('YYYY/MM/DD'),
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (selectFilterBy !== '' && _.isFunction(onChangeSearchTerm)) {
+      if (selectFilterBy === 'last7days') {
+        onChangeSearchTerm({
+          end: dayjs().format('YYYY/MM/DD'),
+          start: dayjs().subtract(7, 'day').format('YYYY/MM/DD'),
+        });
+      }
+      if (selectFilterBy === 'last30days') {
+        onChangeSearchTerm({
+          end: dayjs().format('YYYY/MM/DD'),
+          start: dayjs().subtract(1, 'month').format('YYYY/MM/DD'),
+        });
+      }
+      if (selectFilterBy === 'last6months') {
+        onChangeSearchTerm({
+          end: dayjs().format('YYYY/MM/DD'),
+          start: dayjs().subtract(6, 'month').format('YYYY/MM/DD'),
+        });
+      }
+      if (selectFilterBy === 'any_time') {
+        onChangeSearchTerm({});
+      }
+    }
+  }, [selectFilterBy]);
+
   useEffect(() => {
     triggerClickOutside(filterRef, () => setIsShowFilterDropdown(false));
   }, [filterRef, triggerClickOutside]);
+
   return (
     <div className="relative" ref={filterRef}>
       <div
@@ -82,6 +126,7 @@ const FilterDatetime = () => {
               tabIndex={0}
               onClick={() => {
                 setSelectFilterBy(item.value);
+                setIsShowFilterDropdown(false);
               }}
             >
               <div className="h-full w-40 px-9 text-start  text-sm leading-8">{item.label}</div>
@@ -122,7 +167,7 @@ const FilterDatetime = () => {
               >
                 {t('cancel')}
               </Button>
-              <Button size="xs" className="w-28 py-2 text-xs shadow-none ring-1">
+              <Button size="xs" className="w-28 py-2 text-xs shadow-none ring-1" onClick={handleClickApply}>
                 {t('apply')}
               </Button>
             </div>
