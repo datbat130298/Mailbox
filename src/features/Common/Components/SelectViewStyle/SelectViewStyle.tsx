@@ -24,26 +24,26 @@ const SelectViewStyle = () => {
     uuid: 1,
     label: t('classic'),
     value: 'classic',
-    icon: <MdOutlineViewQuilt size={20} />,
+    icon: <MdOutlineViewQuilt size={22} />,
   });
   const styleViews = [
     {
       uuid: 1,
       label: t('grid'),
       value: 'grid',
-      icon: <MdOutlineViewModule size={20} />,
+      icon: <MdOutlineViewModule size={21} />,
     },
     {
       uuid: 2,
       label: t('classic'),
       value: 'classic',
-      icon: <MdOutlineViewQuilt size={20} />,
+      icon: <MdOutlineViewQuilt size={21} />,
     },
     {
       uuid: 3,
       label: t('compact'),
       value: 'compact',
-      icon: <MdOutlineViewList size={20} />,
+      icon: <MdOutlineViewList size={21} />,
     },
   ];
   useEffect(() => {

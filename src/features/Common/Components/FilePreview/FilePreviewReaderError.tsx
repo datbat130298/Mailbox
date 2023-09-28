@@ -2,8 +2,8 @@ import axios from 'axios';
 import fileDownload from 'js-file-download';
 import { useTranslation } from 'react-i18next';
 import { HiOutlineDownload } from 'react-icons/hi';
+import { AttachmentType } from '../../../../app/Types/commonTypes';
 import Button from '../Button';
-import { AttachmentType } from '../Mail/MailTableContainer/ViewMailSpaceItem/ViewMailAttachment/ViewMailAttachments';
 
 interface FilePreviewReaderErrorProps {
   attachment: AttachmentType | null;
@@ -14,10 +14,10 @@ const FilePreviewReaderError = ({ attachment }: FilePreviewReaderErrorProps) => 
 
   const handleDownload = () => {
     if (attachment) {
-      if (!attachment.absolute_slug) return;
+      if (!attachment.url) return;
       axios
-        .get(attachment.absolute_slug, { responseType: 'blob' })
-        .then((res) => fileDownload(res.data, attachment.name));
+        .get(attachment.url, { responseType: 'blob' })
+        .then((res) => fileDownload(res.data, attachment.file_name));
     }
   };
 

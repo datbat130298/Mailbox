@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { BiLink } from 'react-icons/bi';
 import { CgMailForward } from 'react-icons/cg';
-import { LuReply, LuReplyAll } from 'react-icons/lu';
+import { LuReply } from 'react-icons/lu';
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
 import { twMerge } from 'tailwind-merge';
 import Tooltip from '../../../Tooltip/Tooltip';
@@ -34,7 +33,7 @@ const ViewMailSpaceItemRowAction = ({
             <LuReply size={16} className=" text-gray-500" />
           </div>
         </Tooltip>
-        <Tooltip position="bottom" title={t('reply_all')}>
+        {/* <Tooltip position="bottom" title={t('reply_all')}>
           <div
             className="flex h-5 w-5 items-center justify-center rounded-sm hover:bg-slate-100"
             onClick={onClickReply}
@@ -43,7 +42,7 @@ const ViewMailSpaceItemRowAction = ({
           >
             <LuReplyAll size={16} className=" text-gray-500" />
           </div>
-        </Tooltip>
+        </Tooltip> */}
         <Tooltip position="bottom" title={t('forward')}>
           <div
             className="flex h-5 w-5 items-center justify-center rounded-sm hover:bg-slate-100"
@@ -54,11 +53,11 @@ const ViewMailSpaceItemRowAction = ({
             <CgMailForward size={16} className=" text-gray-500" />
           </div>
         </Tooltip>
-        <Tooltip position="bottom" title={t('reply')}>
+        {/* <Tooltip position="bottom" title={t('reply')}>
           <div className="flex h-5 w-5 items-center justify-center rounded-sm hover:bg-slate-100">
             <BiLink size={15} className="  text-gray-500" />
           </div>
-        </Tooltip>
+        </Tooltip> */}
         <span className="h-4 w-px bg-gray-300" />
         <Tooltip position="bottom" title="reply">
           <div className="flex h-5 w-5 items-center justify-center rounded-sm hover:bg-slate-100">

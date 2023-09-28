@@ -55,6 +55,7 @@ const ComposePopupContainer = ({
   const [body, setBody] = useState<string>('');
   const [isShowErrorModal, setIsShowErrorModal] = useState(false);
   const [attachments, setAttachments] = useState<FileLoadedType[]>([]);
+  const [isLoadingSend, setIsLoadingSend] = useState(false);
   const toast = useNotify();
   const { t } = useTranslation();
 
@@ -93,12 +94,15 @@ const ComposePopupContainer = ({
         !_.isEmpty(selectedCcRecipient) ||
         !_.isEmpty(body)
       ) {
-        const emailArray = selectedRecipient
-          .concat(selectedBccRecipient, selectedCcRecipient)
-          .map((item) => item.email);
+        const attachmentArrayString = attachments.map((item) => item.absolute_slug);
+        const recipient = selectedRecipient.map((item) => item.email);
+        const recipientBcc = selectedBccRecipient.map((item) => item.email);
+        const recipientCc = selectedCcRecipient.map((item) => item.email);
         const dataSubmit = {
-          email_address: [...emailArray],
-          files: [],
+          email_address: [...recipient],
+          cc: [...recipientCc],
+          bcc: [...recipientBcc],
+          files: attachmentArrayString,
           body,
           type: 'DRAFT',
           subject: _.isEmpty(subject) ? 'No Subject' : subject,
@@ -108,7 +112,7 @@ const ComposePopupContainer = ({
             toast.success(t('save_draft'));
           })
           .catch((err) => {
-            if (!_.isEmpty(err)) {
+            if (_.isEmpty(err)) {
               toast.error(t('save_draft_error'));
             }
           });
@@ -116,6 +120,7 @@ const ComposePopupContainer = ({
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleCloseSend = () => {
     dispatch({ type: DraftActionEnum.DELETE, viewType: ComposeViewTypeEnum.POPUP, uuid: id });
     if (_.isFunction(onClear)) {
@@ -169,10 +174,12 @@ const ComposePopupContainer = ({
   }, [selectedRecipient, selectedBccRecipient, selectedCcRecipient]);
 
   const handleClickSend = () => {
+    setIsLoadingSend(true);
     setIsLoading(true);
     if (!isAllowSend) {
       setIsShowErrorModal(true);
       setIsLoading(false);
+      setIsLoadingSend(false);
       return;
     }
     const attachmentArrayString = attachments.map((item) => item.absolute_slug);
@@ -189,19 +196,21 @@ const ComposePopupContainer = ({
       type: 'PROCESSING',
       subject,
     };
-    handleCloseSend();
     sendEmail(dataSubmit)
       .then(() => {
         toast.success(t('sent_success'));
         if (_.isFunction(setIsShowComposeWrite)) setIsShowComposeWrite(false);
+        handleCloseSend();
       })
       .catch((err) => {
         if (!_.isEmpty(err)) {
           toast.error(t('sent_error'));
-          handleClose();
         }
       })
-      .finally(() => setIsLoading(false));
+      .finally(() => {
+        setIsLoading(false);
+        setIsLoadingSend(false);
+      });
   };
 
   const handleChangeViewTypeToModal = (e: React.MouseEvent) => {
@@ -278,6 +287,7 @@ const ComposePopupContainer = ({
         (composeViewType === ComposeViewTypeEnum.REPLY ||
           composeViewType === ComposeViewTypeEnum.FORWARD) && (
           <ComposePopup
+            isLoading={isLoadingSend}
             attachments={attachments}
             onChangeAttachment={handleChangeAttachment}
             onClickSend={handleClickSend}
@@ -308,6 +318,7 @@ const ComposePopupContainer = ({
         )}
       {compose && compose.viewType === ComposeViewTypeEnum.POPUP && (
         <ComposePopup
+          isLoading={isLoadingSend}
           attachments={attachments}
           onChangeAttachment={handleChangeAttachment}
           onClickSend={handleClickSend}
@@ -341,6 +352,7 @@ const ComposePopupContainer = ({
           contentContainerClassName="w-[80vw] h-[90vh] bg-white p-0 rounded-lg"
         >
           <ComposePopup
+            isLoading={isLoadingSend}
             attachments={attachments}
             onChangeAttachment={handleChangeAttachment}
             onClickSend={handleClickSend}

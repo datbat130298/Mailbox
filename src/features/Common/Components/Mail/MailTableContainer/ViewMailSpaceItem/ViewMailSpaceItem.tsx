@@ -3,6 +3,7 @@ import utc from 'dayjs/plugin/utc';
 import _ from 'lodash';
 import { nanoid } from 'nanoid';
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { BiRightArrowCircle } from 'react-icons/bi';
 import { BsChatLeftText } from 'react-icons/bs';
 import { GoDotFill } from 'react-icons/go';
@@ -11,11 +12,14 @@ import { PiFlagPennantFill } from 'react-icons/pi';
 import { twMerge } from 'tailwind-merge';
 import { DraftActionEnum, useDraftsDispatch } from '../../../../../../app/Context/DraftContext';
 import { ComposeViewTypeEnum, TypeChat } from '../../../../../../app/Enums/commonEnums';
+import { readEmailById } from '../../../../../../app/Services/ConversationService/ConversationService';
 import { MailType } from '../../../../../../app/Types/commonTypes';
+import useNotify from '../../../../../Hooks/useNotify';
 import useSelector from '../../../../../Hooks/useSelector';
 import ComposePopupContainer from '../../../ComposePopup/ComposeContainer';
 import LoadingHeader from '../../../Loading/LoadingHeader';
 import ViewMailSpaceGroupButtonFooter from '../ViewMailSpace/ViewMailSpaceGroupButtonFooter';
+import ViewMailAttachment from './ViewMailAttachment/ViewMailAttachments';
 import ViewMailSpaceItemInfoCollapse from './ViewMailSpaceItemInfoCollapse';
 
 interface ViewMailSpaceItemProp {
@@ -23,7 +27,6 @@ interface ViewMailSpaceItemProp {
   isActive: boolean;
   isArray?: boolean;
   handleSelectMail?: (mail: MailType) => void;
-  isFirstOpen?: boolean;
   type: string;
   selectedMail: MailType;
 }
@@ -33,7 +36,6 @@ const ViewMailSpaceItem = ({
   isActive,
   isArray,
   handleSelectMail,
-  isFirstOpen,
   selectedMail,
   type,
 }: ViewMailSpaceItemProp) => {
@@ -41,25 +43,24 @@ const ViewMailSpaceItem = ({
   const [isShowComposeWrite, setIsShowComposeWrite] = useState(false);
   const [viewType, setViewType] = useState<ComposeViewTypeEnum>();
   const [isLoading, setIsLoading] = useState(false);
+  const [isRead, setIsRead] = useState(false);
   const userEmail = useSelector((state) => state.user.email);
   const dateMail = dayjs();
   const dateCurrent = dayjs(mail?.created_at);
+  const toast = useNotify();
   const emailUser = useSelector((state) => state.user.email);
   const dispatch = useDraftsDispatch();
   dayjs.extend(utc);
-
   const contentDefaultForward = `<br><br><p>---------- Forwarded message -------- <br> From: ${mail?.email_account?.email_address} <br>Date: ${mail?.created_at}<br>Subject: ${mail?.subject}<br>To: ${emailUser}</p>`;
   const contentForward = `${contentDefaultForward} <br><br> ${mail?.body}`;
+  const { t } = useTranslation();
 
   const receiver = useMemo(() => {
-    if (type !== TypeChat.SENT) {
-      return mail?.email_address;
-    }
     if (mail.sents_email_address !== undefined && !_.isEmpty(mail.sents_email_address)) {
       const emailArr = mail.sents_email_address.map((item) => item.email_address);
       return emailArr.join(', ');
     }
-    return undefined;
+    return mail?.email_address;
   }, [mail]);
 
   const handleClickHeaderMailItem = (mailCurrent: MailType) => {
@@ -84,10 +85,10 @@ const ViewMailSpaceItem = ({
     setIsShowComposeWrite(false);
     if (_.isEmpty(mail?.inbox) && !isArray) {
       setIsOpen(true);
-    } else if (isFirstOpen) {
+    } else if (mail?.id === selectedMail.id) {
       setIsOpen(true);
     }
-  }, [mail]);
+  }, [mail, selectedMail]);
 
   const handleClickReply = () => {
     setViewType(ComposeViewTypeEnum.REPLY);
@@ -113,6 +114,25 @@ const ViewMailSpaceItem = ({
       body: contentForward,
     });
   };
+
+  const emailAddress = useMemo(() => {
+    if (mail?.email_account?.email_address === userEmail) {
+      return 'Me';
+    }
+
+    return mail?.email_account?.email_address;
+  }, [mail]);
+
+  useEffect(() => {
+    setIsRead(mail?.read || false);
+  }, [mail]);
+
+  useEffect(() => {
+    if (!_.isEmpty(mail) && !mail.read && !isRead && isOpen) {
+      readEmailById([mail.id]).catch(() => toast.error('action_error'));
+      setIsRead(true);
+    }
+  }, [mail, isOpen]);
 
   return (
     <div
@@ -144,6 +164,7 @@ const ViewMailSpaceItem = ({
         </div>
         {!isOpen && (
           <ViewMailSpaceItemInfoCollapse
+            isRead={isRead}
             type={type}
             isArray={isArray}
             mail={mail}
@@ -156,9 +177,7 @@ const ViewMailSpaceItem = ({
         {isOpen && (
           <div className="ml-4 flex flex-col gap-1">
             <div className="flex items-center justify-start gap-4">
-              <p className="truncate">
-                {mail?.email_account?.email_address === userEmail ? 'Me' : mail?.email_account?.email_address}
-              </p>
+              <p className="truncate">{emailAddress}</p>
               <div className="flex items-center gap-0.5">
                 <GoDotFill size={10} className="mx-1 mt-0.5 text-gray-300" />
                 <div className="flex h-7 w-7 items-center justify-center rounded-md text-gray-500 hover:bg-slate-100 hover:text-black">
@@ -209,7 +228,7 @@ const ViewMailSpaceItem = ({
           <div className="-mt-2 ml-4 flex items-center gap-10 pb-3">
             <BiRightArrowCircle size={17} className="mx-1 mt-0.5 text-gray-600" />
             <div className="item-center flex gap-2">
-              <p className="text-sm text-gray-500">To:</p>
+              <p className="text-sm text-gray-500">{t('to')}:</p>
               <p className="text-sm text-gray-500">{receiver}</p>
             </div>
           </div>
@@ -217,7 +236,7 @@ const ViewMailSpaceItem = ({
             {/* eslint-disable-next-line react/no-danger */}
             <div dangerouslySetInnerHTML={{ __html: mail?.body ? mail.body : ' ' }} />
           </div>
-          {/* {!_.isEmpty(fakeData) && <ViewMailAttachment attachments={fakeData} />} */}
+          {!_.isEmpty(mail.attachments) && <ViewMailAttachment attachments={mail.attachments} />}
           <ViewMailSpaceGroupButtonFooter
             onClickReply={handleClickReply}
             onClickForward={handleClickForward}

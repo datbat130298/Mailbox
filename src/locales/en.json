@@ -15,7 +15,7 @@
   "classic": "Classic",
   "compact": "Compact",
   "grid": "Grid",
-  "mask_as_read": "Mask as read",
+  "mark_as_read": "Mark as read",
   "delete": "Delete",
   "archive": "Archive",
   "report": "Report",
@@ -135,5 +135,11 @@
   "upload": "Upload",
   "advanced_search": "Advanced search",
   "reset_filter": "Reset filter",
-  "not_starred": "Not starred"
+  "not_starred": "Not starred",
+  "mark_as_unread": "Mark as unread",
+  "search_empty_message": "No messages matched your search.",
+  "search_empty_description": "Try using search options such as sender, date, size and more.",
+  "refresh": "Refresh",
+  "save_setting_success": "Saved settings",
+  "save_setting": "Save setting"
 }

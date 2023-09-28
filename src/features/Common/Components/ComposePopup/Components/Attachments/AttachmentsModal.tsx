@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { motion } from 'framer-motion';
 import _ from 'lodash';
 import { nanoid } from 'nanoid';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { twMerge } from 'tailwind-merge';
 import { uploadImage } from '../../../../../../app/Services/UploadService';
@@ -21,6 +20,7 @@ export interface FileLoadedType {
   id: string;
   absolute_slug: string;
   file_name?: string;
+  url?: string;
   size: number;
 }
 interface AttachmentsModalProp {
@@ -38,6 +38,13 @@ const AttachmentsModal = ({ isOpen, onClose, onChangeAttachment, attachments }: 
   const [isLoading, setIsLoading] = useState(false);
   const [fileUpload, setFileUpload] = useState<FileType[] | []>([]);
   const [files, setFiles] = useState<FileLoadedType[] | FileType[] | []>([]);
+
+  const isAllowSubmit = useMemo(() => {
+    if (!_.isEmpty(fileUpload) || !_.isEmpty(attachments)) {
+      return true;
+    }
+    return false;
+  }, [attachments, fileUpload, files]);
 
   const tabs = [
     {
@@ -68,7 +75,9 @@ const AttachmentsModal = ({ isOpen, onClose, onChangeAttachment, attachments }: 
       if (_.isArray(files)) {
         const newArray = _.filter(files, (item: FileLoadedType | FileType) => item.id !== index);
         setFiles(newArray as FileLoadedType[] | FileType[]);
+        onChangeAttachment(newArray as FileLoadedType[]);
       }
+      onChangeAttachment([]);
       setFiles([]);
     },
     [fileUpload, files],
@@ -85,29 +94,33 @@ const AttachmentsModal = ({ isOpen, onClose, onChangeAttachment, attachments }: 
     setIsLoading(true);
     const imageArr = fileUpload.map(async (file: FileType) => {
       if (file.file instanceof File) {
-        return uploadImage(file.file, 'mailbox').then((res) => {
-          toast.success(`Upload ${file.file.name} success`);
-          return res;
-        });
+        return uploadImage(file.file, 'mailbox')
+          .then((res) => {
+            toast.success(`Upload ${file.file.name} success`);
+            return res;
+          })
+          .catch(() => {
+            toast.error(`Upload ${file.file.name} error`);
+          });
       }
       return file;
     });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     const res: any = await Promise.all(imageArr)
       .catch(() => toast.error(t('performing_action_error')))
       .finally(() => {
         setIsLoading(false);
       });
+
     if (!_.isEmpty(res)) {
       onClose();
       const newArr = files.map((item) => item);
-      onChangeAttachment([...res, ...newArr]);
+      onChangeAttachment([...res.filter((item: any) => !!item === true), ...newArr]);
       return;
     }
     onClose();
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const createImageFromFile = (file: any) => {
     if (file?.absolute_slug) {
       return file?.absolute_slug;
@@ -134,6 +147,7 @@ const AttachmentsModal = ({ isOpen, onClose, onChangeAttachment, attachments }: 
       titleCancel="cancel"
       onConfirm={handleUpload}
       isLoading={isLoading}
+      isAllowSubmit={isAllowSubmit}
     >
       <div className="flex w-full items-center justify-start">
         {tabs.map((tab) => (
@@ -144,7 +158,7 @@ const AttachmentsModal = ({ isOpen, onClose, onChangeAttachment, attachments }: 
             onClick={() => handleSelectTab(tab.id)}
             className={twMerge(
               'relative px-2 py-1 pb-2 text-base font-medium text-slate-800',
-              selectTab === tab.id && 'rounded-t-lg  border-b-0 border-gray-200 text-primary-600 ',
+              selectTab === tab.id && 'rounded-t-lg  border-b-0 border-gray-200 text-primary-600',
             )}
           >
             {t(tab.value)}
@@ -186,7 +200,7 @@ const AttachmentsModal = ({ isOpen, onClose, onChangeAttachment, attachments }: 
             ))}
 
           {Array.from(fileUpload || [])?.map((file: FileType) => (
-            <FileItem file={file.file} onRemoveFile={handleRemoveFileItem} index={file.id} key={file.id} />
+            <FileItem file={file.file} key={file.id} onRemoveFile={handleRemoveFileItem} index={file.id} />
           ))}
         </div>
       </div>

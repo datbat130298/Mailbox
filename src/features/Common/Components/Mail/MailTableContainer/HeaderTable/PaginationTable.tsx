@@ -1,5 +1,8 @@
+import _ from 'lodash';
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IoIosArrowBack } from 'react-icons/io';
+import { useSearchParams } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 
 export interface MetaType {
@@ -13,25 +16,34 @@ export interface MetaType {
 
 interface PaginationTableProp {
   meta: MetaType;
-  onChange: (page: number) => void;
+  onChange?: (page: number) => void;
 }
 
 const PaginationTable = ({ meta, onChange }: PaginationTableProp) => {
   const { t } = useTranslation();
+  const [, setSearchParams] = useSearchParams();
 
-  const handleClickPrev = () => {
+  const handleClickPrev = useCallback(() => {
     if (!meta.has_prev) return;
-    onChange(meta.page - 1);
-  };
+    if (_.isFunction(onChange)) {
+      onChange(meta.page - 1);
+      return;
+    }
+    setSearchParams({ page: (meta.page - 1).toString() });
+  }, [meta]);
 
-  const handleClickNext = () => {
+  const handleClickNext = useCallback(() => {
     if (!meta.has_next) return;
-    onChange(meta.page + 1);
-  };
+    if (_.isFunction(onChange)) {
+      onChange(meta.page + 1);
+      return;
+    }
+    setSearchParams({ page: (meta.page + 1).toString() });
+  }, [meta]);
 
   return (
-    <div className="flex items-center justify-between gap-2">
-      <div className="flex items-center gap-0.5 text-xs text-gray-600">
+    <div className="z-10 flex items-center justify-between gap-2">
+      <div className="flex items-center gap-0.5 text-sm text-gray-600">
         <p className="font-semibold">{meta.page}</p>
         <p className="px-0.5 text-gray-500">-</p>
         <p className="font-semibold">{meta.total_pages}</p>

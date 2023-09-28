@@ -10,21 +10,14 @@ import Tooltip from '../Tooltip/Tooltip';
 
 interface MailItemStatusProp {
   data: MailType;
-  unReadEmail?: (ids: Array<number>) => void;
+  handleClickStatusRead?: () => void;
   type: TypeChat;
   setIsRead: Dispatch<SetStateAction<boolean>>;
   isRead: boolean;
 }
 
-const MailItemStatus = ({ data, unReadEmail, type, setIsRead, isRead }: MailItemStatusProp) => {
+const MailItemStatus = ({ data, handleClickStatusRead, type, setIsRead, isRead }: MailItemStatusProp) => {
   const { t } = useTranslation();
-
-  const handleClickUnread = () => {
-    if (_.isFunction(unReadEmail)) {
-      setIsRead(false);
-      unReadEmail([data.id]);
-    }
-  };
 
   useEffect(() => {
     if (type === TypeChat.INBOX && !_.isEmpty(data) && data.read !== undefined) {
@@ -44,12 +37,20 @@ const MailItemStatus = ({ data, unReadEmail, type, setIsRead, isRead }: MailItem
   }
   if (type === TypeChat.INBOX && isRead) {
     return (
-      <div className="" role="button" tabIndex={0} onClick={handleClickUnread}>
-        <LuMailOpen size={20} className=" ml-3 text-gray-300" />
-      </div>
+      <Tooltip position="right" title={t('mark_as_unread')}>
+        <div className="" role="button" tabIndex={0} onClick={handleClickStatusRead}>
+          <LuMailOpen size={20} className=" ml-3 text-gray-300" />
+        </div>
+      </Tooltip>
     );
   }
-  return <IoMailOutline size={21} className=" ml-3 text-blue-700" />;
+  return (
+    <Tooltip position="right" title={t('mark_as_read')}>
+      <div className="" role="button" tabIndex={0} onClick={handleClickStatusRead}>
+        <IoMailOutline size={21} className=" ml-3 text-blue-700" />
+      </div>
+    </Tooltip>
+  );
 };
 
 export default MailItemStatus;

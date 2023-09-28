@@ -13,7 +13,7 @@ import {
   TextFileExtensionEnum,
   VideoFileExtensionEnum,
 } from '../../../../app/Enums/commonEnums';
-import { AttachmentType } from '../Mail/MailTableContainer/ViewMailSpaceItem/ViewMailAttachment/ViewMailAttachments';
+import { AttachmentType } from '../../../../app/Types/commonTypes';
 import FilePreviewAudioReader from './FilePreviewAudio/FilePreviewAudioReader';
 import FilePreviewImageReader from './FilePreviewImg/FilePreviewImgReader';
 import FilePreviewPdfReader from './FilePreviewPDF/FilePreivewPdfReader';
@@ -31,7 +31,7 @@ interface FilePreviewModalProp {
 }
 
 const FilePreviewModal = ({ isOpen, onClose, attachment, nextFile, prevFile }: FilePreviewModalProp) => {
-  const fileExtension = attachment?.name.split('.').at(-1);
+  const fileExtension = attachment?.file_name.split('.').at(-1);
 
   const supportedXlsx: string[] = [ExcelFileExtensionEnum.XLSX, ExcelFileExtensionEnum.XLS];
   const supportedImg: string[] = [
@@ -108,7 +108,7 @@ const FilePreviewModal = ({ isOpen, onClose, attachment, nextFile, prevFile }: F
                     >
                       <HiOutlineArrowLeft />
                     </div>
-                    <div>{attachment?.name}</div>
+                    <div>{attachment?.file_name}</div>
                   </div>
                 </div>
                 {prevFile && (

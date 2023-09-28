@@ -2,8 +2,13 @@ import _ from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TypeChat } from '../../../../app/Enums/commonEnums';
+import {
+  readEmailById,
+  unReadEmailById,
+} from '../../../../app/Services/ConversationService/ConversationService';
 import { getTrash, restoreEmailIds } from '../../../../app/Services/Trash/TrashService';
 import { BaseQueryParamsType, MailType } from '../../../../app/Types/commonTypes';
+import useNotify from '../../../Hooks/useNotify';
 import EmptyData from '../../Components/EmptyData/EmptyData';
 import LoadingHeader from '../../Components/Loading/LoadingHeader';
 import MailTableContainer from '../../Components/Mail/MailTableContainer/MailTableContainer';
@@ -14,6 +19,7 @@ const ContainerTrash = () => {
   const [queryParams, setQueryParams] = useState<BaseQueryParamsType>({});
 
   const { t } = useTranslation();
+  const toast = useNotify();
 
   const fetchData = useCallback(() => {
     setIsLoading(true);
@@ -58,10 +64,21 @@ const ContainerTrash = () => {
     });
   }, []);
 
+  const handleClickUnread = (ids: Array<number>) => {
+    unReadEmailById(ids)
+      .then(() => fetchData())
+      .catch(() => {
+        toast.error(t('action_error'));
+        fetchData();
+      });
+  };
+
   return (
     <div className="relative h-full w-full rounded-t-lg">
       <MailTableContainer
         handleChangeSearchTerm={handleChangeSearchTerm}
+        readEmail={readEmailById}
+        unReadEmail={handleClickUnread}
         isLoading={isLoading}
         mailData={trashData}
         type={TypeChat.TRASH}

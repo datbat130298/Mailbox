@@ -4,6 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { RiSettings3Line } from 'react-icons/ri';
 import { twMerge } from 'tailwind-merge';
 import { getCountUnread } from '../../../../app/Services/ConversationService/ConversationService';
+import { getSettingLabel } from '../../../../app/Services/Setting/Seting';
+import { updateLabelSystemDisplay } from '../../../../app/Slices/labelSlice';
+import useDispatch from '../../../Hooks/useDispatch';
 import useNotify from '../../../Hooks/useNotify';
 import useSelector from '../../../Hooks/useSelector';
 import { DisplayLabel } from '../../WorkSpace/Settings/LabelTable';
@@ -17,6 +20,7 @@ const Sidebar = () => {
   const [unreadInbox, setUnreadInbox] = useState(0);
 
   const toast = useNotify();
+  const dispatch = useDispatch();
   const { t } = useTranslation();
   const isShowFullSidebar = useSelector((state) => state.layout.isShowFullSidebar);
   const { labelSystem } = useSelector((state) => state.labelSidebar);
@@ -31,13 +35,19 @@ const Sidebar = () => {
       .catch(() => toast.error('action_error'));
   }, []);
 
+  const fetchDataLabel = useCallback(() => {
+    getSettingLabel()
+      .then((res) => dispatch(updateLabelSystemDisplay(res.value)))
+      .catch(() => toast.error('action_error'));
+  }, []);
+
   useEffect(() => {
     fetchDataUnread();
   }, [isShowFullSidebar]);
 
-  // const categoryItemDisplay = categoryLabel.filter((item) =>
-  //   item.display.find((displayItem) => displayItem.show === true),
-  // );
+  useEffect(() => {
+    fetchDataLabel();
+  }, []);
 
   const visibleSide = useMemo(() => {
     return labelSystem.filter((item) => {
@@ -107,18 +117,6 @@ const Sidebar = () => {
             isShowSidebar={isShowSidebar}
           />
         </SidebarGroup>
-        {/* <SidebarGroup title={t('category')} isShowSidebar={isShowSidebar}>
-          {categoryItemDisplay.map((category) => (
-            <SidebarItem
-              key={category.id}
-              to={category.to}
-              title={category.name}
-              tooltipText={t(category.name)}
-              quantity={category.quantity}
-              isShowSidebar={isShowSidebar}
-            />
-          ))}
-        </SidebarGroup> */}
         <LabelManagement isShowSidebar={isShowSidebar} />
       </div>
     </div>

@@ -2,8 +2,16 @@ import _ from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TypeChat } from '../../../../app/Enums/commonEnums';
-import { rateStarById } from '../../../../app/Services/ConversationService/ConversationService';
-import { deleteEmailSentById, getSent } from '../../../../app/Services/Sent/SentService';
+import {
+  readEmailById,
+  unReadEmailById,
+} from '../../../../app/Services/ConversationService/ConversationService';
+import {
+  deleteEmailSentById,
+  getDetailSentById,
+  getSent,
+  rateStarSentById,
+} from '../../../../app/Services/Sent/SentService';
 import { BaseQueryParamsType, MailType } from '../../../../app/Types/commonTypes';
 import useNotify from '../../../Hooks/useNotify';
 import EmptyData from '../../Components/EmptyData/EmptyData';
@@ -52,16 +60,9 @@ const ContainerSent = () => {
   const handleClickStar = (id: number, value: boolean) => {
     setIsShowLoading(true);
     if (!id) return;
-    rateStarById(id, value)
-      .then(() => {
-        if (value) {
-          toast.success(t('add_star_success'));
-          return;
-        }
-        toast.success(t('remove_star_success'));
-      })
+    rateStarSentById(id, value)
       .catch(() => {
-        toast.success(t('action_error'));
+        toast.error(t('action_error'));
         fetchData();
       })
       .finally(() => setIsShowLoading(false));
@@ -89,10 +90,23 @@ const ContainerSent = () => {
       behavior: 'smooth',
     });
   }, []);
+
+  const handleClickUnread = (ids: Array<number>) => {
+    unReadEmailById(ids)
+      .then(() => fetchData())
+      .catch(() => {
+        toast.error(t('action_error'));
+        fetchData();
+      });
+  };
+
   return (
     <div className="relative h-full w-full rounded-t-lg">
       <MailTableContainer
+        readEmail={readEmailById}
+        unReadEmail={handleClickUnread}
         handleChangeSearchTerm={handleChangeSearchTerm}
+        getDetailById={getDetailSentById}
         isLoading={isLoading}
         mailData={sentMailData}
         type={TypeChat.SENT}

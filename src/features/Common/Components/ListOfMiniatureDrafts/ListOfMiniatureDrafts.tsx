@@ -21,10 +21,10 @@ const ListOfMiniatureDrafts = () => {
         }
         return count;
       });
-      if (count === 1) return 'max-w-[1420px]';
+      if (count === 1) return 'max-w-[1500px]';
       if (count === 0) return 'max-w-[1160px]';
     }
-    return 'max-w-[1390px]';
+    return 'max-w-[1550px]';
   }, [draftList]);
 
   return (

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { TypeChat } from '../../../../app/Enums/commonEnums';
 import {
   deleteEmailById,
+  getConversationById,
   getListEmail,
   rateStarById,
   readEmailById,
@@ -82,23 +83,30 @@ const ContainerInbox = () => {
     if (!id) return;
     rateStarById(id, value)
       .catch(() => {
-        toast.success(t('action_error'));
+        toast.error(t('action_error'));
         fetchDataListEmail();
       })
       .finally(() => setIsShowLoading(false));
   };
 
   const handleClickUnread = (ids: Array<number>) => {
-    unReadEmailById(ids).catch(() => {
-      toast.error(t('action_error'));
-      fetchDataListEmail();
-    });
+    unReadEmailById(ids)
+      .then(() => {
+        if (ids.length > 1) {
+          fetchDataListEmail();
+        }
+      })
+      .catch(() => {
+        toast.error(t('action_error'));
+        fetchDataListEmail();
+      });
   };
 
   return (
     <div className="relative h-full w-full rounded-t-lg">
       <MailTableContainer
         handleChangeSearchTerm={handleChangeSearchTerm}
+        getDetailById={getConversationById}
         isLoading={isLoading}
         mailData={inboxData}
         type={TypeChat.INBOX}

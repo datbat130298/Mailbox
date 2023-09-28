@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { useMemo, useState } from 'react';
 import { BiLabel } from 'react-icons/bi';
 import { MdMoreVert } from 'react-icons/md';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 import { addSearchTerm } from '../../../../../app/Slices/labelSlice';
 import useDispatch from '../../../../Hooks/useDispatch';
@@ -24,7 +25,7 @@ const LabelGroup = ({ label, id, childrenLabel, className, onRemove, onClickEdit
   const [isShowChildren, setIsShowChildren] = useState<boolean>(false);
   const [isShowLabelCustomPopup, setIsShowLabelCustomPopup] = useState<boolean>(false);
   const [colorPicker, setColorPicker] = useState<string>('');
-
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const isShowFullSidebar = useSelector((state) => state.layout.isShowFullSidebar);
 
@@ -40,6 +41,18 @@ const LabelGroup = ({ label, id, childrenLabel, className, onRemove, onClickEdit
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+    navigate({
+      pathname: '/search',
+      search: createSearchParams({
+        from: [label],
+        to: [label],
+        search: label,
+        subject: label,
+        body: label,
+        // attachment: hasAttachmentChecked.toString(),
+        type: 'all',
+      }).toString(),
+    });
     dispatch(addSearchTerm(label));
   };
 

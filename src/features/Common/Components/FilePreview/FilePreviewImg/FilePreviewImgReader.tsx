@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { AiOutlineMinus, AiOutlinePlus, AiOutlineZoomOut } from 'react-icons/ai';
 import { twMerge } from 'tailwind-merge';
-import { AttachmentType } from '../../Mail/MailTableContainer/ViewMailSpaceItem/ViewMailAttachment/ViewMailAttachments';
+import { AttachmentType } from '../../../../../app/Types/commonTypes';
 
 export interface FilePreviewImageProps {
   attachment: AttachmentType | null;
@@ -78,8 +78,8 @@ const FilePreviewImageReader = ({ attachment }: FilePreviewImageProps) => {
             'max-w-4/5 z-0  h-fit max-h-fit-layout w-fit cursor-crosshair duration-150',
             resize?.sizeString,
           )}
-          src={attachment?.absolute_slug}
-          alt={attachment?.name}
+          src={attachment?.url}
+          alt={attachment?.file_name}
         />
       </div>
       <div

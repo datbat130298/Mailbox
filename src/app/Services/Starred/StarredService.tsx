@@ -13,7 +13,7 @@ const getStarred = async (options: BaseQueryParamsType) => {
     'search_by[]': options?.searchBy,
     search: options?.searchValue,
   });
-  const response = await axiosInstance.get(`/mailbox/emails?${queryParams}`);
+  const response = await axiosInstance.get(`/mailbox/email-searchs?${queryParams}`);
   return response.data;
 };
 

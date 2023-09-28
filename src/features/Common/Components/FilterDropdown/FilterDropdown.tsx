@@ -21,6 +21,7 @@ interface FilterDropdownProps {
   className?: string;
   onClickReadSelectRows?: () => void;
   onClickDeleteSelectRows?: () => void;
+  onClickUnReadSelectRows?: () => void;
 }
 
 const FilterDropdown = ({
@@ -32,14 +33,29 @@ const FilterDropdown = ({
   className,
   onClickReadSelectRows,
   onClickDeleteSelectRows,
+  onClickUnReadSelectRows,
 }: FilterDropdownProps) => {
   const filterRef = useRef<HTMLDivElement>(null);
   const [isShowFilterDropdown, setIsShowFilterDropdown] = useState(false);
-  const [selectFilterBy, setSelectFilterBy] = useState('');
 
   useEffect(() => {
     triggerClickOutside(filterRef, () => setIsShowFilterDropdown(false));
   }, [filterRef, triggerClickOutside]);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleClick = (item: any) => {
+    if (item.value === 'mark_as_read' && _.isFunction(onClickReadSelectRows)) {
+      onClickReadSelectRows();
+    }
+    if (item.value === 'delete' && _.isFunction(onClickDeleteSelectRows)) {
+      onClickDeleteSelectRows();
+    }
+    if (item.value === 'mark_as_unread' && _.isFunction(onClickUnReadSelectRows)) {
+      onClickUnReadSelectRows();
+    }
+    setIsShowFilterDropdown(false);
+  };
+
   return (
     <div className="relative" ref={filterRef}>
       {elementStyle && (
@@ -51,7 +67,7 @@ const FilterDropdown = ({
           })}
           <div
             className={twMerge(
-              'flex-center ml-1 h-full w-max hover:text-primary-700  group-hover:text-primary-700',
+              'flex-center ml-1.5 h-full w-max hover:text-primary-700  group-hover:text-primary-700',
               isShowFilterDropdown && ' text-primary-700',
             )}
             role="button"
@@ -60,14 +76,14 @@ const FilterDropdown = ({
               setIsShowFilterDropdown(true);
             }}
           >
-            <FiChevronDown size={14} />
+            <FiChevronDown size={17} />
           </div>
         </div>
       )}
       {!elementStyle && (
         <div
           className={twMerge(
-            'my-3 flex h-8 w-fit rounded-md px-2  hover:bg-gray-100 hover:text-primary-700',
+            'my-3 flex h-8 w-fit rounded-md px-3  hover:bg-gray-100 hover:text-primary-700',
             isShowFilterDropdown && 'bg-gray-100 text-primary-700',
             className,
           )}
@@ -90,23 +106,11 @@ const FilterDropdown = ({
       >
         {data?.map((item) => (
           <div
-            className={twMerge(
-              'flex h-8 min-w-max rounded-sm hover:bg-gray-200 hover:text-primary-700',
-              selectFilterBy === item?.value && 'bg-gray-200 text-primary-700',
-            )}
+            className={twMerge('flex h-8 min-w-max rounded-sm hover:bg-gray-200 hover:text-primary-700')}
             key={item.uuid}
             role="button"
             tabIndex={0}
-            onClick={() => {
-              if (item.value === 'mask_as_read' && _.isFunction(onClickReadSelectRows)) {
-                onClickReadSelectRows();
-              }
-              if (item.value === 'delete' && _.isFunction(onClickDeleteSelectRows)) {
-                onClickDeleteSelectRows();
-              }
-              setSelectFilterBy(item.value);
-              setIsShowFilterDropdown(false);
-            }}
+            onClick={() => handleClick(item)}
           >
             <div className="h-full w-full px-7 text-start text-sm leading-8">{item.label}</div>
           </div>

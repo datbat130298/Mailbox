@@ -61,7 +61,7 @@ const ComposePopupRecipientInput = (
   return (
     <div
       className={twMerge(
-        'mx-2 my-0.5 flex flex-col items-center border-b-[1px] border-gray-200 py-0',
+        'mx-2 my-0.5 flex flex-col items-center border-b-[1px] border-gray-200 py-px pb-0.5',
         _.isEmpty(selectRecipient) && viewType !== ComposeViewTypeEnum.REPLY && 'mx-2 flex-row items-center',
         _.isEmpty(selectRecipient) && viewType !== ComposeViewTypeEnum.REPLY && 'mx-2 flex-row items-center',
         (isShowBccInput ||

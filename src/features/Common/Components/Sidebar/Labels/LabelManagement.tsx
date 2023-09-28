@@ -127,19 +127,6 @@ const LabelManagement = ({ isShowSidebar }: LabelManagementProp) => {
         />
       ))}
 
-      {/* <SidebarGroup title={t('more')}>
-        {arrayHiddenLabel.map((labelItem) => (
-          <LabelGroup
-            onClickEdit={handleClickEdit}
-            onRemove={handleRemoveLabel}
-            id={labelItem.id}
-            key={labelItem.id}
-            label={labelItem.label}
-            childrenLabel={labelItem.children}
-          />
-        ))}
-      </SidebarGroup> */}
-
       <AddLabelsModal
         selectedLabel={selectedAction}
         isLoading={isLoading}

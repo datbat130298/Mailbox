@@ -9,6 +9,7 @@ import { RiDeleteBin6Line, RiMailDownloadLine } from 'react-icons/ri';
 import { useParams } from 'react-router-dom';
 import { TypeChat } from '../../../../../../app/Enums/commonEnums';
 import { getConversationById } from '../../../../../../app/Services/ConversationService/ConversationService';
+import { getDetailSentById } from '../../../../../../app/Services/Sent/SentService';
 import { MailType } from '../../../../../../app/Types/commonTypes';
 import useNotify from '../../../../../Hooks/useNotify';
 import Modal from '../../../Modal/Modal';
@@ -26,6 +27,7 @@ interface ViewMailMobileProps {
   onClickForward: () => void;
   onClickReplyAll: () => void;
   onRemoveItem?: (id: number) => void;
+  getDetailById?: (id: number) => void;
   onClickDeleteMail?: (id: number) => void;
   onClickRestoreMail?: (id: number) => void;
   onRateStar?: (id: number, value: boolean) => void;
@@ -39,6 +41,7 @@ const ViewMailMobile = ({
   onRateStar,
   onRemoveItem,
   onClickReply,
+  getDetailById,
   onClickForward,
   onClickReplyAll,
   onClickDeleteMail,
@@ -46,7 +49,6 @@ const ViewMailMobile = ({
 }: ViewMailMobileProps) => {
   const { t } = useTranslation();
   const [, setIsShowCompose] = useState(false);
-  const [mail, setMail] = useState<MailType>();
   const [conversation, setConversation] = useState<Array<MailType>>([]);
   const [selectedMail, setSelectedMail] = useState<MailType>({} as MailType);
   const [isActiveStar, setIsActiveStar] = useState(false);
@@ -55,28 +57,40 @@ const ViewMailMobile = ({
   const toast = useNotify();
   const [isLoading, setIsLoading] = useState(false);
 
-  const fetchDataConversation = useCallback(
-    (idMail: number) => {
-      setIsLoading(true);
-      getConversationById(idMail)
-        .then((res) => setConversation(res))
-        .catch((err) => toast.error(err.message))
+  const fetchDataDetail = useCallback((idx: number) => {
+    setIsLoading(true);
+    if (_.isFunction(getDetailById)) {
+      getDetailById(idx)
+        .then((res: Array<MailType> | MailType) => {
+          if (_.isArray(res)) {
+            setConversation(res);
+            return;
+          }
+          setSelectedMail(res as MailType);
+        })
         .finally(() => setIsLoading(false));
-    },
-    [type, mailData],
-  );
-
-  useEffect(() => {
-    if (!_.isEmpty(mailData) && type === TypeChat.INBOX) {
-      fetchDataConversation(mailData.id);
     }
-  }, [mailData, type]);
-
-  useEffect(() => {
-    if (!_.isEmpty(mailData)) {
-      setMail(mailData);
+  }, []);
+  const fetchDataDetailCustom = useCallback((index: number, functionCallback: (id: number) => void) => {
+    setIsLoading(true);
+    if (_.isFunction(functionCallback)) {
+      functionCallback(index)
+        .then((res: Array<MailType> | MailType) => {
+          if (_.isArray(res)) {
+            setConversation(res);
+            return;
+          }
+          setSelectedMail(res as MailType);
+        })
+        .finally(() => setIsLoading(false));
     }
-  }, [id, mailData]);
+  }, []);
+
+  // useEffect(() => {
+  //   if (!_.isEmpty(mailData) && type === TypeChat.INBOX) {
+  //     fetchDataDetail(mailData.id);
+  //   }
+  // }, [mailData, type]);
 
   const subjectRe = useMemo(() => {
     if (mailData?.subject) return mailData.subject;
@@ -103,10 +117,25 @@ const ViewMailMobile = ({
   };
 
   useEffect(() => {
-    if (!_.isEmpty(mailData)) {
-      setIsActiveStar(mailData?.star || false);
+    if (mailData) {
+      setSelectedMail(mailData);
     }
-  }, [mailData]);
+    if (_.isFunction(getDetailById) && mailData) {
+      fetchDataDetail(mailData.id);
+      return;
+    }
+    if (!_.isFunction(getDetailById) && mailData) {
+      if (mailData.source && mailData.source === TypeChat.SENTS) {
+        fetchDataDetailCustom(mailData.id, getDetailSentById);
+        return;
+      }
+      if (mailData.source && mailData.source === TypeChat.EMAIL) {
+        fetchDataDetailCustom(mailData.id, getConversationById);
+        return;
+      }
+    }
+    setIsLoading(false);
+  }, [mailData, type]);
 
   const handleClickStar = () => {
     setIsActiveStar((prev) => !prev);
@@ -121,22 +150,16 @@ const ViewMailMobile = ({
   const handleClickDelete = () => {
     if (_.isFunction(onClickDeleteMail)) {
       onClose();
-      onClickDeleteMail(mail!.id);
+      onClickDeleteMail(selectedMail!.id);
     }
   };
 
   const handleClickRestore = () => {
     if (_.isFunction(onClickRestoreMail)) {
       onClose();
-      onClickRestoreMail(mail!.id);
+      onClickRestoreMail(selectedMail!.id);
     }
   };
-
-  useEffect(() => {
-    if (isOpen && !_.isEmpty(mailData)) {
-      setSelectedMail(mailData);
-    }
-  }, [mailData, isOpen]);
 
   return (
     <Modal
@@ -207,7 +230,7 @@ const ViewMailMobile = ({
                       selectedEmail={selectedMail}
                       handleSelectMail={handleSelectMail}
                       isActive={selectedMail.id === item.id}
-                      mail={item?.email || item}
+                      mail={item}
                       type={item?.type || type}
                       onClickForward={onClickForward}
                       onClickReply={onClickReply}
@@ -221,7 +244,7 @@ const ViewMailMobile = ({
                   handleSelectMail={handleSelectMail}
                   selectedEmail={selectedMail}
                   isActive
-                  mail={mailData || ({} as unknown as MailType)}
+                  mail={selectedMail || ({} as unknown as MailType)}
                   onClickForward={onClickForward}
                   onClickReply={onClickReply}
                   onClickReplyAll={onClickReplyAll}

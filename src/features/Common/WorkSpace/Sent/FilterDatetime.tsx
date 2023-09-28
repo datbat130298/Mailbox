@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import _ from 'lodash';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { BsCalendar4 } from 'react-icons/bs';
+import { FaRegCalendarAlt } from 'react-icons/fa';
 import { twMerge } from 'tailwind-merge';
 import { BaseQueryParamsType } from '../../../../app/Types/commonTypes';
 import { triggerClickOutside } from '../../../utils/helpers';
@@ -94,7 +94,7 @@ const FilterDatetime = ({ onChangeSearchTerm }: FilterDateTimeTermProp) => {
     <div className="relative" ref={filterRef}>
       <div
         className={twMerge(
-          'my-3 flex h-8 w-fit rounded-md px-2  hover:bg-gray-100 hover:text-primary-700',
+          'my-3 flex h-8 w-fit rounded-md px-3  hover:bg-gray-100 hover:text-primary-700',
           isShowFilterDropdown && 'bg-gray-100 text-primary-700',
         )}
         role="button"
@@ -104,9 +104,9 @@ const FilterDatetime = ({ onChangeSearchTerm }: FilterDateTimeTermProp) => {
         }}
       >
         <div className="flex-center h-full w-max">
-          <BsCalendar4 size={14} />
+          <FaRegCalendarAlt size={17} />
         </div>
-        <div className="ml-1 text-sm leading-8">{t('time')}</div>
+        <div className="ml-2 text-sm leading-8">{t('time')}</div>
       </div>
       <div
         className={twMerge(

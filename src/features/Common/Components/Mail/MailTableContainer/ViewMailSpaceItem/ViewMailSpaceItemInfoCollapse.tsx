@@ -19,6 +19,7 @@ interface ViewMailSpaceItemInfoCollapseProp {
   onClickReply: (e: React.MouseEvent) => void;
   onClickForward: (e: React.MouseEvent) => void;
   type: string;
+  isRead: boolean;
 }
 
 const ViewMailSpaceItemInfoCollapse = ({
@@ -29,6 +30,7 @@ const ViewMailSpaceItemInfoCollapse = ({
   isActive,
   isOpen,
   type,
+  isRead,
 }: ViewMailSpaceItemInfoCollapseProp) => {
   dayjs.extend(utc);
 
@@ -48,7 +50,12 @@ const ViewMailSpaceItemInfoCollapse = ({
     <div className={twMerge('ml-4 flex h-12 w-full flex-col gap-1 ', type === TypeChat.SENT && 'italic')}>
       <div className={twMerge('flex flex-row items-center justify-between')}>
         <div className="flex items-center justify-start gap-1.5">
-          <p className="max-w-[50%] truncate text-base font-normal not-italic text-black">
+          <p
+            className={twMerge(
+              'max-w-[50%] truncate text-base font-normal not-italic text-black',
+              !isRead && 'font-semibold',
+            )}
+          >
             {emailUser === mail?.email_account?.email_address ? 'Me' : mail?.email_account?.email_address}
           </p>
           <div className="rounded-md text-gray-500 hover:bg-slate-100 hover:text-black">
@@ -81,7 +88,12 @@ const ViewMailSpaceItemInfoCollapse = ({
       <div
         className={twMerge('line-clamp-1 flex w-full justify-start', emailUser === mail?.address && 'italic')}
       >
-        <p className="line-clamp-1 w-fit text-ellipsis text-left text-sm">{`Re: ${subjectRe}`}</p>
+        <p
+          className={twMerge(
+            'line-clamp-1 w-fit text-ellipsis text-left text-sm',
+            !isRead && 'font-semibold',
+          )}
+        >{`Re: ${subjectRe}`}</p>
         <p className={twMerge('line-clamp-1 flex w-full text-ellipsis text-sm text-gray-600')}>
           {!_.isEmpty(mail?.body) && `- ${convertHtmlToString(mail?.body)}`}
         </p>

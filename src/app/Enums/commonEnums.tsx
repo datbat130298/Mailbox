@@ -25,6 +25,9 @@ export enum TypeChat {
   SENT = 'sent',
   DRAFT = 'draft',
   TRASH = 'trash',
+  SEARCH = 'search',
+  SENTS = 'sents',
+  EMAIL = 'email',
 }
 
 export enum StatusSent {

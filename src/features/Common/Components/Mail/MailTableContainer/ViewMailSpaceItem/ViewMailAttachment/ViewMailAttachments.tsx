@@ -3,16 +3,11 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import { twMerge } from 'tailwind-merge';
+import { AttachmentType } from '../../../../../../../app/Types/commonTypes';
 import ViewMailAttachmentItem from './ViewMailAttachmentItem';
 
-export interface AttachmentType {
-  name: string;
-  absolute_slug: string;
-  size: number;
-}
-
 interface ViewMailAttachmentProp {
-  attachments: AttachmentType[];
+  attachments?: AttachmentType[];
 }
 
 const ViewMailAttachment = ({ attachments }: ViewMailAttachmentProp) => {
@@ -38,11 +33,11 @@ const ViewMailAttachment = ({ attachments }: ViewMailAttachmentProp) => {
         >
           <MdKeyboardArrowDown />
         </div>
-        <p className="text-sm font-semibold">{`${attachments.length} ${t('attachment')}(s)`}</p>
+        <p className="text-sm font-semibold">{`${attachments?.length} ${t('attachment')}(s)`}</p>
       </div>
       {isShow && (
         <div className="ml-7 mt-1 flex flex-wrap gap-3">
-          {attachments.map((item: AttachmentType) => (
+          {attachments?.map((item: AttachmentType) => (
             <ViewMailAttachmentItem attachment={item} key={nanoid()} />
           ))}
         </div>

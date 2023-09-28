@@ -41,7 +41,7 @@ export interface ComposePopupProps {
   fromMail?: MailType;
   composePopupStyle?: ComposePopupStyleType;
   id?: string;
-  onClose?: () => void;
+  onClose?: (isSave?: boolean) => void;
   onZoom: (e: React.MouseEvent) => void;
   onChangeSubjectInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onClear?: () => void;
@@ -53,6 +53,7 @@ export interface ComposePopupProps {
   onClickSend: () => void;
   onChangeAttachment: (arr: FileLoadedType[]) => void;
   attachments: FileLoadedType[];
+  isLoading: boolean;
 }
 
 const ComposePopup = ({
@@ -78,13 +79,13 @@ const ComposePopup = ({
   composePopupStyle,
   id,
   onChangeSubjectInput,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onClose,
   onZoom,
   onClear,
   contentInbox,
   isShowToolbar = false,
   onClickSend,
+  isLoading,
 }: ComposePopupProps) => {
   const [isVisibleToolbar, setIsVisibleToolbar] = useState<boolean>(false);
   const [isShowSelectTimeModal, setIsShowSelectTimeModal] = useState<boolean>(false);
@@ -191,6 +192,8 @@ const ComposePopup = ({
         return;
       }
       toolbar.style.visibility = 'visible';
+      toolbar.style.position = 'absolute';
+      toolbar.style.bottom = '23px';
     }
   }, [isVisibleToolbar]);
 
@@ -217,6 +220,7 @@ const ComposePopup = ({
 
   const handleClose = () => {
     // handleClickCloseComposeItem(id || 0);
+    if (_.isFunction(onClose)) onClose();
     dispatch({ type: DraftActionEnum.DELETE, viewType: ComposeViewTypeEnum.POPUP, uuid: id });
     if (_.isFunction(onClear)) {
       onClear();
@@ -239,7 +243,7 @@ const ComposePopup = ({
   return (
     <div
       className={twMerge(
-        'z-50 h-[610px] w-[540px] flex-shrink-0 rounded-t-md bg-white shadow-compose',
+        'relative z-50  flex h-[680px] w-[620px] flex-shrink-0 flex-col overflow-auto rounded-t-md bg-white shadow-compose',
         composePopupStyle?.containerClassName,
         viewType === ComposeViewTypeEnum.MODAL && 'rounded-md',
         composeClassName,
@@ -255,8 +259,8 @@ const ComposePopup = ({
       )}
       <div
         className={twMerge(
-          'h-full w-full overflow-auto',
-          viewType === ComposeViewTypeEnum.POPUP && 'h-[550px]',
+          'flex h-full w-full flex-1 flex-col overflow-auto',
+          viewType === ComposeViewTypeEnum.POPUP && 'h-fit',
           composePopupStyle?.composeContent,
         )}
       >
@@ -280,7 +284,7 @@ const ComposePopup = ({
         </div>
         <div
           className={twMerge(
-            'mx-2 h-[430px] overflow-auto',
+            'relative mx-2 h-[80%] overflow-auto',
             viewType === ComposeViewTypeEnum.MODAL && 'h-[73vh]',
             composePopupStyle?.composeClassName,
           )}
@@ -297,7 +301,7 @@ const ComposePopup = ({
         </div>
         <div
           className={twMerge(
-            'fixed bottom-3 flex w-[540px] items-center justify-between px-4 ',
+            'absolute bottom-3 flex w-full items-center justify-between bg-transparent px-4',
             viewType === ComposeViewTypeEnum.MODAL && 'w-[80vw]',
             (viewType === ComposeViewTypeEnum.REPLY || viewType === ComposeViewTypeEnum.FORWARD) &&
               'relative bottom-3 w-full',
@@ -305,6 +309,7 @@ const ComposePopup = ({
         >
           <div className="relative flex justify-start gap-4">
             <ComposePopupButtonSend
+              isLoading={isLoading}
               onClickSend={handleClickSend}
               onClickArrow={handleClickArrow}
               onClickSendWithTime={handleClickSendWihTime}
@@ -335,7 +340,7 @@ const ComposePopup = ({
               <ComposePopupToolbarItem
                 title={t('insert_photo')}
                 icon={<IoImageOutline size={19} />}
-                onClick={handleClickFormat}
+                onClick={handleClickImportFile}
               />
               {contentInbox && _.isFunction(handleClickInsertContent) && isShowButtonInsertContent && (
                 <ComposePopupToolbarItem
@@ -357,8 +362,9 @@ const ComposePopup = ({
             </div>
             <div
               className={twMerge(
-                'absolute -left-2 bottom-10 hidden w-full bg-white px-2 py-1 text-sm font-semibold text-black shadow-md',
+                'absolute -left-2 bottom-20 hidden w-full bg-slate-200 bg-opacity-50 px-2 py-1 text-sm font-semibold text-black',
                 !_.isEmpty(attachments) && 'block',
+                !isVisibleToolbar && 'bottom-10',
               )}
             >
               <div className="flex w-full items-center justify-between">
