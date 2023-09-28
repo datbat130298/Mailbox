@@ -1,24 +1,22 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import _ from 'lodash';
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 import { BaseQueryParamsType } from '../../../../../app/Types/commonTypes';
-import { queryParamsDefault } from '../../../../utils/helpers';
 import { EmailType } from '../../../Components/SelectMultiEmail/SelectMultiEmail';
 import ButtonFilter from './ButtonFilter';
 import ButtonFilterTime, { ImperativeHandleResetTimeType } from './ButtonFilterTime';
 
-interface SearchHeaderProp {
-  setQueryParam: Dispatch<SetStateAction<BaseQueryParamsType>>;
-}
-
-const SearchHeader = ({ setQueryParam }: SearchHeaderProp) => {
+const SearchHeader = () => {
   const { t } = useTranslation();
   const refTime = useRef<ImperativeHandleResetTimeType>(null);
 
   const [fromEmail, setFromEmail] = useState<Array<EmailType>>([]);
   const [toEmail, setToEmail] = useState<Array<EmailType>>([]);
   const [hasAttachment, setHasAttachment] = useState(false);
+  const [searchParam, setSearchParams] = useSearchParams();
 
   const handleClickHasAttachment = () => {
     setHasAttachment((prev) => !prev);
@@ -33,29 +31,32 @@ const SearchHeader = ({ setQueryParam }: SearchHeaderProp) => {
   };
 
   useEffect(() => {
+    if (_.isEmpty(toEmail) && _.isEmpty(fromEmail)) return;
     const toEmailArray: string[] = toEmail.map((item: EmailType) => item.email);
-    const fromEmailArray: string[] = fromEmail.map((item: EmailType) => (item.id ? item.id.toString() : ''));
-    setQueryParam((prev: BaseQueryParamsType) => ({
-      ...prev,
-      filterParams: [
-        { filterBy: 'email_address', values: [...toEmailArray] },
-        { filterBy: 'email_account_id', values: [...fromEmailArray] },
-      ],
-    }));
+    const fromEmailArray: string[] = fromEmail.map((item: EmailType) => item.email);
+    setSearchParams({ from: [...fromEmailArray], to: [...toEmailArray] });
   }, [toEmail, fromEmail]);
 
   const handleChangeSearchTerm = (value: BaseQueryParamsType) => {
-    setQueryParam((prev: BaseQueryParamsType) => ({
-      ...prev,
-      end: value.end,
-      start: value.start,
-    }));
+    const { end } = value;
+    const { start } = value;
+    if (end && start) {
+      setSearchParams({
+        end: end || '',
+        start: start || '',
+        to: searchParam.getAll('to'),
+        from: searchParam.getAll('from'),
+        source: searchParam.getAll('source'),
+        subject: searchParam.getAll('subject'),
+        body: searchParam.getAll('body'),
+      });
+    }
   };
 
   const handleClickResetFilter = () => {
+    setSearchParams();
     setToEmail([]);
     setFromEmail([]);
-    setQueryParam(queryParamsDefault);
     if (refTime?.current !== null) {
       refTime?.current?.handleReset();
     }
@@ -65,16 +66,20 @@ const SearchHeader = ({ setQueryParam }: SearchHeaderProp) => {
     let newArr: EmailType[] = [];
     newArr = fromEmail.filter((item: EmailType) => item.id !== id);
     setFromEmail(newArr);
+    setSearchParams({ from: [] });
   };
 
   const handleRemoveToEmail = (id: string) => {
     let newArr: EmailType[] = [];
     newArr = toEmail.filter((item: EmailType) => item.id !== id);
     setToEmail(newArr);
+    if (_.isEmpty(newArr)) {
+      setSearchParams({ to: [] });
+    }
   };
 
   return (
-    <div className="no-scrollbar flex h-full w-full items-start justify-between gap-4 overflow-auto px-4 pb-1 pt-3 lg:pb-0">
+    <div className="no-scrollbar flex h-full w-full items-start justify-between gap-4 overflow-auto px-4 pb-1 pt-4 lg:pb-0">
       <div className="flex flex-1 items-center gap-3">
         <ButtonFilter
           title={t('from')}
@@ -113,7 +118,7 @@ const SearchHeader = ({ setQueryParam }: SearchHeaderProp) => {
           </div>
         )}
       </div>
-      <p className="line-clamp-1 hidden items-center text-center font-semibold text-blue-600 md:flex">
+      <p className="line-clamp-1 hidden items-center text-ellipsis text-center font-semibold text-blue-600 md:flex">
         {t('advanced_search')}
       </p>
     </div>

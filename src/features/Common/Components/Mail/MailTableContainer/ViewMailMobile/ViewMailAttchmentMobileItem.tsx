@@ -4,10 +4,10 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdMoreVert } from 'react-icons/md';
 import { twMerge } from 'tailwind-merge';
+import { AttachmentType } from '../../../../../../app/Types/commonTypes';
 import { triggerClickOutside } from '../../../../../utils/helpers';
 import AttachmentIconExtension from '../../../ComposePopup/Components/Attachments/AttachmentIconExtension';
 import FilePreviewModal from '../../../FilePreview/FilePreviewModal';
-import { AttachmentType } from '../ViewMailSpaceItem/ViewMailAttachment/ViewMailAttachments';
 
 interface ViewMailAttachmentMobileItemProp {
   attachment: AttachmentType;
@@ -35,23 +35,23 @@ const ViewMailAttachmentMobileItem = ({ attachment }: ViewMailAttachmentMobileIt
   };
 
   const sizeItem: string = useMemo(() => {
-    if (attachment.size) {
-      if (attachment.size >= 1000000000) {
-        return `${Math.round(attachment.size / 1024 / 1024 / 1024)} GB`;
+    if (attachment.file_size) {
+      if (attachment.file_size >= 1000000000) {
+        return `${Math.round(attachment.file_size / 1024 / 1024 / 1024)} GB`;
       }
-      if (attachment.size >= 1000000) {
-        return `${Math.round(attachment.size / 1024 / 1024)} MB`;
+      if (attachment.file_size >= 1000000) {
+        return `${Math.round(attachment.file_size / 1024 / 1024)} MB`;
       }
-      return `${Math.round(attachment.size / 1024)} KB`;
+      return `${Math.round(attachment.file_size / 1024)} KB`;
     }
     return '';
-  }, [attachment.size]);
+  }, [attachment.file_size]);
 
   const handleDownload = () => {
-    if (!attachment.absolute_slug) return;
+    if (!attachment.url) return;
     axios
-      .get(attachment.absolute_slug, { responseType: 'blob' })
-      .then((res) => fileDownload(res.data, attachment.name));
+      .get(attachment.url, { responseType: 'blob' })
+      .then((res) => fileDownload(res.data, attachment.file_name));
   };
 
   const handleCloseViewImg = () => {
@@ -67,8 +67,10 @@ const ViewMailAttachmentMobileItem = ({ attachment }: ViewMailAttachmentMobileIt
       <div className="relative h-full w-full overflow-hidden rounded-sm">
         <AttachmentIconExtension attachment={attachment} />
         <div className="absolute bottom-0 flex w-full items-center justify-between bg-white px-1 opacity-80">
-          <div className="flex flex-1 flex-col justify-center">
-            <p className="line-clamp-1 truncate text-xs font-semibold text-gray-900">{attachment.name}</p>
+          <div className="flex w-2/3 flex-col justify-center">
+            <p className="line-clamp-1 text-ellipsis text-xs font-semibold text-gray-900">
+              {attachment.file_name}
+            </p>
             <p className="line-clamp-1 truncate text-[10px] text-gray-500">{sizeItem}</p>
           </div>
           <div

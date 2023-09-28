@@ -7,8 +7,7 @@ import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
 import { Document, Page, pdfjs } from 'react-pdf';
 import { OnDocumentLoadSuccess, OnRenderSuccess } from 'react-pdf/dist/cjs/shared/types';
 import { twMerge } from 'tailwind-merge';
-// import LoadingSkeleton from '../../Loading/LoadingSkeleton';
-import { AttachmentType } from '../../Mail/MailTableContainer/ViewMailSpaceItem/ViewMailAttachment/ViewMailAttachments';
+import { AttachmentType } from '../../../../../app/Types/commonTypes';
 import FilePreviewReaderError from '../FilePreviewReaderError';
 import FilePreviewPdfReaderSkeleton from './FilePreviewPdfReaderSkeleton';
 
@@ -180,7 +179,7 @@ const FilePreviewPdfReader = ({ attachment }: FilePreviewPdfReaderProps) => {
   return (
     <div>
       <Document
-        file={attachment?.absolute_slug}
+        file={attachment?.url}
         className={twMerge('mx-auto flex max-w-screen-md origin-top flex-col justify-center', sizeClassName)}
         loading={<FilePreviewPdfReaderSkeleton />}
         error={<FilePreviewReaderError attachment={attachment} />}

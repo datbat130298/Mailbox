@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { AiOutlineMinus, AiOutlinePlus, AiOutlineZoomOut } from 'react-icons/ai';
 import { twMerge } from 'tailwind-merge';
 import { getTxtFile } from '../../../../../app/Services/UploadService';
-import { AttachmentType } from '../../Mail/MailTableContainer/ViewMailSpaceItem/ViewMailAttachment/ViewMailAttachments';
+import { AttachmentType } from '../../../../../app/Types/commonTypes';
 
 export interface FilePreviewTxtProps {
   attachment: AttachmentType;
@@ -19,7 +19,7 @@ const FilePreviewTxtReader = ({ attachment }: FilePreviewTxtProps) => {
   const [resizeNumber, setResizeNumber] = useState<number>(1);
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    getTxtFile(attachment.absolute_slug).then((data) => {
+    getTxtFile(attachment.url).then((data) => {
       setFileTxt(data);
     });
   }, [attachment]);

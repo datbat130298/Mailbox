@@ -110,7 +110,10 @@ const ButtonFilterTime = (
         });
       }
       if (selectTime === 'any_time') {
-        onChangeSearchTerm({});
+        onChangeSearchTerm({
+          end: dayjs().format('YYYY/MM/DD'),
+          start: dayjs().subtract(2, 'year').format('YYYY/MM/DD'),
+        });
       }
     }
   }, [selectTime]);

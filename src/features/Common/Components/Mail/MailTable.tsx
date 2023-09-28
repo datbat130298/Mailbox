@@ -21,6 +21,7 @@ interface MailTableProps {
   onClickRestoreMail?: (id: number) => void;
   onRateStar?: (id: number, value: boolean) => void;
   unReadEmail?: (ids: Array<number>) => void;
+  readEmail?: (ids: Array<number>) => void;
   onRemoveItem?: (id: number) => void;
 }
 
@@ -39,6 +40,7 @@ const MailTable = ({
   selectRows,
   selectedMail,
   unReadEmail,
+  readEmail,
 }: MailTableProps) => {
   const detectLoadingRef = useRef<HTMLDivElement>(null);
   const { inViewport } = useInViewport(detectLoadingRef);
@@ -68,6 +70,7 @@ const MailTable = ({
           !isLoading &&
           data?.map((item) => (
             <MailItem
+              readEmail={readEmail}
               onRemoveItem={onRemoveItem}
               unReadEmail={unReadEmail}
               onRateStar={onRateStar}

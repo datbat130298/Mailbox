@@ -28,13 +28,14 @@ interface MailTableContainerProp {
   fetchData: () => void;
   deleteEmail?: (arrayId: Array<number>) => void;
   meta: MetaType;
-  onChangePage: (page: number) => void;
+  onChangePage?: (page: number) => void;
   onRestoreEmail?: (ids: Array<number>) => void;
   handleChangeSearchTerm?: (query: BaseQueryParamsType, type: string) => void;
   onRateStar?: (id: number, value: boolean) => void;
   onRemoveItem?: (id: number) => void;
   actionArray?: Array<string>;
   emptyComponent?: React.ReactNode;
+  getDetailById?: (id: number) => void;
 }
 
 export interface SentListEmailProp {
@@ -58,6 +59,7 @@ const MailTableContainer = ({
   onRemoveItem,
   actionArray = ['datetime'],
   emptyComponent,
+  getDetailById,
 }: MailTableContainerProp) => {
   const [isShowViewMailSpace, setIsShowViewMailSpace] = useState(false);
   const [isShowViewMailMobile, setIsShowViewMailMobile] = useState(false);
@@ -157,7 +159,7 @@ const MailTableContainer = ({
     return setSelectRows([]);
   };
 
-  const handleClickReadSelectRows = () => {
+  const handleClickReadSelectRows = useCallback(() => {
     if (!_.isFunction(readEmail) || _.isEmpty(selectRows)) return;
     readEmail(selectRows)
       .then(() => {
@@ -165,7 +167,13 @@ const MailTableContainer = ({
         fetchData();
       })
       .catch(() => toast.error(t('action_error')));
-  };
+  }, [selectRows]);
+
+  const handleClickUnReadSelectRows = useCallback(() => {
+    if (!_.isFunction(unReadEmail) || _.isEmpty(selectRows)) return;
+    unReadEmail(selectRows);
+    setSelectRows([]);
+  }, [selectRows]);
 
   const handleClickDeleteMultiEmail = () => {
     if (!_.isFunction(deleteEmail) || _.isEmpty(selectRows)) return;
@@ -241,29 +249,11 @@ const MailTableContainer = ({
       if (tableRef.current !== null && isShowFullSideBar) {
         tableRef.current.style.width = `${event.clientX - 283}px`;
       }
-
-      if (headerTableRef.current && !isShowFullSideBar) {
-        headerTableRef.current.style.width = `${event.clientX - 95}px`;
-      }
-      if (headerTableRef.current && isShowFullSideBar) {
-        headerTableRef.current.style.width = `${event.clientX - 283}px`;
-      }
     },
     [isShowFullSideBar],
   );
 
   useEffect(() => {
-    if (isShowViewMailSpace && headerTableRef.current !== null) {
-      if (window.innerWidth < 1280) {
-        headerTableRef.current.style.width = '33.3%';
-      }
-      if (window.innerWidth >= 1280) {
-        headerTableRef.current.style.width = '50%';
-      }
-    }
-    if (!isShowViewMailSpace && headerTableRef.current !== null) {
-      headerTableRef.current.style.width = '100%';
-    }
     if (
       isShowViewMailSpace &&
       dragBarSide.current &&
@@ -311,65 +301,73 @@ const MailTableContainer = ({
   const contentDefaultForward = `<br><br><p>---------- Forwarded message -------- <br> From: ${selectedMail?.from_user?.email} <br>Date: ${selectedMail?.created_at}<br>Subject: ${selectedMail?.subject}<br>To: ${emailUser}</p>`;
 
   return (
-    <div
-      className={twMerge('h-full w-full text-center', isShowViewMailSpace && 'flex overflow-hidden')}
-      ref={containerRef}
-    >
+    <div className={twMerge('flex h-full w-full flex-col overflow-hidden text-center')}>
+      <HeaderMailTable
+        onChangeSearchTerm={handleChangeSearchTerm}
+        type={type}
+        onClickUnReadSelectRows={handleClickUnReadSelectRows}
+        onClickRestoreSelectRows={handleRestoreMailIds}
+        onClickReadSelectRows={handleClickReadSelectRows}
+        onClickDeleteSelectRows={handleClickDeleteMultiEmail}
+        ref={headerTableRef}
+        actionArray={actionArray}
+        isShowShadow={isShowShadow}
+        isShowCheckboxHeader={isShowViewMailSpace}
+        isChecked={isChecked}
+        onClickSelectAll={handleSelectAll}
+        onCloseViewMailSpace={() => {
+          setIsShowViewMailSpace(false);
+          setSelectedMail({} as MailType);
+        }}
+        meta={meta}
+        onChangePage={onChangePage}
+      />
       <div
-        className={twMerge(
-          'h-full w-full',
-          isShowViewMailSpace && 'w-1/2',
-          isShowViewMailSpace && window.innerWidth < 1280 && 'w-1/3',
-        )}
-        ref={tableRef}
+        ref={containerRef}
+        className={twMerge('h-full w-full', isShowViewMailSpace && 'flex overflow-hidden')}
       >
-        <div className={twMerge('', tableRef.current && `w-${tableRef.current.style.width}`)}>
-          <HeaderMailTable
-            onChangeSearchTerm={handleChangeSearchTerm}
+        <div
+          className={twMerge(
+            'h-full w-full',
+            isShowViewMailSpace && 'w-1/2',
+            isShowViewMailSpace && window.innerWidth < 1280 && 'w-1/3',
+          )}
+          ref={tableRef}
+        >
+          <MailTable
+            onRemoveItem={onRemoveItem}
+            readEmail={readEmail}
+            unReadEmail={unReadEmail}
+            onRateStar={onRateStar}
+            onClickDeleteMail={handleClickDelete}
+            onClickRestoreMail={handleRestore}
             type={type}
-            onClickRestoreSelectRows={handleRestoreMailIds}
-            onClickReadSelectRows={handleClickReadSelectRows}
-            onClickDeleteSelectRows={handleClickDeleteMultiEmail}
-            // isShowViewMailSpace={isShowViewMailMobile}
-            ref={headerTableRef}
-            actionArray={actionArray}
-            isShowShadow={isShowShadow}
-            isShowCheckboxHeader={isShowViewMailSpace}
-            isChecked={isChecked}
-            onClickSelectAll={handleSelectAll}
-            onCloseViewMailSpace={() => {
-              setIsShowViewMailSpace(false);
-              setSelectedMail({} as MailType);
-            }}
-            meta={meta}
-            onChangePage={onChangePage}
+            isLoading={isLoading}
+            data={mailData}
+            onChangeShowShadow={setIsShowShadow}
+            onChangeSelectRows={handleSelectRows}
+            onClickShowMail={handleSelectMail}
+            selectRows={selectRows}
+            selectedMail={selectedMail && selectedMail}
+            emptyComponent={emptyComponent}
           />
         </div>
-        <MailTable
-          onRemoveItem={onRemoveItem}
-          unReadEmail={unReadEmail}
-          onRateStar={onRateStar}
-          onClickDeleteMail={handleClickDelete}
-          onClickRestoreMail={handleRestore}
-          type={type}
-          isLoading={isLoading}
-          data={mailData}
-          onChangeShowShadow={setIsShowShadow}
-          onChangeSelectRows={handleSelectRows}
-          onClickShowMail={handleSelectMail}
-          selectRows={selectRows}
-          selectedMail={selectedMail && selectedMail}
-          emptyComponent={emptyComponent}
-        />
+        {isShowViewMailSpace && (
+          <div className="z-10 h-full w-full flex-1 bg-white" ref={viewMailRef}>
+            <ViewMailSpace
+              handleClose={handleClose}
+              mailData={selectedMail}
+              ref={dragBarSide}
+              type={type}
+              getDetailById={getDetailById}
+            />
+          </div>
+        )}
       </div>
-      {isShowViewMailSpace && (
-        <div className="z-10 h-full w-full flex-1 bg-white" ref={viewMailRef}>
-          <ViewMailSpace handleClose={handleClose} mailData={selectedMail} ref={dragBarSide} type={type} />
-        </div>
-      )}
       <ViewMailMobile
         onClickRestoreMail={handleRestore}
         onClickDeleteMail={handleClickDelete}
+        getDetailById={getDetailById}
         onRemoveItem={onRemoveItem}
         onRateStar={onRateStar}
         mailData={selectedMail}

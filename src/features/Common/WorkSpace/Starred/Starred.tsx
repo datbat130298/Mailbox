@@ -2,7 +2,12 @@ import _ from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TypeChat } from '../../../../app/Enums/commonEnums';
-import { rateStarById } from '../../../../app/Services/ConversationService/ConversationService';
+import {
+  rateStarById,
+  readEmailById,
+  unReadEmailById,
+} from '../../../../app/Services/ConversationService/ConversationService';
+import { rateStarSentById } from '../../../../app/Services/Sent/SentService';
 import { getStarred } from '../../../../app/Services/Starred/StarredService';
 import { BaseQueryParamsType, MailType } from '../../../../app/Types/commonTypes';
 import useNotify from '../../../Hooks/useNotify';
@@ -49,15 +54,25 @@ const Starred = () => {
     setQueryParams((prev) => ({ ...prev, page }));
   };
 
-  const handleClickStar = (id: number, value: boolean) => {
+  const handleClickStar = (id: number, value: boolean, type?: TypeChat) => {
     setIsShowLoading(true);
     if (!id) return;
-    rateStarById(id, value)
-      .catch(() => {
-        toast.success(t('action_error'));
-        fetchData();
-      })
-      .finally(() => setIsShowLoading(false));
+    if (type === TypeChat.SENTS) {
+      rateStarSentById(id, value)
+        .catch(() => {
+          toast.error(t('action_error'));
+          fetchData();
+        })
+        .finally(() => setIsShowLoading(false));
+    }
+    if (type === TypeChat.EMAIL) {
+      rateStarById(id, value)
+        .catch(() => {
+          toast.error(t('action_error'));
+          fetchData();
+        })
+        .finally(() => setIsShowLoading(false));
+    }
   };
 
   const handleChangeSearchTerm = (valueSearch: BaseQueryParamsType, typeSearch: string) => {
@@ -92,6 +107,15 @@ const Starred = () => {
     [starredData],
   );
 
+  const handleClickUnread = (ids: Array<number>) => {
+    unReadEmailById(ids)
+      .then(() => fetchData())
+      .catch(() => {
+        toast.error(t('action_error'));
+        fetchData();
+      });
+  };
+
   return (
     <div className="relative h-full w-full rounded-t-lg">
       <MailTableContainer
@@ -99,6 +123,8 @@ const Starred = () => {
         mailData={starredData}
         type={TypeChat.STARRED}
         fetchData={fetchData}
+        readEmail={readEmailById}
+        unReadEmail={handleClickUnread}
         meta={meta}
         onChangePage={handleChangePage}
         onRateStar={handleClickStar}

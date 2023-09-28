@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid';
 import { useTranslation } from 'react-i18next';
-import { AttachmentType } from '../ViewMailSpaceItem/ViewMailAttachment/ViewMailAttachments';
+import { AttachmentType } from '../../../../../../app/Types/commonTypes';
 import ViewMailAttachmentMobileItem from './ViewMailAttchmentMobileItem';
 
 interface ViewMailAttachmentMobileProp {
@@ -15,9 +15,9 @@ const ViewMailAttachmentMobile = ({ attachments }: ViewMailAttachmentMobileProp)
         <p className="text-sm font-semibold">{`${attachments.length} ${t('attachment')}(s)`}</p>
       </div>
       <div className="grid grid-cols-2 gap-4">
-        {attachments.map((item) => (
-          <div className="col-span-1">
-            <ViewMailAttachmentMobileItem attachment={item} key={nanoid()} />
+        {attachments?.map((item) => (
+          <div className="col-span-1" key={nanoid()}>
+            <ViewMailAttachmentMobileItem attachment={item} />
           </div>
         ))}
       </div>

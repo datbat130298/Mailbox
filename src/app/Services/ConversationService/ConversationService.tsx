@@ -48,7 +48,13 @@ const rateStarById = async (id: number, value: boolean) => {
   return response.data.data;
 };
 
+const getMailFromServer = async () => {
+  const response = await axiosInstance.get(`/mailbox/mail-box`);
+  return response.data.data;
+};
+
 export {
+  getMailFromServer,
   getConversationById,
   getListEmail,
   getCountUnread,

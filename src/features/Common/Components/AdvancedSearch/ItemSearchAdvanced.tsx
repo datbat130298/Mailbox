@@ -19,6 +19,7 @@ const ItemSearchAdvanced = ({ label, value, onChange }: ItemSearchAdvancedProps)
           size="sm"
           onChange={(e) => onChange(e.target.value)}
           className="h-full w-full rounded-none border border-x-0 border-t-0 bg-transparent px-0 pb-1"
+          inputClassName="text-sm"
         />
       </div>
     </div>

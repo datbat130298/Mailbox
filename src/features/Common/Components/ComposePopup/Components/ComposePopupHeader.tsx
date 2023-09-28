@@ -6,7 +6,7 @@ import { twMerge } from 'tailwind-merge';
 import Tooltip from '../../Tooltip/Tooltip';
 
 interface ComposePopupHeaderProps {
-  onClose: () => void;
+  onClose: (isSave?: boolean) => void;
   onChangeViewType: (e: React.MouseEvent) => void;
   onZoom: (e: React.MouseEvent) => void;
   title?: string;
@@ -58,7 +58,9 @@ const ComposePopupHeader = ({
               className="h-[15px] w-[18px] hover:bg-slate-200"
               role="button"
               tabIndex={0}
-              onClick={onClose}
+              onClick={() => {
+                onClose(false);
+              }}
             >
               <IoClose size={18} className="p-[1px]" />
             </div>

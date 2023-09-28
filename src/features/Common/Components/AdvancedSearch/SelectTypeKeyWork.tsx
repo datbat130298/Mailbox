@@ -21,7 +21,7 @@ const SelectTypeKeyWork = ({ typeKeyWork, setTypeKeyWork }: SelectTypeKeyWorkPro
     },
     {
       label: t('sent'),
-      value: 'sent',
+      value: 'sents',
     },
     {
       label: t('drafts'),

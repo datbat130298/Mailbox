@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { AttachmentType } from '../../Mail/MailTableContainer/ViewMailSpaceItem/ViewMailAttachment/ViewMailAttachments';
+import { AttachmentType } from '../../../../../app/Types/commonTypes';
 
 export interface FilePreviewAudioProps {
   attachment: AttachmentType | null;
@@ -10,9 +10,9 @@ const FilePreviewAudioReader = ({ attachment }: FilePreviewAudioProps) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   useEffect(() => {
     if (attachment) {
-      setFileAudio(attachment.absolute_slug);
+      setFileAudio(attachment.url);
       if (audioRef.current) {
-        audioRef.current.src = attachment.absolute_slug;
+        audioRef.current.src = attachment.url;
       }
     }
   }, [attachment]);

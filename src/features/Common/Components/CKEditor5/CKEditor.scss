@@ -4,6 +4,10 @@
   visibility: visible !important;
 }
 
+.ck.ck-content.ck-editor__editable {
+  height: 100% !important;
+}
+
 .document-editor__toolbar {
   box-shadow: 0 0 5px hsla(0, 0%, 0%, 0.2);
 }

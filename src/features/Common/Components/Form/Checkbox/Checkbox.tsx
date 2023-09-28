@@ -24,7 +24,7 @@ const Checkbox = ({
   );
 
   const iconClassName = twMerge(
-    'absolute top-1/2 left-1/2 z-0 mt-px -translate-x-1/2 -translate-y-1/2 text-white group-hover:text-slate-500',
+    'absolute top-1/2 left-1/2 z-0 mt-px -translate-x-1/2 -translate-y-1/2 group-hover:text-slate-500',
     iconTouchedClassName,
   );
 
@@ -33,12 +33,12 @@ const Checkbox = ({
       className={twMerge(
         'z-0 h-[18px] w-[18px]',
         className,
-        'group relative inline-block rounded-[4px] bg-white',
+        'group relative inline-block rounded-[4px] bg-inherit',
       )}
     >
       <div
         className={twMerge(
-          'absolute inset-0 -z-10 cursor-pointer rounded-md border-[1px] border-gray-200 group-hover:border-slate-500',
+          'absolute inset-0 -z-10 cursor-pointer rounded-md border border-gray-400 group-hover:border-gray-500',
           checked && !indeterminate && !disabled && 'border-slate-500 bg-slate-500',
           indeterminate && !disabled && 'border-slate-500',
           disabled && 'cursor-not-allowed bg-gray-100 group-hover:border-gray-100',

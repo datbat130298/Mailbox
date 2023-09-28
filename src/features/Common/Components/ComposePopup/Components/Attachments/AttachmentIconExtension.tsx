@@ -5,10 +5,17 @@ import {
   ExcelFileExtensionEnum,
   HTMLFileExtensionEnum,
   ImageFileExtensionEnum,
+  PDFFileExtensionEnum,
   TextFileExtensionEnum,
   VideoFileExtensionEnum,
 } from '../../../../../../app/Enums/commonEnums';
-import { AttachmentType } from '../../../Mail/MailTableContainer/ViewMailSpaceItem/ViewMailAttachment/ViewMailAttachments';
+import { AttachmentType } from '../../../../../../app/Types/commonTypes';
+import excel from '../../../../../../assets/image/excel.jpg';
+import html from '../../../../../../assets/image/html.png';
+import pdf from '../../../../../../assets/image/pdf.png';
+import text from '../../../../../../assets/image/text.png';
+import unknowfile from '../../../../../../assets/image/unknowfile.png';
+import video from '../../../../../../assets/image/video.jpg';
 import { FileLoadedType } from './AttachmentsModal';
 
 interface AttachmentIconExtensionProp {
@@ -17,49 +24,51 @@ interface AttachmentIconExtensionProp {
 }
 
 const AttachmentIconExtension = ({ attachment, classNameAll }: AttachmentIconExtensionProp) => {
-  const fileExtension =
-    attachment instanceof File
-      ? attachment?.name.split('.').at(-1)
-      : attachment?.absolute_slug?.split('.').at(-1);
+  const fileExtension = useMemo(() => {
+    if (attachment instanceof File) {
+      return attachment?.name.split('.').at(-1);
+    }
+    if (attachment?.url !== undefined) {
+      return attachment?.url?.split('.').at(-1);
+    }
+    if (attachment?.absolute_slug && attachment?.absolute_slug !== undefined) {
+      return attachment?.absolute_slug?.split('.').at(-1);
+    }
+    return '';
+  }, [attachment]);
 
   const AttachmentIcon = useMemo(() => {
     if (_.values(TextFileExtensionEnum).includes(fileExtension as TextFileExtensionEnum)) {
-      return <img src="https://cdn-icons-png.flaticon.com/512/32/32329.png" alt="text" />;
+      return <img src={text} alt="text" />;
     }
     if (_.values(HTMLFileExtensionEnum).includes(fileExtension as HTMLFileExtensionEnum)) {
-      return <img src="https://cdn-icons-png.flaticon.com/512/103/103077.png" alt="html" />;
+      return <img src={html} alt="html" />;
     }
 
     if (_.values(ExcelFileExtensionEnum).includes(fileExtension as ExcelFileExtensionEnum)) {
-      return (
-        <img
-          src="https://p7.hiclipart.com/preview/917/965/263/microsoft-excel-microsoft-office-2013-icon-excel-png-transparent.jpg"
-          alt="excel"
-        />
-      );
+      return <img src={excel} alt="excel" />;
     }
 
     if (_.values(ImageFileExtensionEnum).includes(fileExtension as ImageFileExtensionEnum)) {
       return (
         <img
-          src={attachment instanceof File ? URL.createObjectURL(attachment) : attachment.absolute_slug}
+          src={
+            attachment instanceof File
+              ? URL.createObjectURL(attachment)
+              : attachment.url || attachment.absolute_slug
+          }
           alt="img"
           className="h-full w-full object-cover"
         />
       );
     }
-
     if (_.values(VideoFileExtensionEnum).includes(fileExtension as VideoFileExtensionEnum)) {
-      return (
-        <img src="https://i.pinimg.com/564x/a3/e6/38/a3e638ecf2e8d2f0ea59bc0f09a5e11f.jpg" alt="video" />
-      );
+      return <img src={video} alt="video" />;
     }
-    return (
-      <img
-        alt={fileExtension}
-        src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Icon-round-Question_mark.svg/2048px-Icon-round-Question_mark.svg.png"
-      />
-    );
+    if (_.values(PDFFileExtensionEnum).includes(fileExtension as PDFFileExtensionEnum)) {
+      return <img src={pdf} alt="pdf" />;
+    }
+    return <img alt={fileExtension} src={unknowfile} />;
   }, [fileExtension]);
 
   return (

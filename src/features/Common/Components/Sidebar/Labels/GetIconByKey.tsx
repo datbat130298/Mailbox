@@ -1,6 +1,7 @@
 import { BiSend } from 'react-icons/bi';
-import { BsChatLeftText, BsMailbox, BsPersonLinesFill } from 'react-icons/bs';
+import { BsMailbox, BsPersonLinesFill } from 'react-icons/bs';
 import { FiTrash2 } from 'react-icons/fi';
+import { HiOutlineChatAlt } from 'react-icons/hi';
 import {
   MdLabelImportantOutline,
   MdOutlineContactMail,
@@ -33,7 +34,7 @@ const GetIconByKey = ({ name }: GetIconByKeyProp) => {
       icon = <MdLabelImportantOutline size={20} />;
       break;
     case 'chats':
-      icon = <BsChatLeftText size={14} className="" />;
+      icon = <HiOutlineChatAlt size={21} className="" />;
       break;
     case 'sent':
       icon = <BiSend size={21} className="" />;

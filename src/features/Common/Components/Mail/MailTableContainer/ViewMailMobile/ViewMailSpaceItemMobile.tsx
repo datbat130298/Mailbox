@@ -7,10 +7,13 @@ import { GoDotFill } from 'react-icons/go';
 import { PiFlagPennantFill } from 'react-icons/pi';
 import { twMerge } from 'tailwind-merge';
 import { TypeChat } from '../../../../../../app/Enums/commonEnums';
-import { MailType } from '../../../../../../app/Types/commonTypes';
+import { readEmailById } from '../../../../../../app/Services/ConversationService/ConversationService';
+import { AttachmentType, MailType } from '../../../../../../app/Types/commonTypes';
+import useNotify from '../../../../../Hooks/useNotify';
 import useSelector from '../../../../../Hooks/useSelector';
 import { convertHtmlToString } from '../../../../../utils/helpers';
 import ViewMailSpaceButtonFooterItem from '../ViewMailSpace/ViewMailSpaceButtonFooterItem';
+import ViewMailAttachmentMobile from './ViewMailAttachmentMobile';
 
 interface ViewMailSpaceItemMobileProp {
   mail: MailType;
@@ -37,10 +40,11 @@ const ViewMailSpaceItemMobile = ({
 }: ViewMailSpaceItemMobileProp) => {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
-
+  const [isRead, setIsRead] = useState(false);
   const userEmail = useSelector((state) => state.user.email);
   const dateMail = dayjs();
   const dateCurrent = dayjs(mail?.created_at);
+  const toast = useNotify();
 
   const subjectRe = useMemo(() => {
     if (mail?.subject) {
@@ -50,7 +54,6 @@ const ViewMailSpaceItemMobile = ({
   }, [mail]);
 
   const handleClickHeaderMailItem = (mailCurrent: MailType) => {
-    // setIsShowComposeWrite(false);
     if (!isArray) return;
     setIsOpen((prev) => !prev);
     if (_.isFunction(handleSelectMail)) {
@@ -59,21 +62,26 @@ const ViewMailSpaceItemMobile = ({
   };
 
   const receiver = useMemo(() => {
-    if (type !== TypeChat.SENT) {
-      return mail?.email_address;
-    }
     if (mail.sents_email_address !== undefined && !_.isEmpty(mail.sents_email_address)) {
       const emailArr = mail.sents_email_address.map((item) => item.email_address);
       return emailArr.join(', ');
     }
-    return undefined;
+    return mail?.email_address;
   }, [mail]);
 
   useEffect(() => {
-    if (_.isEmpty(mail?.inbox) && !isArray) {
+    setIsRead(mail?.read || false);
+    if (mail.id === selectedEmail.id) {
       setIsOpen(true);
     }
   }, [mail]);
+
+  useEffect(() => {
+    if (!_.isEmpty(mail) && !mail.read && !isRead && isOpen) {
+      readEmailById([mail.id]).catch(() => toast.error('action_error'));
+      setIsRead(true);
+    }
+  }, [mail, isOpen]);
 
   return (
     <div
@@ -98,7 +106,7 @@ const ViewMailSpaceItemMobile = ({
             userEmail === mail?.email_account?.email_address && 'bg-sky-300 italic opacity-60',
           )}
         >
-          <p className="text-lg font-semibold uppercase">
+          <p className={twMerge('text-lg font-semibold uppercase', !isRead && 'font-semibold')}>
             {userEmail === mail?.email_account?.email_address
               ? 'ME'
               : mail?.author?.slice(0, 1) || mail?.email_account?.email_address?.slice(0, 1)}
@@ -115,7 +123,12 @@ const ViewMailSpaceItemMobile = ({
           >
             <div className={twMerge('flex flex-row items-center')}>
               <div className="flex items-center justify-start gap-1.5">
-                <p className="max-w-[33%] truncate text-base font-normal text-black">
+                <p
+                  className={twMerge(
+                    'max-w-[33%] truncate text-base font-normal text-black',
+                    !isRead && 'font-semibold',
+                  )}
+                >
                   {userEmail === mail?.email_account?.email_address
                     ? 'Me'
                     : mail?.email_account?.email_address}
@@ -147,7 +160,12 @@ const ViewMailSpaceItemMobile = ({
                 userEmail === mail?.email_account?.email_address && 'italic',
               )}
             >
-              <p className="line-clamp-1 w-fit text-ellipsis text-left text-sm">{`Re: ${subjectRe}`}</p>
+              <p
+                className={twMerge(
+                  'line-clamp-1 w-fit text-ellipsis text-left text-sm',
+                  !isRead && 'font-semibold',
+                )}
+              >{`Re: ${subjectRe}`}</p>
               <p className={twMerge('line-clamp-1 flex w-full text-ellipsis text-sm text-gray-600')}>
                 {!_.isEmpty(mail?.body) && `- ${convertHtmlToString(mail?.body)}`}
               </p>
@@ -201,7 +219,9 @@ const ViewMailSpaceItemMobile = ({
               <div dangerouslySetInnerHTML={{ __html: mail ? mail.body : ' ' }} />
             </div>
           </div>
-          {/* {!_.isEmpty(fakeDataAttachment) && <ViewMailAttachmentMobile attachments={fakeDataAttachment} />} */}
+          {!_.isEmpty(mail.attachments) && (
+            <ViewMailAttachmentMobile attachments={mail.attachments as AttachmentType[]} />
+          )}
           <div className={twMerge('mx-5 flex h-12 items-center justify-start text-blue-600')}>
             <ViewMailSpaceButtonFooterItem
               onClick={() => onClickReply()}

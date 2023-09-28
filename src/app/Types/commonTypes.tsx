@@ -3,7 +3,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { Dayjs } from 'dayjs';
 import { SentListEmailProp } from '../../features/Common/Components/Mail/MailTableContainer/MailTableContainer';
 import { EmailType } from '../../features/Common/Components/SelectMultiEmail/SelectMultiEmail';
-import { ComposeViewTypeEnum, StatusSent } from '../Enums/commonEnums';
+import { ComposeViewTypeEnum, StatusSent, TypeChat } from '../Enums/commonEnums';
 import { TableColumnFilterState } from './elementTypes';
 import { UserDataType } from './userTypes';
 
@@ -81,6 +81,11 @@ export interface BaseQueryParamsType {
   searchBy?: string[];
   searchValue?: string;
   searchTerm?: string;
+  source?: string;
+  body?: string;
+  subject?: string;
+  fromMail?: string;
+  toMail?: string;
 }
 
 export interface FilterOptionItemType {
@@ -116,6 +121,13 @@ export interface DatePickerRangeType {
   end: Dayjs | null;
 }
 
+export interface AttachmentType {
+  file_name: string;
+  url: string;
+  file_size: number;
+  absolute_slug?: string;
+}
+
 export interface MailType {
   id: number;
   author: string;
@@ -135,6 +147,10 @@ export interface MailType {
   email_address: string;
   email?: MailType;
   email_account?: UserDataType;
+  email_addresses?: string;
+  from_email?: string;
+  attachments?: Array<AttachmentType>;
+  source?: TypeChat;
 }
 
 export interface FlagType {

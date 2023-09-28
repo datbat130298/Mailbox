@@ -8,6 +8,11 @@ const sendEmail = async (data: any) => {
   return response.data.data;
 };
 
+const getDetailSentById = async (id: number) => {
+  const response = await axiosInstance.get(`/mailbox/sent/${id}`);
+  return response.data.data;
+};
+
 const getSent = async (options: BaseQueryParamsType) => {
   const queryParams = generateParamString({
     per_page: options.perPage || 20,
@@ -26,4 +31,9 @@ const deleteEmailSentById = async (ids: Array<number>) => {
   return response.data.data;
 };
 
-export { getSent, sendEmail, deleteEmailSentById };
+const rateStarSentById = async (id: number, value: boolean) => {
+  const response = await axiosInstance.put(`/mailbox/sent/${id}`, { star: value });
+  return response.data.data;
+};
+
+export { getSent, sendEmail, deleteEmailSentById, getDetailSentById, rateStarSentById };

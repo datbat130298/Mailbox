@@ -1,20 +1,24 @@
+import _ from 'lodash';
 import { nanoid } from 'nanoid';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IoArrowBack, IoLink } from 'react-icons/io5';
 import { MdMoreVert } from 'react-icons/md';
 import { TbSend } from 'react-icons/tb';
 import { twMerge } from 'tailwind-merge';
 import { sendEmail } from '../../../../app/Services/Sent/SentService';
+import { uploadImage } from '../../../../app/Services/UploadService';
 import { MailType } from '../../../../app/Types/commonTypes';
 import useNotify from '../../../Hooks/useNotify';
 import useSelector from '../../../Hooks/useSelector';
+import { FileType } from '../../Components/ComposePopup/Components/Attachments/AttachmentsModal';
 import ComposePopupInput from '../../Components/ComposePopup/Components/ComposePopupInput';
 import ComposePopupRecipient from '../../Components/ComposePopup/Components/ComposePopupRecipient/ComposePopupRecipient';
 import WriterCompose from '../../Components/ComposePopup/Components/EditorWriterCompose';
 import Modal from '../../Components/Modal/Modal';
 import { EmailType } from '../../Components/SelectMultiEmail/SelectMultiEmail';
 import Tooltip from '../../Components/Tooltip/Tooltip';
+import FileItemMobile from './FileItemMobile';
 
 interface ComposeModalMobileProp {
   isOpen: boolean;
@@ -31,8 +35,11 @@ const ComposeModalMobile = ({ isOpen, onClose, dataForward, recipient, mail }: C
   const [selectedBccRecipient, setSelectedBccRecipient] = useState<Array<EmailType>>([]);
   const [content, setContent] = useState('');
   const [, setIsSubmitting] = useState(false);
-  const userEmail = useSelector((state) => state.user.email);
+  const [files, setFiles] = useState<FileType[]>([]);
+  // const [fileUpload, setFileUpload] = useState<FileType[] | []>([]);
 
+  const userEmail = useSelector((state) => state.user.email);
+  const inputRef = useRef<HTMLInputElement>(null);
   const { t } = useTranslation();
   const toast = useNotify();
 
@@ -75,28 +82,84 @@ const ComposeModalMobile = ({ isOpen, onClose, dataForward, recipient, mail }: C
     }
   }, [isOpen, mail]);
 
-  const handleClickSend = () => {
+  const handleImg = async (array: File[]) => {
+    const imageArr = array.map((item) => {
+      if (item instanceof File) {
+        return uploadImage(item, 'mailbox').then((res) => {
+          setIsSubmitting(true);
+          return res.absolute_slug;
+        });
+      }
+
+      return item;
+    });
+    const res = await Promise.all(imageArr).catch(() => toast.error(t('performing_action_error')));
+    return res;
+  };
+
+  const handleClickSend = async () => {
     setIsSubmitting(true);
     const recipientEmail = selectedRecipient.map((item) => item.email);
     const recipientBcc = selectedBccRecipient.map((item) => item.email);
     const recipientCc = selectedCcRecipient.map((item) => item.email);
+    const image = files.map((item: FileType) => item.file);
+    const img = await handleImg(image);
+
     const dataSubmit = {
+      files: img,
       email_address: [...recipientEmail],
       cc: [...recipientCc],
       bcc: [...recipientBcc],
-      files: [],
       body: content,
       type: 'PROCESSING',
       subject,
     };
+    onClose();
     sendEmail(dataSubmit)
       .then(() => {
         toast.success('sent_success');
-        onClose();
       })
       .catch(() => toast.error('sent_error'))
       .finally(() => setIsSubmitting(false));
   };
+
+  const handleClickInsert = () => {
+    if (inputRef.current !== null) {
+      inputRef.current?.click();
+    }
+  };
+
+  const handleChangFile = useCallback(
+    (fileList: FileList) => {
+      const newArr = Array.from(fileList).map((file: File) => ({ id: nanoid(), file }));
+      if (_.isEmpty(files)) {
+        setFiles(newArr);
+        return;
+      }
+      setFiles((prev) => [...prev, ...newArr]);
+    },
+    [files],
+  );
+
+  const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    if (e.target.files && e.target.files[0]) {
+      handleChangFile(e.target.files);
+    }
+  };
+
+  const handleRemoveFileItem = useCallback(
+    (index: string) => {
+      const newArr = files.filter((item) => item.id !== index);
+      setFiles(newArr);
+      if (_.isArray(files)) {
+        const newArray = _.filter(files, (item: FileType) => item.id !== index);
+        setFiles(newArray as FileType[]);
+      }
+      setFiles([]);
+    },
+    [files],
+  );
 
   useEffect(() => {
     if (isOpen) {
@@ -130,6 +193,7 @@ const ComposeModalMobile = ({ isOpen, onClose, dataForward, recipient, mail }: C
     if (!isOpen) {
       setContent('');
       setSubject('');
+      setFiles([]);
       setSelectedRecipient([]);
       setSelectedBccRecipient([]);
       setSelectedCcRecipient([]);
@@ -155,7 +219,10 @@ const ComposeModalMobile = ({ isOpen, onClose, dataForward, recipient, mail }: C
           </div>
           <div className="flex items-center space-x-3 text-gray-800">
             <Tooltip position="bottom" title="insert link">
-              <IoLink className="" size={22} />
+              <div className="" role="button" tabIndex={0} onClick={handleClickInsert}>
+                <IoLink className="" size={22} />
+              </div>
+              <input className="hidden" type="file" ref={inputRef} multiple onChange={handleChangeInput} />
             </Tooltip>
 
             <Tooltip position="bottom" title="sent">
@@ -198,6 +265,18 @@ const ComposeModalMobile = ({ isOpen, onClose, dataForward, recipient, mail }: C
             isDisabled={undefined}
           />
         </div>
+        {files.length !== 0 && (
+          <>
+            <p className="px-4 font-semibold">{`${t('attachment')}: ${files.length}`}</p>
+            <div className="grid grid-cols-2 gap-4 px-4 py-4">
+              {files.map((item: FileType) => (
+                <div key={item.id} className="col-span-1">
+                  <FileItemMobile id={item.id} file={item.file} onRemove={handleRemoveFileItem} />
+                </div>
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </Modal>
   );

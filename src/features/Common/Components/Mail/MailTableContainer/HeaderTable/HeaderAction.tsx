@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { BsTrash } from 'react-icons/bs';
-import { MdOutlineMoreVert, MdRestore } from 'react-icons/md';
+import { MdMoreVert, MdRestore } from 'react-icons/md';
 import { TypeChat } from '../../../../../../app/Enums/commonEnums';
 import FilterDropdown from '../../../FilterDropdown/FilterDropdown';
 
@@ -11,6 +11,7 @@ interface HeaderActionProps {
   onClickDeleteSelectRows?: () => void;
   type: TypeChat;
   onClickRestoreSelectRows: () => void;
+  onClickUnReadSelectRows: () => void;
 }
 
 const HeaderAction = ({
@@ -18,14 +19,20 @@ const HeaderAction = ({
   onClickReadSelectRows,
   onClickDeleteSelectRows,
   onClickRestoreSelectRows,
+  onClickUnReadSelectRows,
   type,
 }: HeaderActionProps) => {
   const { t } = useTranslation();
   const moreAction = [
     {
       uuid: 1,
-      label: t('mask_as_read'),
-      value: 'mask_as_read',
+      label: t('mark_as_read'),
+      value: 'mark_as_read',
+    },
+    {
+      uuid: 2,
+      label: t('mark_as_unread'),
+      value: 'mark_as_unread',
     },
   ];
 
@@ -69,13 +76,14 @@ const HeaderAction = ({
       )}
       <div className="-ml-1">
         <FilterDropdown
+          onClickUnReadSelectRows={onClickUnReadSelectRows}
           onClickReadSelectRows={onClickReadSelectRows}
           onClickDeleteSelectRows={onClickDeleteSelectRows}
           data={moreAction}
-          icon={<MdOutlineMoreVert size={18} />}
+          icon={<MdMoreVert size={20} />}
           label={t('more')}
           position="left-0 top-10"
-          className="mx-1 px-1"
+          className="mx-1 px-2"
         />
       </div>
     </>

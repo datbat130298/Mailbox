@@ -1,6 +1,6 @@
 import { FaArrowLeft } from 'react-icons/fa';
 import { twMerge } from 'tailwind-merge';
-import { AttachmentType } from '../ViewMailSpaceItem/ViewMailAttachment/ViewMailAttachments';
+import { AttachmentType } from '../../../../../../app/Types/commonTypes';
 
 interface ViewMailAttachmentImgMobileProp {
   attachment: AttachmentType;
@@ -19,15 +19,15 @@ const ViewMailAttachmentImgMobile = ({ attachment, onClose }: ViewMailAttachment
         <div className="" role="button" tabIndex={0} onClick={onClose}>
           <FaArrowLeft />
         </div>
-        <p>{attachment.name}</p>
+        <p>{attachment.file_name}</p>
       </div>
       <img
         className={twMerge(
           'max-w-4/5 z-0  h-fit max-h-fit-layout w-fit cursor-crosshair duration-150',
           // resize?.sizeString,
         )}
-        src={attachment?.absolute_slug}
-        alt={attachment?.name}
+        src={attachment?.url}
+        alt={attachment?.file_name}
       />
     </div>
   );

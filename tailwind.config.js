@@ -18,6 +18,7 @@ module.exports = {
       },
       fontSize: {
         s: ['0.6rem', { lineHeight: '0.75rem' }],
+        ms: ['15px', { lineHeight: '21px' }],
       },
       colors: {
         primary: {
