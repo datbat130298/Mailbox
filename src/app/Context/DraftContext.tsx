@@ -20,12 +20,58 @@ interface DraftAction {
   subject?: string;
   body?: string;
   viewType: ComposeViewTypeEnum;
+  typeMail?: string;
 }
 
 const DraftsContext = createContext<ComposeType[] | []>([]);
 
 const handleAddCompose = (state: ComposeType[], newCompose: ComposeType) => {
   let newArr = [];
+  if (window.innerWidth < 1536) {
+    if (state.length === 0) {
+      newArr = [
+        ...state,
+        {
+          uuid: nanoid(),
+          viewType:
+            localStorage.getItem('defaultFullScreen') && localStorage.getItem('defaultFullScreen') === 'true'
+              ? ComposeViewTypeEnum.MODAL
+              : newCompose.viewType,
+          recipient: newCompose?.recipient,
+          recipientBcc: newCompose.recipientBcc,
+          recipientCc: newCompose.recipientCc,
+          subject: newCompose.subject,
+          body: newCompose.body,
+          typeMail: newCompose?.typeMail || '',
+        },
+      ];
+      return newArr;
+    }
+    if (state.length >= 1) {
+      newArr = state.map((item: ComposeType) => {
+        return {
+          ...item,
+          viewType: ComposeViewTypeEnum.ZOOM_OUT,
+        };
+      });
+      return [
+        ...newArr,
+        {
+          uuid: nanoid(),
+          viewType:
+            localStorage.getItem('defaultFullScreen') && localStorage.getItem('defaultFullScreen') === 'true'
+              ? ComposeViewTypeEnum.MODAL
+              : newCompose.viewType,
+          recipient: newCompose?.recipient,
+          recipientBcc: newCompose.recipientBcc,
+          recipientCc: newCompose.recipientCc,
+          subject: newCompose.subject,
+          body: newCompose.body,
+          typeMail: newCompose?.typeMail || '',
+        },
+      ];
+    }
+  }
   if (state.length < 2) {
     newArr = [
       ...state,
@@ -40,6 +86,7 @@ const handleAddCompose = (state: ComposeType[], newCompose: ComposeType) => {
         recipientCc: newCompose.recipientCc,
         subject: newCompose.subject,
         body: newCompose.body,
+        typeMail: newCompose?.typeMail || '',
       },
     ];
     return newArr;
@@ -67,6 +114,7 @@ const handleAddCompose = (state: ComposeType[], newCompose: ComposeType) => {
         recipientCc: newCompose.recipientCc,
         subject: newCompose.subject,
         body: newCompose.body,
+        typeMail: newCompose?.typeMail || '',
       },
     ];
   }
@@ -93,6 +141,7 @@ const handleAddCompose = (state: ComposeType[], newCompose: ComposeType) => {
       recipientCc: newCompose.recipientCc,
       subject: newCompose.subject,
       body: newCompose.body,
+      typeMail: newCompose?.typeMail || '',
     },
   ];
 };
@@ -118,6 +167,29 @@ const handleChangeView = (state: ComposeType[], compose: ComposeType) => {
     return count;
   });
 
+  if (window.innerWidth < 1536) {
+    if (count === 1) {
+      const newArr = state.map((item: ComposeType) => {
+        if (item.uuid !== compose.uuid) {
+          return {
+            ...item,
+            viewType: ComposeViewTypeEnum.ZOOM_OUT,
+          };
+        }
+        return {
+          uuid: compose.uuid,
+          viewType: compose.viewType,
+          recipient: compose?.recipient,
+          recipientBcc: compose.recipientBcc,
+          recipientCc: compose.recipientCc,
+          subject: compose.subject,
+          body: compose.body,
+          typeMail: compose?.typeMail || '',
+        };
+      });
+      return newArr;
+    }
+  }
   if (count <= 1) {
     if (isSpecial) {
       const newArr = state.map((item: ComposeType) => {
@@ -135,6 +207,7 @@ const handleChangeView = (state: ComposeType[], compose: ComposeType) => {
           recipientCc: compose.recipientCc,
           subject: compose.subject,
           body: compose.body,
+          typeMail: compose?.typeMail || '',
         };
       });
       return newArr;
@@ -151,6 +224,7 @@ const handleChangeView = (state: ComposeType[], compose: ComposeType) => {
         recipientCc: compose.recipientCc,
         subject: compose.subject,
         body: compose.body,
+        typeMail: compose?.typeMail || '',
       };
     });
     return newArr;
@@ -168,6 +242,7 @@ const handleChangeView = (state: ComposeType[], compose: ComposeType) => {
         recipientCc: compose.recipientCc,
         subject: compose.subject,
         body: compose.body,
+        typeMail: compose?.typeMail || '',
       };
     });
     return newArr;

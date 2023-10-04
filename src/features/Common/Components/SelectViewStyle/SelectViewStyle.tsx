@@ -46,6 +46,7 @@ const SelectViewStyle = () => {
       icon: <MdOutlineViewList size={21} />,
     },
   ];
+
   useEffect(() => {
     triggerClickOutside(viewStyleTabRef, () => setIsShowSelectViewStyle(false));
   }, [viewStyleTabRef, triggerClickOutside]);
@@ -56,6 +57,7 @@ const SelectViewStyle = () => {
       setSelectStyle(currentStyle);
     }
   }, [itemMailStyle]);
+
   return (
     <div
       className="flex-center my-3 h-8 w-max rounded-md p-2 text-sm hover:bg-gray-100 hover:text-primary-700"
@@ -82,9 +84,9 @@ const SelectViewStyle = () => {
               role="button"
               tabIndex={0}
               onClick={() => {
+                setIsShowSelectViewStyle(false);
                 setSelectStyle(item);
                 dispatch(setMailItemStyle(item.value));
-                setIsShowSelectViewStyle(false);
               }}
             >
               <div className="flex-center mr-1 h-full w-8">{item.icon}</div>

@@ -11,7 +11,9 @@ import { TypeChat } from '../../../../../../app/Enums/commonEnums';
 import { getConversationById } from '../../../../../../app/Services/ConversationService/ConversationService';
 import { getDetailSentById } from '../../../../../../app/Services/Sent/SentService';
 import { MailType } from '../../../../../../app/Types/commonTypes';
+import useDispatch from '../../../../../Hooks/useDispatch';
 import useNotify from '../../../../../Hooks/useNotify';
+import FilterDropdown, { FilterItemType } from '../../../FilterDropdown/FilterDropdown';
 import Modal from '../../../Modal/Modal';
 import Tooltip from '../../../Tooltip/Tooltip';
 import MailItemSkeleton from '../../MailItemSkeleton';
@@ -31,6 +33,8 @@ interface ViewMailMobileProps {
   onClickDeleteMail?: (id: number) => void;
   onClickRestoreMail?: (id: number) => void;
   onRateStar?: (id: number, value: boolean) => void;
+  onDeleteEmail?: (ids: Array<number>) => void;
+  onClickCancelSchedule?: (id: number) => void;
 }
 
 const ViewMailMobile = ({
@@ -42,10 +46,12 @@ const ViewMailMobile = ({
   onRemoveItem,
   onClickReply,
   getDetailById,
+  onDeleteEmail,
   onClickForward,
   onClickReplyAll,
   onClickDeleteMail,
   onClickRestoreMail,
+  onClickCancelSchedule,
 }: ViewMailMobileProps) => {
   const { t } = useTranslation();
   const [, setIsShowCompose] = useState(false);
@@ -55,6 +61,7 @@ const ViewMailMobile = ({
   const [emailReply, setEmailReply] = useState({});
   const { id } = useParams();
   const toast = useNotify();
+  const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchDataDetail = useCallback((idx: number) => {
@@ -86,12 +93,6 @@ const ViewMailMobile = ({
     }
   }, []);
 
-  // useEffect(() => {
-  //   if (!_.isEmpty(mailData) && type === TypeChat.INBOX) {
-  //     fetchDataDetail(mailData.id);
-  //   }
-  // }, [mailData, type]);
-
   const subjectRe = useMemo(() => {
     if (mailData?.subject) return mailData.subject;
     return '(No subject)';
@@ -106,6 +107,23 @@ const ViewMailMobile = ({
   const handleSelectMail = (mailSelected: MailType) => {
     setSelectedMail(mailSelected);
   };
+
+  const handleClickCancelSchedule = useCallback(() => {
+    if (_.isFunction(onClickCancelSchedule) && !_.isEmpty(selectedMail)) {
+      onClickCancelSchedule(selectedMail?.id || 0);
+    }
+  }, [selectedMail]);
+
+  const filterDropDown = useMemo(() => {
+    return [
+      {
+        uuid: 1,
+        label: t('cancel_schedule'),
+        value: 'cancel_schedule',
+        onClick: handleClickCancelSchedule,
+      },
+    ];
+  }, []);
 
   const handleClickForward = () => {
     onClose();
@@ -170,8 +188,8 @@ const ViewMailMobile = ({
       className="overflow-hidden rounded-none"
       contentContainerClassName="p-0 h-screen w-screen rounded-none"
     >
-      <div className="h-full w-full overflow-hidden bg-white">
-        <div className="fixed flex w-full flex-col bg-slate-100 p-3 px-4">
+      <div className="flex h-full w-full flex-col overflow-hidden bg-white">
+        <div className="flex w-full flex-col bg-slate-100 p-3 px-4">
           <div className="flex  items-center justify-between">
             <div className="flex items-center justify-center space-x-3">
               <div role="button" tabIndex={0} onClick={onClose}>
@@ -205,20 +223,22 @@ const ViewMailMobile = ({
                   </div>
                 </Tooltip>
               )}
-
-              <Tooltip position="bottom" title={t('more')}>
-                <MdMoreVert size={22} />
-              </Tooltip>
+              <FilterDropdown
+                data={type === TypeChat.SCHEDULE ? (filterDropDown as FilterItemType[]) : []}
+                position="right-5 top-7"
+                className="-mx-2 h-3"
+                type={type}
+                icon={<MdMoreVert size={20} />}
+              />
             </div>
           </div>
           <div className="flex justify-start gap-2 bg-slate-100 px-1 pb-0.5 pt-1">
-            {/* <p className="flex h-full justify-start font-medium">Subject:</p> */}
             <p className="h-max text-left text-base font-medium">{`Re: ${subjectRe}`}</p>
           </div>
         </div>
 
         {/* content */}
-        <div className="h-full w-full overflow-auto pt-[86px]">
+        <div className="h-full w-full overflow-auto">
           {!isLoading && (
             <div className="h-full w-full overflow-auto">
               {mailData && !_.isEmpty(conversation) ? (

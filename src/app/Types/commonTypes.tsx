@@ -142,8 +142,8 @@ export interface MailType {
   inbox?: Array<MailType>;
   status?: StatusSent;
   sents_email_address?: Array<SentListEmailProp>;
-  bcc?: Array<string>;
-  cc?: Array<string>;
+  bcc?: Array<SentListEmailProp>;
+  cc?: Array<SentListEmailProp>;
   email_address: string;
   email?: MailType;
   email_account?: UserDataType;
@@ -151,6 +151,7 @@ export interface MailType {
   from_email?: string;
   attachments?: Array<AttachmentType>;
   source?: TypeChat;
+  schedule_at?: string;
 }
 
 export interface FlagType {
@@ -181,4 +182,5 @@ export interface ComposeType {
   subject?: string;
   body?: string;
   viewType: ComposeViewTypeEnum;
+  typeMail?: string;
 }

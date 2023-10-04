@@ -7,6 +7,7 @@ import {
   MdOutlineContactMail,
   MdOutlineDiscount,
   MdOutlineLabel,
+  MdOutlineScheduleSend,
   MdOutlineStarBorder,
   MdOutlineSystemUpdateAlt,
   MdOutlineWatchLater,
@@ -53,6 +54,9 @@ const GetIconByKey = ({ name }: GetIconByKeyProp) => {
       break;
     case 'forums':
       icon = <MdOutlineContactMail size={18} />;
+      break;
+    case 'schedule':
+      icon = <MdOutlineScheduleSend size={22} />;
       break;
     case 'social':
       icon = <BsPersonLinesFill size={18} />;

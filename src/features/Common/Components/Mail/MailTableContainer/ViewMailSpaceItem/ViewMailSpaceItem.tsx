@@ -8,10 +8,11 @@ import { BiRightArrowCircle } from 'react-icons/bi';
 import { BsChatLeftText } from 'react-icons/bs';
 import { GoDotFill } from 'react-icons/go';
 import { IoSearchOutline } from 'react-icons/io5';
+import { MdOutlineScheduleSend } from 'react-icons/md';
 import { PiFlagPennantFill } from 'react-icons/pi';
 import { twMerge } from 'tailwind-merge';
 import { DraftActionEnum, useDraftsDispatch } from '../../../../../../app/Context/DraftContext';
-import { ComposeViewTypeEnum, TypeChat } from '../../../../../../app/Enums/commonEnums';
+import { ComposeViewTypeEnum, StatusSent, TypeChat } from '../../../../../../app/Enums/commonEnums';
 import { readEmailById } from '../../../../../../app/Services/ConversationService/ConversationService';
 import { MailType } from '../../../../../../app/Types/commonTypes';
 import useNotify from '../../../../../Hooks/useNotify';
@@ -29,6 +30,9 @@ interface ViewMailSpaceItemProp {
   handleSelectMail?: (mail: MailType) => void;
   type: string;
   selectedMail: MailType;
+  onClose: () => void;
+  onDeleteEmail?: (id: Array<number>) => void;
+  onRemoveItem?: (id: number) => void;
 }
 
 const ViewMailSpaceItem = ({
@@ -38,6 +42,9 @@ const ViewMailSpaceItem = ({
   handleSelectMail,
   selectedMail,
   type,
+  onClose,
+  onDeleteEmail,
+  onRemoveItem,
 }: ViewMailSpaceItemProp) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isShowComposeWrite, setIsShowComposeWrite] = useState(false);
@@ -56,11 +63,23 @@ const ViewMailSpaceItem = ({
   const { t } = useTranslation();
 
   const receiver = useMemo(() => {
-    if (mail.sents_email_address !== undefined && !_.isEmpty(mail.sents_email_address)) {
+    const emailReci = [];
+    if (mail?.sents_email_address && !_.isEmpty(mail.sents_email_address)) {
       const emailArr = mail.sents_email_address.map((item) => item.email_address);
-      return emailArr.join(', ');
+      emailReci.push(emailArr);
     }
-    return mail?.email_address;
+    if (mail?.bcc && !_.isEmpty(mail?.bcc)) {
+      const emailArr = mail?.bcc?.map((item) => item.email_address);
+      emailReci.push(emailArr);
+    }
+    if (mail?.cc && !_.isEmpty(mail?.cc)) {
+      const emailArr = mail?.cc?.map((item) => item.email_address);
+      emailReci?.push(emailArr);
+    }
+    if (_.isEmpty(emailReci)) {
+      return mail?.email_address;
+    }
+    return emailReci.join(', ');
   }, [mail]);
 
   const handleClickHeaderMailItem = (mailCurrent: MailType) => {
@@ -101,7 +120,7 @@ const ViewMailSpaceItem = ({
       type: DraftActionEnum.ADD_COMPOSE,
       uuid: nanoid(),
       viewType: ComposeViewTypeEnum.POPUP,
-      recipient: [{ email: mail.email_address }],
+      recipient: [{ email: mail?.email_address }],
     });
   };
 
@@ -119,9 +138,32 @@ const ViewMailSpaceItem = ({
     if (mail?.email_account?.email_address === userEmail) {
       return 'Me';
     }
-
     return mail?.email_account?.email_address;
   }, [mail]);
+
+  const handleCancelSchedule = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (_.isFunction(onRemoveItem)) {
+      onRemoveItem(mail.id);
+    }
+    if (_.isFunction(onDeleteEmail) && _.isFunction(onRemoveItem)) {
+      onDeleteEmail([mail.id]);
+      const emailRecipient = mail?.sents_email_address?.map((item) => ({ email: item.email_address }));
+      const emailRecipientBcc = mail?.bcc?.map((item) => ({ email: item.email_address }));
+      const emailRecipientCc = mail?.cc?.map((item) => ({ email: item.email_address }));
+      dispatch({
+        type: DraftActionEnum.ADD_COMPOSE,
+        uuid: nanoid(),
+        viewType: ComposeViewTypeEnum.POPUP,
+        body: mail.body,
+        subject: mail.subject,
+        recipient: emailRecipient,
+        recipientBcc: emailRecipientBcc,
+        recipientCc: emailRecipientCc,
+      });
+      onClose();
+    }
+  };
 
   useEffect(() => {
     setIsRead(mail?.read || false);
@@ -175,31 +217,39 @@ const ViewMailSpaceItem = ({
           />
         )}
         {isOpen && (
-          <div className="ml-4 flex flex-col gap-1">
-            <div className="flex items-center justify-start gap-4">
-              <p className="truncate">{emailAddress}</p>
-              <div className="flex items-center gap-0.5">
-                <GoDotFill size={10} className="mx-1 mt-0.5 text-gray-300" />
-                <div className="flex h-7 w-7 items-center justify-center rounded-md text-gray-500 hover:bg-slate-100 hover:text-black">
-                  <BsChatLeftText size={15} className="" />
-                </div>
-                {/* <div className="flex h-7 w-7 items-center justify-center rounded-md text-gray-500 hover:bg-slate-100 hover:text-black">
+          <div className="ml-4 flex w-full flex-col gap-1">
+            <div className="flex w-full justify-between">
+              <div className="flex items-center justify-start gap-4">
+                <p className="truncate">{emailAddress}</p>
+                <div className="flex items-center gap-0.5">
+                  <GoDotFill size={10} className="mx-1 mt-0.5 text-gray-300" />
+                  <div className="flex h-7 w-7 items-center justify-center rounded-md text-gray-500 hover:bg-slate-100 hover:text-black">
+                    <BsChatLeftText size={15} className="" />
+                  </div>
+                  {/* <div className="flex h-7 w-7 items-center justify-center rounded-md text-gray-500 hover:bg-slate-100 hover:text-black">
                   <IoCallOutline size={17} className="" />
                 </div>
                 <div className="flex h-7 w-7 items-center justify-center rounded-md text-gray-500 hover:bg-slate-100 hover:text-black">
                   <BsCameraVideo size={18} className="" />
                 </div> */}
-                <div className="flex h-7 w-7 items-center justify-center rounded-md text-gray-500 hover:bg-slate-100 hover:text-black">
-                  <IoSearchOutline size={18} className="" />
+                  <div className="flex h-7 w-7 items-center justify-center rounded-md text-gray-500 hover:bg-slate-100 hover:text-black">
+                    <IoSearchOutline size={18} className="" />
+                  </div>
                 </div>
               </div>
-              {/* {mail?.email_account?.email_address === userEmail && (
-                <div className="flex items-center gap-0.5">
-                  <GoDotFill size={10} className="mx-1 mt-0.5 text-gray-300" />
-                  <p className="text-sm text-gray-500">To:</p>
-                  <p className="text-sm text-gray-500">{mail?.email_address}</p>
-                </div>
-              )} */}
+              <div
+                className={twMerge(
+                  '-mr-1 hidden items-center gap-1.5 rounded-md bg-gray-50 px-3 py-1.5 text-ms font-semibold text-blue-500 hover:bg-gray-100 hover:text-blue-600',
+                  type === TypeChat.SCHEDULE && 'flex',
+                  mail?.status === StatusSent.SCHEDULE && 'flex',
+                )}
+                role="button"
+                tabIndex={0}
+                onClick={handleCancelSchedule}
+              >
+                {/* <GoDotFill size={10} className="mx-1 mt-0.5 text-gray-300" /> */}
+                {t('cancel_send')}
+              </div>
             </div>
             <div className="flex items-center justify-start gap-2">
               <div className="rounded-md text-gray-500 hover:bg-slate-100 hover:text-black">
@@ -225,11 +275,25 @@ const ViewMailSpaceItem = ({
       </div>
       {isOpen && (
         <>
-          <div className="-mt-2 ml-4 flex items-center gap-10 pb-3">
-            <BiRightArrowCircle size={17} className="mx-1 mt-0.5 text-gray-600" />
-            <div className="item-center flex gap-2">
-              <p className="text-sm text-gray-500">{t('to')}:</p>
-              <p className="text-sm text-gray-500">{receiver}</p>
+          <div className="-mt-1 ml-4 flex gap-10 pb-3">
+            <div className="flex h-full items-start">
+              <BiRightArrowCircle size={17} className="mx-1 mt-0.5 text-gray-600" />
+            </div>
+            <div className="flex items-start justify-start gap-2">
+              <p className="text-sm text-gray-600">{t('to')}:</p>
+              <p className="text-left text-sm text-gray-600">{receiver}</p>
+            </div>
+          </div>
+          <div
+            className={twMerge(
+              '-mt-2 ml-4 hidden items-center justify-between pb-3',
+              type === TypeChat.SCHEDULE && 'flex',
+              mail?.status === StatusSent.SCHEDULE && 'flex',
+            )}
+          >
+            <div className="flex items-center gap-10">
+              <MdOutlineScheduleSend size={17} className="mx-[5px] mt-0.5 text-gray-600" />
+              <p className="text-sm text-gray-600">Send scheduled for {dayjs(mail?.schedule_at).format()}</p>
             </div>
           </div>
           <div className="mx-4 break-all border-y py-4 text-left text-base">

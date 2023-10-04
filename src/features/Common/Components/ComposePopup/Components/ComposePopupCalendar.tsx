@@ -7,12 +7,13 @@ import './style.scss';
 interface ComposePopupCalendarProps {
   setSelectDay: Dispatch<SetStateAction<Date>>;
   selectDay: Date;
+  onChange?: (date: Date) => void;
 }
 
-const ComposePopupCalendar = ({ setSelectDay, selectDay }: ComposePopupCalendarProps) => {
+const ComposePopupCalendar = ({ setSelectDay, selectDay, onChange }: ComposePopupCalendarProps) => {
   return (
     <div className="flex h-fit w-fit justify-center">
-      <Calendar date={selectDay} onChange={setSelectDay} color="#BF1922" fixedHeight />
+      <Calendar date={selectDay} onChange={onChange || setSelectDay} color="#BF1922" fixedHeight />
     </div>
   );
 };

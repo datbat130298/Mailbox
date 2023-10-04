@@ -4,9 +4,10 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BiRightArrowCircle } from 'react-icons/bi';
 import { GoDotFill } from 'react-icons/go';
+import { MdOutlineScheduleSend } from 'react-icons/md';
 import { PiFlagPennantFill } from 'react-icons/pi';
 import { twMerge } from 'tailwind-merge';
-import { TypeChat } from '../../../../../../app/Enums/commonEnums';
+import { StatusSent, TypeChat } from '../../../../../../app/Enums/commonEnums';
 import { readEmailById } from '../../../../../../app/Services/ConversationService/ConversationService';
 import { AttachmentType, MailType } from '../../../../../../app/Types/commonTypes';
 import useNotify from '../../../../../Hooks/useNotify';
@@ -165,7 +166,9 @@ const ViewMailSpaceItemMobile = ({
                   'line-clamp-1 w-fit text-ellipsis text-left text-sm',
                   !isRead && 'font-semibold',
                 )}
-              >{`Re: ${subjectRe}`}</p>
+              >
+                {`Re: ${subjectRe}`}
+              </p>
               <p className={twMerge('line-clamp-1 flex w-full text-ellipsis text-sm text-gray-600')}>
                 {!_.isEmpty(mail?.body) && `- ${convertHtmlToString(mail?.body)}`}
               </p>
@@ -212,6 +215,20 @@ const ViewMailSpaceItemMobile = ({
               <p className="text-sm text-gray-500">{receiver}</p>
             </div>
           </div>
+          <div
+            className={twMerge(
+              '-mt-2 ml-4 hidden items-center justify-between pb-3',
+              type === TypeChat.SCHEDULE && 'flex',
+              mail?.status === StatusSent.SCHEDULE && 'flex',
+            )}
+          >
+            <div className="flex items-center gap-10">
+              <MdOutlineScheduleSend size={17} className="mx-[5px] mt-0.5 text-gray-600" />
+              <p className="text-sm text-gray-600">
+                Send scheduled for {dayjs(mail?.schedule_at).format('MMMM D, YYYY h:mm A')}
+              </p>
+            </div>
+          </div>
           <div className=" bg-white px-3">
             {/*  content mail */}
             <div className="px-2 text-justify text-sm">
@@ -223,13 +240,9 @@ const ViewMailSpaceItemMobile = ({
             <ViewMailAttachmentMobile attachments={mail.attachments as AttachmentType[]} />
           )}
           <div className={twMerge('mx-5 flex h-12 items-center justify-start text-blue-600')}>
-            <ViewMailSpaceButtonFooterItem
-              onClick={() => onClickReply()}
-              className="-ml-2"
-              title={t('reply')}
-            />
-            <ViewMailSpaceButtonFooterItem onClick={() => onClickReplyAll()} title={t('reply_all')} />
-            <ViewMailSpaceButtonFooterItem onClick={() => onClickForward()} title={t('forward')} />
+            <ViewMailSpaceButtonFooterItem onClick={onClickReply} className="-ml-2" title={t('reply')} />
+            <ViewMailSpaceButtonFooterItem onClick={onClickReplyAll} title={t('reply_all')} />
+            <ViewMailSpaceButtonFooterItem onClick={onClickForward} title={t('forward')} />
           </div>
         </div>
       )}

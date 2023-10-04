@@ -16,13 +16,17 @@ interface ViewMailSpaceContainerProp {
   type: string;
   getDetailById?: (id: number) => void;
   handleClose: () => void;
+  onDeleteEmail?: (id: Array<number>) => void;
+  onRemoveItem?: (id: number) => void;
 }
 
 const ViewMailSpaceContainer = ({
+  onDeleteEmail,
   mailData,
   type,
   getDetailById,
   handleClose,
+  onRemoveItem,
 }: ViewMailSpaceContainerProp) => {
   const [isShowShadow, setIsShowShadow] = useState(false);
   const [selectedMail, setSelectedMail] = useState<MailType>();
@@ -120,6 +124,8 @@ const ViewMailSpaceContainer = ({
             <div>
               {conversation?.map((mail) => (
                 <ViewMailSpaceItem
+                  onRemoveItem={onRemoveItem}
+                  onDeleteEmail={onDeleteEmail}
                   selectedMail={selectedMail || conversation[0]}
                   type={type}
                   key={mail.id}
@@ -127,11 +133,15 @@ const ViewMailSpaceContainer = ({
                   isActive={selectedMail?.id === mail.id}
                   isArray
                   handleSelectMail={handleSelectMail}
+                  onClose={handleClose}
                 />
               ))}
             </div>
           ) : (
             <ViewMailSpaceItem
+              onRemoveItem={onRemoveItem}
+              onDeleteEmail={onDeleteEmail}
+              onClose={handleClose}
               mail={selectedMail || ({} as unknown as MailType)}
               isActive
               type={type}

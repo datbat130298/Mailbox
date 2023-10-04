@@ -138,5 +138,10 @@
   "search_empty_description": "Try using search options such as sender, date, size and more.",
   "refresh": "Làm mới",
   "save_setting_success": "Đã lưu cài đặt",
-  "save_setting": "Lưu cài đặt"
+  "save_setting": "Lưu cài đặt",
+  "cancel_send": "Hoãn gửi",
+  "no_subject": "No subject",
+  "notification": "Thông báo",
+  "recipient_and_content_cannot_empty": "Người nhận và nội dung không thể rỗng",
+  "cancel_schedule": "Huỷ lịch trình"
 }

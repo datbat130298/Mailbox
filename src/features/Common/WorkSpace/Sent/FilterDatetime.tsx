@@ -94,8 +94,8 @@ const FilterDatetime = ({ onChangeSearchTerm }: FilterDateTimeTermProp) => {
     <div className="relative" ref={filterRef}>
       <div
         className={twMerge(
-          'my-3 flex h-8 w-fit rounded-md px-3  hover:bg-gray-100 hover:text-primary-700',
-          isShowFilterDropdown && 'bg-gray-100 text-primary-700',
+          'flex h-8 w-fit rounded-md bg-[#F5F6F8] px-3 hover:bg-[#ececee] ',
+          isShowFilterDropdown && 'bg-gray-100 ',
         )}
         role="button"
         tabIndex={0}
@@ -106,7 +106,7 @@ const FilterDatetime = ({ onChangeSearchTerm }: FilterDateTimeTermProp) => {
         <div className="flex-center h-full w-max">
           <FaRegCalendarAlt size={17} />
         </div>
-        <div className="ml-2 text-sm leading-8">{t('time')}</div>
+        <div className="ml-2 hidden text-sm font-semibold leading-8 md:block">{t('time')}</div>
       </div>
       <div
         className={twMerge(
@@ -126,7 +126,9 @@ const FilterDatetime = ({ onChangeSearchTerm }: FilterDateTimeTermProp) => {
               tabIndex={0}
               onClick={() => {
                 setSelectFilterBy(item.value);
-                setIsShowFilterDropdown(false);
+                if (item.value !== 'custom_range') {
+                  setIsShowFilterDropdown(false);
+                }
               }}
             >
               <div className="h-full w-40 px-9 text-start  text-sm leading-8">{item.label}</div>

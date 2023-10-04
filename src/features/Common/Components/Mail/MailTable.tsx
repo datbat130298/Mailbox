@@ -4,8 +4,8 @@ import { useInViewport } from 'react-in-viewport';
 import { twMerge } from 'tailwind-merge';
 import { TypeChat } from '../../../../app/Enums/commonEnums';
 import { MailType } from '../../../../app/Types/commonTypes';
-import MailItem from './MailItem';
 import MailItemSkeleton from './MailItemSkeleton';
+import MailItem2 from './MailTableContainer/MailItem/MailIteam';
 
 interface MailTableProps {
   data: Array<MailType>;
@@ -69,7 +69,7 @@ const MailTable = ({
         {!_.isEmpty(data) &&
           !isLoading &&
           data?.map((item) => (
-            <MailItem
+            <MailItem2
               readEmail={readEmail}
               onRemoveItem={onRemoveItem}
               unReadEmail={unReadEmail}

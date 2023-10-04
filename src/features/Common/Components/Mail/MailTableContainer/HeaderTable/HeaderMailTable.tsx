@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React, { ForwardedRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdRefresh } from 'react-icons/md';
+import { MdOutlineScheduleSend, MdRefresh } from 'react-icons/md';
 import { useSearchParams } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 import { TypeChat } from '../../../../../../app/Enums/commonEnums';
@@ -10,9 +10,10 @@ import { BaseQueryParamsType } from '../../../../../../app/Types/commonTypes';
 import useNotify from '../../../../../Hooks/useNotify';
 import { queryParamsDefault } from '../../../../../utils/helpers';
 import FilterDatetime from '../../../../WorkSpace/Sent/FilterDatetime';
-import FilterDropdown from '../../../FilterDropdown/FilterDropdown';
+import FilterDropdown, { FilterItemType } from '../../../FilterDropdown/FilterDropdown';
 import Checkbox from '../../../Form/Checkbox';
 import SelectViewStyle from '../../../SelectViewStyle/SelectViewStyle';
+import ButtonHeaderTable from './ButtonHeaderTable';
 import HeaderAction from './HeaderAction';
 import PaginationTable, { MetaType } from './PaginationTable';
 
@@ -32,6 +33,9 @@ interface HeaderMailTableProps {
   meta: MetaType;
   onChangePage?: (page: number) => void;
   onChangeSearchTerm?: (value: BaseQueryParamsType, type: string) => void;
+  onSelectRead: () => void;
+  onSelectUnRead: () => void;
+  onSelectAllDropdown: () => void;
 }
 
 const HeaderMailTable = (
@@ -52,6 +56,9 @@ const HeaderMailTable = (
     onClickRestoreSelectRows,
     onClickUnReadSelectRows,
     type,
+    onSelectRead,
+    onSelectUnRead,
+    onSelectAllDropdown,
   }: HeaderMailTableProps,
   ref: ForwardedRef<HTMLDivElement>,
 ) => {
@@ -59,23 +66,6 @@ const HeaderMailTable = (
   const [, setSearchParams] = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
   const toast = useNotify();
-  const filterCheckboxData = [
-    {
-      uuid: 1,
-      label: t('all'),
-      value: 'all',
-    },
-    {
-      uuid: 2,
-      label: t('unread'),
-      value: 'unread',
-    },
-    {
-      uuid: 3,
-      label: t('read'),
-      value: 'read',
-    },
-  ];
 
   const handleClickRefresh = () => {
     setIsLoading(true);
@@ -92,59 +82,91 @@ const HeaderMailTable = (
       });
   };
 
+  const filterCheckboxData = [
+    {
+      uuid: 1,
+      label: t('all'),
+      value: 'all',
+      onClick: onSelectAllDropdown,
+    },
+    {
+      uuid: 2,
+      label: t('unread'),
+      value: 'unread',
+      onClick: onSelectUnRead,
+    },
+    {
+      uuid: 3,
+      label: t('read'),
+      value: 'read',
+      onClick: onSelectRead,
+    },
+  ];
+
   return (
-    <div
-      className={twMerge(
-        'z-40 flex h-14 w-full justify-between rounded-t-lg px-2 text-gray-700 ',
-        isShowShadow ? 'shadow-bottom' : 'border-b-[0.5px]',
-      )}
-      ref={ref}
-    >
-      <div className="flex h-full w-fit gap-x-0.5">
-        <div className="group my-3 flex h-8 w-fit rounded-md px-2 hover:bg-gray-100">
-          <div className="flex-center h-full w-max">
-            <Checkbox
-              checked={isChecked}
-              indeterminate={isChecked}
-              onChange={(e) => onClickSelectAll(e.target.checked)}
-              className="group-hover:border-primary-700 group-hover:text-primary-700"
+    <>
+      <div
+        className={twMerge(
+          'hidden w-full items-center justify-start gap-3 px-4 pt-3 text-gray-700 ',
+          type === TypeChat.SCHEDULE && 'flex',
+        )}
+      >
+        <div className="flex h-full items-start">
+          <MdOutlineScheduleSend size={24} />
+        </div>
+        <p className="text-left text-gray-600">Messages in Scheduled will be sent at their scheduled time.</p>
+      </div>
+      <div
+        className={twMerge(
+          'z-40 flex h-14 w-full justify-between rounded-t-lg px-2 text-gray-700 ',
+          isShowShadow ? 'shadow-bottom' : 'border-b',
+        )}
+        ref={ref}
+      >
+        <div className="flex h-full w-fit items-center gap-x-1 md:gap-x-4">
+          <div className="group flex h-8 w-fit rounded-md bg-[#F5F6F8] px-2 hover:bg-[#ECEDF0]">
+            <div className="flex-center h-full w-max">
+              <Checkbox
+                checked={isChecked}
+                indeterminate={isChecked}
+                onChange={(e) => onClickSelectAll(e.target.checked)}
+                className=""
+                classNameBorder="border-gray-600"
+              />
+            </div>
+            <FilterDropdown
+              elementStyle={<div className="hidden" />}
+              data={filterCheckboxData as FilterItemType[]}
+              position="-left-6 top-10"
+              type={type}
             />
           </div>
-          <FilterDropdown
-            elementStyle={<div className="hidden" />}
-            data={filterCheckboxData}
-            position="-left-6 top-10"
+          {_.includes(actionArray, 'datetime') && !isChecked && (
+            <FilterDatetime onChangeSearchTerm={onChangeSearchTerm} />
+          )}
+          <HeaderAction
+            type={type}
+            onClickUnReadSelectRows={onClickUnReadSelectRows}
+            onClickRestoreSelectRows={onClickRestoreSelectRows}
+            showAction={isChecked}
+            onClickReadSelectRows={onClickReadSelectRows}
+            onClickDeleteSelectRows={onClickDeleteSelectRows}
+          />
+          <ButtonHeaderTable
+            icon={<MdRefresh size={20} className={twMerge('animate-spin', !isLoading && 'animate-none')} />}
+            title={t('refresh')}
+            onClick={handleClickRefresh}
           />
         </div>
-        {_.includes(actionArray, 'datetime') && !isChecked && (
-          <FilterDatetime onChangeSearchTerm={onChangeSearchTerm} />
-        )}
-        <HeaderAction
-          type={type}
-          onClickUnReadSelectRows={onClickUnReadSelectRows}
-          onClickRestoreSelectRows={onClickRestoreSelectRows}
-          showAction={isChecked}
-          onClickReadSelectRows={onClickReadSelectRows}
-          onClickDeleteSelectRows={onClickDeleteSelectRows}
-        />
-        <div
-          className=" z-10 my-3 ml-1 flex h-8 items-center justify-center gap-1.5 rounded-md px-2 text-sm hover:bg-slate-100 hover:text-primary-700"
-          role="button"
-          tabIndex={0}
-          onClick={handleClickRefresh}
-        >
-          <MdRefresh size={20} className={twMerge('animate-spin', !isLoading && 'animate-none')} />
-          <p className="hidden lg:block">{t('refresh')}</p>
+        <div className="hidden h-full w-fit gap-2 sm:flex">
+          {!_.isEmpty(meta) && <PaginationTable meta={meta || {}} onChange={onChangePage} />}
+          <SelectViewStyle />
+        </div>
+        <div className="flex h-full w-fit items-center gap-1 sm:hidden">
+          {!_.isEmpty(meta) && <PaginationTable meta={meta || {}} onChange={onChangePage} />}
         </div>
       </div>
-      <div className="hidden h-full w-fit gap-2 sm:flex">
-        {!_.isEmpty(meta) && <PaginationTable meta={meta || {}} onChange={onChangePage} />}
-        <SelectViewStyle />
-      </div>
-      <div className="flex h-full w-fit items-center gap-1 sm:hidden">
-        {!_.isEmpty(meta) && <PaginationTable meta={meta || {}} onChange={onChangePage} />}
-      </div>
-    </div>
+    </>
   );
 };
 

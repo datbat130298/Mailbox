@@ -21,9 +21,9 @@ import ComposePopupButtonSend from './ComposePopupButtonSend';
 import ComposePopupHeader from './ComposePopupHeader';
 import ComposePopupInput from './ComposePopupInput';
 import ComposePopupRecipient from './ComposePopupRecipient/ComposePopupRecipient';
-import ComposePopupSelectTimeModal from './ComposePopupSelectTimeModal';
 import ComposePopupToolbarItem from './ComposePopupToolbarItem';
 import WriterCompose from './EditorWriterCompose';
+import ComposePopupSelectTimeModal from './PickTimeAndDate/ComposePopupSelectTimeModal';
 
 export interface ComposePopupProps {
   body: string;
@@ -50,7 +50,7 @@ export interface ComposePopupProps {
   handleClickInsertContent?: (text: string) => void;
   handleClickChangeView?: () => void;
   isShowToolbar?: boolean;
-  onClickSend: () => void;
+  onClickSend: (date?: string) => void;
   onChangeAttachment: (arr: FileLoadedType[]) => void;
   attachments: FileLoadedType[];
   isLoading: boolean;
@@ -125,20 +125,12 @@ const ComposePopup = ({
     onClickSend();
   };
 
-  const handleClickArrow = () => {
-    // eslint-disable-next-line no-console
-    console.log('this is Arrow');
-  };
-
   const handleClickSendWihTime = () => {
-    // eslint-disable-next-line no-console
-    console.log('this is SendWithTime');
     setIsShowSelectTimeModal(true);
   };
 
-  const handleSubmitSchedule = () => {
-    // eslint-disable-next-line no-console
-    console.log('this is SubmitSchudule');
+  const handleSubmitSchedule = (date: string) => {
+    onClickSend(date);
   };
 
   const handleClickImportFile = () => {
@@ -311,7 +303,6 @@ const ComposePopup = ({
             <ComposePopupButtonSend
               isLoading={isLoading}
               onClickSend={handleClickSend}
-              onClickArrow={handleClickArrow}
               onClickSendWithTime={handleClickSendWihTime}
             />
             <div className="hidden w-full items-center justify-start sm:flex">

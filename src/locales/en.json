@@ -88,6 +88,7 @@
   "spam": "Spam",
   "important": "Important",
   "schedules": "Schedules",
+  "schedule": "Schedule",
   "chats": "Chats",
   "new_label": "New label",
   "main-menu": "Main menu",
@@ -141,5 +142,10 @@
   "search_empty_description": "Try using search options such as sender, date, size and more.",
   "refresh": "Refresh",
   "save_setting_success": "Saved settings",
-  "save_setting": "Save setting"
+  "save_setting": "Save setting",
+  "cancel_send": "Cancel send",
+  "no_subject": "No subject",
+  "notification": "Notification",
+  "recipient_and_content_cannot_empty": "Recipient and content cannot be empty",
+  "cancel_schedule": "Cancel schedule"
 }

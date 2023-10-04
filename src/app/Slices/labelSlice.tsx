@@ -49,6 +49,19 @@ const systemLabels = [
   },
   {
     id: 5,
+    to: '/schedule',
+    name: 'schedule',
+    display: [
+      {
+        hide: false,
+      },
+      {
+        show: true,
+      },
+    ],
+  },
+  {
+    id: 6,
     to: '/spam',
     name: 'spam',
     display: [
@@ -61,7 +74,7 @@ const systemLabels = [
     ],
   },
   {
-    id: 6,
+    id: 7,
     to: '/trash',
     name: 'trash',
     quantity: 13,
@@ -75,7 +88,7 @@ const systemLabels = [
     ],
   },
   {
-    id: 7,
+    id: 8,
     to: '/drafts',
     name: 'drafts',
     display: [

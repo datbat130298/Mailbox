@@ -1,9 +1,11 @@
+import _ from 'lodash';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { BsTrash } from 'react-icons/bs';
+import { FiTrash2 } from 'react-icons/fi';
 import { MdMoreVert, MdRestore } from 'react-icons/md';
 import { TypeChat } from '../../../../../../app/Enums/commonEnums';
 import FilterDropdown from '../../../FilterDropdown/FilterDropdown';
+import ButtonHeaderTable from './ButtonHeaderTable';
 
 interface HeaderActionProps {
   showAction: boolean;
@@ -28,11 +30,13 @@ const HeaderAction = ({
       uuid: 1,
       label: t('mark_as_read'),
       value: 'mark_as_read',
+      onClick: onClickReadSelectRows,
     },
     {
       uuid: 2,
       label: t('mark_as_unread'),
       value: 'mark_as_unread',
+      onClick: onClickUnReadSelectRows,
     },
   ];
 
@@ -40,50 +44,30 @@ const HeaderAction = ({
     <>
       {showAction && (
         <>
-          {/* <div className="my-3 ml-1 flex h-8 w-fit rounded-md px-2  hover:bg-gray-100 hover:text-primary-700">
-            <div className="flex-center h-full w-max">
-              <IoArchiveOutline size={15} />
-            </div>
-            <div className="ml-1 text-sm leading-8">{t('archive')}</div>
-          </div> */}
-          {type !== TypeChat.TRASH && (
-            <div
-              className="my-3 ml-1 flex h-8 w-fit rounded-md px-2  hover:bg-gray-100 hover:text-primary-700"
-              tabIndex={0}
-              role="button"
+          {type !== TypeChat.TRASH && _.isFunction(onClickDeleteSelectRows) && (
+            <ButtonHeaderTable
               onClick={onClickDeleteSelectRows}
-            >
-              <div className="flex-center h-full w-max">
-                <BsTrash size={14} />
-              </div>
-              <div className="ml-1 text-sm leading-8">{t('delete')}</div>
-            </div>
+              icon={<FiTrash2 size={17} />}
+              title={t('delete')}
+            />
           )}
           {type === TypeChat.TRASH && (
-            <div
-              className="my-3 ml-1 flex h-8 w-fit rounded-md px-2  hover:bg-gray-100 hover:text-primary-700"
-              tabIndex={0}
-              role="button"
+            <ButtonHeaderTable
               onClick={onClickRestoreSelectRows}
-            >
-              <div className="flex-center h-full w-max">
-                <MdRestore size={18} />
-              </div>
-              <div className="ml-1 text-sm leading-8">{t('restore')}</div>
-            </div>
+              title={t('restore')}
+              icon={<MdRestore size={18} />}
+            />
           )}
         </>
       )}
-      <div className="-ml-1">
+      <div className="">
         <FilterDropdown
-          onClickUnReadSelectRows={onClickUnReadSelectRows}
-          onClickReadSelectRows={onClickReadSelectRows}
-          onClickDeleteSelectRows={onClickDeleteSelectRows}
           data={moreAction}
           icon={<MdMoreVert size={20} />}
           label={t('more')}
           position="left-0 top-10"
-          className="mx-1 px-2"
+          className="font-semibold"
+          type={type}
         />
       </div>
     </>

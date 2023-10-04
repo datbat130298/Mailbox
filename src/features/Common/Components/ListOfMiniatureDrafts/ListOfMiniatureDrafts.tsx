@@ -10,7 +10,24 @@ const ListOfMiniatureDrafts = () => {
   const draftList = useDrafts();
   const [isLoading, setIsLoading] = useState(false);
   const maxWidthView = useMemo(() => {
-    if (draftList.length < 4) return 'max-w-[1390px]';
+    if (window.innerWidth < 1536) {
+      if (draftList.length < 3) return 'max-w-[1400px]';
+      if (draftList.length >= 3) {
+        let count = 0;
+        draftList.forEach((item: ComposeType, index: number) => {
+          if (index < draftList.length - 4) return count;
+          if (item.viewType === ComposeViewTypeEnum.POPUP) {
+            count += 1;
+            return count;
+          }
+          return count;
+        });
+        if (count === 1) return 'max-w-[1210px]';
+        if (count === 0) return 'max-w-[870px]';
+      }
+      return 'max-w-[1400px]';
+    }
+    if (draftList.length < 4) return 'max-w-[1550px]';
     if (draftList.length >= 4) {
       let count = 0;
       draftList.forEach((item: ComposeType, index: number) => {

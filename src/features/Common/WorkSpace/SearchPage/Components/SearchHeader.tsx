@@ -3,8 +3,8 @@ import _ from 'lodash';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
-import { twMerge } from 'tailwind-merge';
 import { BaseQueryParamsType } from '../../../../../app/Types/commonTypes';
+import ButtonHeaderTable from '../../../Components/Mail/MailTableContainer/HeaderTable/ButtonHeaderTable';
 import { EmailType } from '../../../Components/SelectMultiEmail/SelectMultiEmail';
 import ButtonFilter from './ButtonFilter';
 import ButtonFilterTime, { ImperativeHandleResetTimeType } from './ButtonFilterTime';
@@ -94,28 +94,9 @@ const SearchHeader = () => {
           onRemove={handleRemoveToEmail}
         />
         <ButtonFilterTime onChangeSearchTerm={handleChangeSearchTerm} ref={refTime} />
-        <div
-          className={twMerge(
-            'flex w-max items-center justify-between gap-2 rounded-md border border-gray-500 px-2 py-1 font-semibold text-gray-700 shadow-none  transition-all',
-            hasAttachment && 'border-blue-100 bg-blue-100 shadow-md',
-          )}
-          role="button"
-          tabIndex={0}
-          onClick={handleClickHasAttachment}
-        >
-          <p className="line-clamp-1 text-sm ">{t('has_attachment')}</p>
-        </div>
+        <ButtonHeaderTable onClick={handleClickHasAttachment} title={t('has_attachment')} responsive />
         {(!_.isEmpty(fromEmail) || !_.isEmpty(toEmail)) && (
-          <div
-            className={twMerge(
-              'flex w-max items-center justify-between gap-2 rounded-md border border-gray-500 px-2 py-1 font-semibold text-gray-700 hover:shadow-md active:border-blue-100 active:bg-blue-100 active:shadow-none',
-            )}
-            role="button"
-            tabIndex={0}
-            onClick={handleClickResetFilter}
-          >
-            <p className="line-clamp-1 text-sm ">{t('reset_filter')}</p>
-          </div>
+          <ButtonHeaderTable title={t('reset_filter')} onClick={handleClickResetFilter} responsive />
         )}
       </div>
       <p className="line-clamp-1 hidden items-center text-ellipsis text-center font-semibold text-blue-600 md:flex">

@@ -4,7 +4,7 @@ import React, { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useSt
 import { useTranslation } from 'react-i18next';
 import { twMerge } from 'tailwind-merge';
 import { DraftActionEnum, useDraftsDispatch } from '../../../../app/Context/DraftContext';
-import { ComposeViewTypeEnum } from '../../../../app/Enums/commonEnums';
+import { ComposeViewTypeEnum, TypeChat } from '../../../../app/Enums/commonEnums';
 import { sendEmail } from '../../../../app/Services/Sent/SentService';
 import { ComposePopupStyleType, ComposeType, MailType } from '../../../../app/Types/commonTypes';
 import useNotify from '../../../Hooks/useNotify';
@@ -87,7 +87,7 @@ const ComposePopupContainer = ({
     if (_.isFunction(onClear)) {
       onClear();
     }
-    if (!isSave) {
+    if (!isSave && compose?.typeMail !== TypeChat.DRAFT) {
       if (
         !_.isEmpty(selectedRecipient) ||
         !_.isEmpty(selectedBccRecipient) ||
@@ -120,7 +120,6 @@ const ComposePopupContainer = ({
     }
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleCloseSend = () => {
     dispatch({ type: DraftActionEnum.DELETE, viewType: ComposeViewTypeEnum.POPUP, uuid: id });
     if (_.isFunction(onClear)) {
@@ -173,7 +172,7 @@ const ComposePopupContainer = ({
     return false;
   }, [selectedRecipient, selectedBccRecipient, selectedCcRecipient]);
 
-  const handleClickSend = () => {
+  const handleClickSend = (date?: string) => {
     setIsLoadingSend(true);
     setIsLoading(true);
     if (!isAllowSend) {
@@ -194,6 +193,7 @@ const ComposePopupContainer = ({
       files: attachmentArrayString,
       body,
       type: 'PROCESSING',
+      schedule_at: date || '',
       subject,
     };
     sendEmail(dataSubmit)

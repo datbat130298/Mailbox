@@ -1,5 +1,6 @@
 import { Dialog, Transition } from '@headlessui/react';
 import _ from 'lodash';
+import { nanoid } from 'nanoid';
 import React, { forwardRef, Fragment, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BiSearch } from 'react-icons/bi';
@@ -37,7 +38,11 @@ const SidebarResponsive = (
 
   const fetchDataLabel = useCallback(() => {
     getSettingLabel()
-      .then((res) => dispatch(updateLabelSystemDisplay(res.value)))
+      .then((res) => {
+        if (res.value.length() === 8) {
+          dispatch(updateLabelSystemDisplay(res.value));
+        }
+      })
       .catch(() => toast.error('action_error'));
   }, []);
 
@@ -154,7 +159,7 @@ const SidebarResponsive = (
                   visibleSide.map((visibleSideItem) => (
                     <SidebarItem
                       onCloseMobile={onClose}
-                      key={visibleSideItem.id}
+                      key={nanoid()}
                       to={visibleSideItem.to}
                       title={visibleSideItem.name}
                       tooltipText={t(visibleSideItem.name)}
@@ -167,7 +172,7 @@ const SidebarResponsive = (
                   {hiddenSidebar.map((hiddenSidebarItem) => (
                     <SidebarItem
                       onCloseMobile={onClose}
-                      key={hiddenSidebarItem.id}
+                      key={nanoid()}
                       to={hiddenSidebarItem.to}
                       title={hiddenSidebarItem.name}
                       tooltipText={t(hiddenSidebarItem.name)}

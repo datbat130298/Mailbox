@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import { nanoid } from 'nanoid';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { twMerge } from 'tailwind-merge';
@@ -98,11 +97,12 @@ const MailTableContainer = ({
     const listEmail = convertArrayEmailString(mail.sents_email_address || []);
     dispatch2({
       type: DraftActionEnum.ADD_COMPOSE,
-      uuid: nanoid(),
+      uuid: mail.id.toString(),
       viewType: ComposeViewTypeEnum.POPUP,
       recipient: listEmail as unknown as EmailType[],
       subject: mail.subject,
       body: mail.body,
+      typeMail: TypeChat.DRAFT,
     });
   };
 
@@ -159,21 +159,55 @@ const MailTableContainer = ({
     return setSelectRows([]);
   };
 
+  const handleSelectAllDropdown = () => {
+    const selectAll = mailData.map((item) => item.id);
+    setSelectRows(selectAll);
+  };
+
+  const handleSelectRead = useCallback(() => {
+    const mailsRead = mailData.filter((item) => item.read);
+    const selectRead = mailsRead.map((item) => item.id);
+    setSelectRows(selectRead);
+  }, [mailData]);
+
+  const handleSelectUnRead = useCallback(() => {
+    const mailsRead = mailData.filter((item) => !item.read);
+    const selectRead = mailsRead.map((item) => item.id);
+    setSelectRows(selectRead);
+  }, [mailData]);
+
   const handleClickReadSelectRows = useCallback(() => {
-    if (!_.isFunction(readEmail) || _.isEmpty(selectRows)) return;
-    readEmail(selectRows)
+    if (!_.isFunction(readEmail)) return;
+    if (!_.isEmpty(selectRows)) {
+      readEmail(selectRows)
+        .then(() => {
+          setSelectRows([]);
+          fetchData();
+        })
+        .catch(() => toast.error(t('action_error')));
+      setSelectRows([]);
+      return;
+    }
+    const selectAll = mailData.map((item) => item.id);
+    readEmail(selectAll)
       .then(() => {
         setSelectRows([]);
         fetchData();
       })
       .catch(() => toast.error(t('action_error')));
-  }, [selectRows]);
+  }, [selectRows, mailData]);
 
-  const handleClickUnReadSelectRows = useCallback(() => {
-    if (!_.isFunction(unReadEmail) || _.isEmpty(selectRows)) return;
-    unReadEmail(selectRows);
+  const handleClickUnReadSelectRows = useCallback(async () => {
+    if (!_.isFunction(unReadEmail)) return;
+    if (!_.isEmpty(selectRows)) {
+      await unReadEmail(selectRows);
+      setSelectRows([]);
+      return;
+    }
+    const selectAll = mailData.map((item) => item.id);
+    await unReadEmail(selectAll);
     setSelectRows([]);
-  }, [selectRows]);
+  }, [selectRows, mailData]);
 
   const handleClickDeleteMultiEmail = () => {
     if (!_.isFunction(deleteEmail) || _.isEmpty(selectRows)) return;
@@ -220,6 +254,17 @@ const MailTableContainer = ({
       .finally(() => setIsShowLoading(false));
   };
 
+  const handleClickCancelScheduleMobile = useCallback((id: number) => {
+    if (_.isFunction(deleteEmail)) {
+      deleteEmail([id]);
+    }
+    if (_.isFunction(onRemoveItem)) {
+      onRemoveItem(id);
+    }
+    setIsShowViewMailMobile(false);
+    setIsShowComposeMobile(true);
+  }, []);
+
   const onMouseDown = useCallback((event: MouseEvent) => {
     event.preventDefault();
     isClicked.current = true;
@@ -247,7 +292,7 @@ const MailTableContainer = ({
         tableRef.current.style.width = `${event.clientX - 95}px`;
       }
       if (tableRef.current !== null && isShowFullSideBar) {
-        tableRef.current.style.width = `${event.clientX - 283}px`;
+        tableRef.current.style.width = `${event.clientX - 273}px`;
       }
     },
     [isShowFullSideBar],
@@ -303,6 +348,9 @@ const MailTableContainer = ({
   return (
     <div className={twMerge('flex h-full w-full flex-col overflow-hidden text-center')}>
       <HeaderMailTable
+        onSelectAllDropdown={handleSelectAllDropdown}
+        onSelectRead={handleSelectRead}
+        onSelectUnRead={handleSelectUnRead}
         onChangeSearchTerm={handleChangeSearchTerm}
         type={type}
         onClickUnReadSelectRows={handleClickUnReadSelectRows}
@@ -355,6 +403,8 @@ const MailTableContainer = ({
         {isShowViewMailSpace && (
           <div className="z-10 h-full w-full flex-1 bg-white" ref={viewMailRef}>
             <ViewMailSpace
+              onRemoveItem={onRemoveItem}
+              onDeleteEmail={deleteEmail}
               handleClose={handleClose}
               mailData={selectedMail}
               ref={dragBarSide}
@@ -365,6 +415,7 @@ const MailTableContainer = ({
         )}
       </div>
       <ViewMailMobile
+        onClickCancelSchedule={handleClickCancelScheduleMobile}
         onClickRestoreMail={handleRestore}
         onClickDeleteMail={handleClickDelete}
         getDetailById={getDetailById}
@@ -389,6 +440,7 @@ const MailTableContainer = ({
         onClickReplyAll={() => setIsShowComposeMobile(true)}
       />
       <ComposeModalMobile
+        type={type}
         recipient={emailReply}
         isOpen={isShowComposeMobile}
         mail={selectedMail}
