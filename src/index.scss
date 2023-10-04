@@ -8,6 +8,16 @@
   @apply flex flex-shrink-0 items-center justify-center;
 }
 
+.EmojiPickerReact * {
+  @apply font-sans tracking-normal;
+  .epr-emoji-category-label {
+    @apply font-medium #{!important};
+  }
+  .epr-emoji-category.epr-hidden-on-search {
+    @apply animate-none text-gray-700 #{!important};
+  }
+}
+
 body {
   @apply overflow-hidden;
 }

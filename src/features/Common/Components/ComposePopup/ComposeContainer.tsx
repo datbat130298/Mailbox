@@ -1,3 +1,4 @@
+import { EmojiClickData } from 'emoji-picker-react';
 import _ from 'lodash';
 import { nanoid } from 'nanoid';
 import React, { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react';
@@ -80,6 +81,14 @@ const ComposePopupContainer = ({
     //   return;
     // }
     setBody(value);
+  }, []);
+
+  const handleInsertEmoji = useCallback((emoji: EmojiClickData) => {
+    const popup = document.getElementById(`${id}`);
+    if (!_.isEmpty(popup?.getElementsByTagName('p'))) {
+      const textContent = popup?.getElementsByTagName('p')[0].textContent;
+      handleChangeEditor(textContent + emoji.emoji);
+    }
   }, []);
 
   const handleClose = (isSave?: boolean) => {
@@ -297,6 +306,7 @@ const ComposePopupContainer = ({
             handleClickInsertContent={handleClickInsertContent}
             body={body}
             onClose={handleClose}
+            onInsertEmoji={handleInsertEmoji}
             onChangeEditor={handleChangeEditor}
             selectRecipient={selectedRecipient || undefined}
             selectedCcRecipient={selectedCcRecipient || undefined}
@@ -318,6 +328,7 @@ const ComposePopupContainer = ({
         )}
       {compose && compose.viewType === ComposeViewTypeEnum.POPUP && (
         <ComposePopup
+          onInsertEmoji={handleInsertEmoji}
           isLoading={isLoadingSend}
           attachments={attachments}
           onChangeAttachment={handleChangeAttachment}
@@ -356,6 +367,7 @@ const ComposePopupContainer = ({
             attachments={attachments}
             onChangeAttachment={handleChangeAttachment}
             onClickSend={handleClickSend}
+            onInsertEmoji={handleInsertEmoji}
             id={id}
             body={body}
             onChangeEditor={handleChangeEditor}
