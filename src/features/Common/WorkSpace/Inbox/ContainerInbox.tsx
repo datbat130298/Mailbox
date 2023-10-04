@@ -48,6 +48,7 @@ const ContainerInbox = () => {
       })
       .finally(() => {
         setIsLoading(false);
+        setIsShowLoading(false);
       });
   }, [queryParams]);
 
@@ -90,6 +91,7 @@ const ContainerInbox = () => {
   };
 
   const handleClickUnread = (ids: Array<number>) => {
+    setIsShowLoading(true);
     unReadEmailById(ids)
       .then(() => {
         if (ids.length > 1) {

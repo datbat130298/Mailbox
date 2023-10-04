@@ -1,5 +1,4 @@
 import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
 import _ from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FaRegStar, FaStar } from 'react-icons/fa';
@@ -46,7 +45,6 @@ const MailItem = ({
   const { itemMailStyle } = useSelector((state) => state.layout);
   const userEmail = useSelector((state) => state.user.email);
   const user = useSelector((state) => state.user);
-  dayjs.extend(utc);
 
   const emailShow = useMemo(() => {
     if (type === TypeChat.DRAFT) {

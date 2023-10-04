@@ -1,18 +1,23 @@
 import dayjs from 'dayjs';
-import { ChangeEventHandler, useEffect, useMemo, useState } from 'react';
+import { ChangeEventHandler, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IoClose } from 'react-icons/io5';
-import Modal from '../../Modal/Modal';
-import ComposePopupCalendar from './ComposePopupCalendarPicker';
+import Modal from '../../../Modal/Modal';
+import ComposePopupCalendar from '../ComposePopupCalendar';
 
 interface ComposePopupPickDateAndTimeModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSubmit: (date: string) => void;
 }
 
-const ComposePopupPickDateAndTimeModal = ({ isOpen, onClose }: ComposePopupPickDateAndTimeModalProps) => {
+const ComposePopupPickDateAndTimeModal = ({
+  isOpen,
+  onClose,
+  onSubmit,
+}: ComposePopupPickDateAndTimeModalProps) => {
   const [selectDay, setSelectDay] = useState(new Date());
-  const [selectHour, setSelectHour] = useState(dayjs().format('HH:mm'));
+  const [selectHour, setSelectHour] = useState(dayjs().format('HH:mm:ss'));
 
   const { t } = useTranslation();
 
@@ -35,10 +40,15 @@ const ComposePopupPickDateAndTimeModal = ({ isOpen, onClose }: ComposePopupPickD
     return false;
   }, [selectDay]);
 
+  const handleSubmitCustomTime = useCallback(() => {
+    onSubmit(`${dayjs(selectDay).format('YYYY-MM-DD')} ${selectHour}`);
+    onClose();
+  }, [selectDay, selectHour]);
+
   useEffect(() => {
     if (!isOpen) {
       setSelectDay(new Date());
-      setSelectHour(dayjs().format('HH:mm'));
+      setSelectHour(dayjs().format('HH:mm:ss'));
     }
   }, [isOpen]);
 
@@ -49,6 +59,7 @@ const ComposePopupPickDateAndTimeModal = ({ isOpen, onClose }: ComposePopupPickD
       isShowHeader={false}
       contentContainerClassName="w-[650px] h-[420px] pt-6 pb-0 -mb-7"
       isAllowSubmit={isDisable}
+      onConfirm={handleSubmitCustomTime}
     >
       <div className="flex  items-center justify-between pl-8 pr-9 text-xl font-semibold">
         {t('pick_date_time')}

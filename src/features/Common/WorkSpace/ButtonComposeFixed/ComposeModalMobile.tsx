@@ -1,11 +1,12 @@
 import _ from 'lodash';
 import { nanoid } from 'nanoid';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IoArrowBack, IoLink } from 'react-icons/io5';
 import { MdMoreVert } from 'react-icons/md';
 import { TbSend } from 'react-icons/tb';
 import { twMerge } from 'tailwind-merge';
+import { TypeChat } from '../../../../app/Enums/commonEnums';
 import { sendEmail } from '../../../../app/Services/Sent/SentService';
 import { uploadImage } from '../../../../app/Services/UploadService';
 import { MailType } from '../../../../app/Types/commonTypes';
@@ -15,6 +16,9 @@ import { FileType } from '../../Components/ComposePopup/Components/Attachments/A
 import ComposePopupInput from '../../Components/ComposePopup/Components/ComposePopupInput';
 import ComposePopupRecipient from '../../Components/ComposePopup/Components/ComposePopupRecipient/ComposePopupRecipient';
 import WriterCompose from '../../Components/ComposePopup/Components/EditorWriterCompose';
+import ComposePopupSelectTimeModal from '../../Components/ComposePopup/Components/PickTimeAndDate/ComposePopupSelectTimeModal';
+import ErrorSchedule from '../../Components/ComposePopup/Components/PickTimeAndDate/ErrorSchedule';
+import FilterDropdown, { FilterItemType } from '../../Components/FilterDropdown/FilterDropdown';
 import Modal from '../../Components/Modal/Modal';
 import { EmailType } from '../../Components/SelectMultiEmail/SelectMultiEmail';
 import Tooltip from '../../Components/Tooltip/Tooltip';
@@ -26,17 +30,26 @@ interface ComposeModalMobileProp {
   mail?: MailType | null;
   dataForward?: string;
   recipient?: Array<EmailType>;
+  type?: TypeChat;
 }
 
-const ComposeModalMobile = ({ isOpen, onClose, dataForward, recipient, mail }: ComposeModalMobileProp) => {
+const ComposeModalMobile = ({
+  isOpen,
+  onClose,
+  dataForward,
+  recipient,
+  mail,
+  type,
+}: ComposeModalMobileProp) => {
   const [subject, setSubject] = useState<string>('');
   const [selectedRecipient, setSelectedRecipient] = useState<Array<EmailType>>([]);
   const [selectedCcRecipient, setSelectedCcRecipient] = useState<Array<EmailType>>([]);
   const [selectedBccRecipient, setSelectedBccRecipient] = useState<Array<EmailType>>([]);
+  const [isShowSelectTimeModal, setIsShowSelectTimeModal] = useState(false);
+  const [isShowError, setIsShowError] = useState(false);
   const [content, setContent] = useState('');
   const [, setIsSubmitting] = useState(false);
   const [files, setFiles] = useState<FileType[]>([]);
-  // const [fileUpload, setFileUpload] = useState<FileType[] | []>([]);
 
   const userEmail = useSelector((state) => state.user.email);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -73,8 +86,8 @@ const ComposeModalMobile = ({ isOpen, onClose, dataForward, recipient, mail }: C
           id: item.id || nanoid(),
           email: item.email_address,
         })) || [];
-      const recipientBcc = mail?.bcc?.map((item: string) => ({ id: nanoid(), email: item })) || [];
-      const recipientCc = mail.cc?.map((item: string) => ({ id: nanoid(), email: item }));
+      const recipientBcc = mail?.bcc?.map((item) => ({ id: nanoid(), email: item.email_address })) || [];
+      const recipientCc = mail.cc?.map((item) => ({ id: nanoid(), email: item.email_address }));
 
       setSelectedRecipient(recipientEmail as EmailType[]);
       setSelectedBccRecipient(recipientBcc as EmailType[]);
@@ -97,7 +110,30 @@ const ComposeModalMobile = ({ isOpen, onClose, dataForward, recipient, mail }: C
     return res;
   };
 
-  const handleClickSend = async () => {
+  const handleClickShowSchedule = useCallback(() => {
+    if (!_.isEmpty(recipient) && !_.isEmpty(content)) {
+      setIsShowSelectTimeModal(true);
+      return;
+    }
+    setIsShowError(true);
+  }, []);
+
+  const handleCloseError = () => {
+    setIsShowError(false);
+  };
+
+  const filterDropDown = useMemo(() => {
+    return [
+      {
+        uuid: 1,
+        label: t('schedule'),
+        value: 'schedule',
+        onClick: handleClickShowSchedule,
+      },
+    ];
+  }, []);
+
+  const handleClickSend = async (date?: string) => {
     setIsSubmitting(true);
     const recipientEmail = selectedRecipient.map((item) => item.email);
     const recipientBcc = selectedBccRecipient.map((item) => item.email);
@@ -112,6 +148,7 @@ const ComposeModalMobile = ({ isOpen, onClose, dataForward, recipient, mail }: C
       bcc: [...recipientBcc],
       body: content,
       type: 'PROCESSING',
+      schedule_at: date || '',
       subject,
     };
     onClose();
@@ -201,84 +238,97 @@ const ComposeModalMobile = ({ isOpen, onClose, dataForward, recipient, mail }: C
   }, [isOpen]);
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      isShowFooter={false}
-      isShowHeader={false}
-      className="overflow-hidden rounded-none"
-      contentContainerClassName="p-0 h-screen w-screen rounded-none"
-    >
-      <div className="flex h-full w-full flex-col">
-        <div className="flex items-center justify-between bg-slate-100 p-3 text-gray-800">
-          <div className="flex items-center space-x-3">
-            <div role="button" tabIndex={0} onClick={onClose}>
-              <IoArrowBack size={22} className="mt-0.5" />
+    <>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        isShowFooter={false}
+        isShowHeader={false}
+        className="overflow-hidden rounded-none"
+        contentContainerClassName="p-0 h-screen w-screen rounded-none"
+      >
+        <div className="flex h-full w-full flex-col">
+          <div className="flex items-center justify-between bg-slate-100 p-3 text-gray-800">
+            <div className="flex items-center space-x-3">
+              <div role="button" tabIndex={0} onClick={onClose}>
+                <IoArrowBack size={22} className="mt-0.5" />
+              </div>
+              <p className="text-lg ">{t('compose')}</p>
             </div>
-            <p className="text-lg ">{t('compose')}</p>
-          </div>
-          <div className="flex items-center space-x-3 text-gray-800">
-            <Tooltip position="bottom" title="insert link">
-              <div className="" role="button" tabIndex={0} onClick={handleClickInsert}>
-                <IoLink className="" size={22} />
-              </div>
-              <input className="hidden" type="file" ref={inputRef} multiple onChange={handleChangeInput} />
-            </Tooltip>
-
-            <Tooltip position="bottom" title="sent">
-              <div className="" role="button" tabIndex={0} onClick={handleClickSend}>
-                <TbSend size={20} className="ml-1 rotate-45" />
-              </div>
-            </Tooltip>
-            <Tooltip position="bottom" title="more">
-              <MdMoreVert size={22} />
-            </Tooltip>
-          </div>
-        </div>
-        <div className="mx-4 mt-1 flex gap-3 border-b-[0.5px] py-3 text-sm">
-          <p className="text-[#9CA3AF]">From</p>
-          <p className="text-slate-800">{userEmail}</p>
-        </div>
-        <ComposePopupInput
-          placeholder={t('subject')}
-          value={subject}
-          onChange={onChangeSubjectInput}
-          className="mx-4"
-        />
-        <ComposePopupRecipient
-          selectRecipient={selectedRecipient}
-          selectedCcRecipient={selectedCcRecipient}
-          selectedBccRecipient={selectedBccRecipient}
-          onChangeSelectRecipient={handleOnChangeRecipient}
-          onChangeSelectCcRecipient={handleOnChangeCcRecipient}
-          onChangeSelectBccRecipient={handleOnChangeBccRecipient}
-          className="mx-4"
-        />
-        <div className={twMerge('mx-2 flex-1 overflow-auto')}>
-          <WriterCompose
-            isShowToolbar={false}
-            id="compose"
-            data={content}
-            handleChangeEditor={handleChangeEditor}
-            handleChangeBlur={undefined}
-            isLoading={undefined}
-            isDisabled={undefined}
-          />
-        </div>
-        {files.length !== 0 && (
-          <>
-            <p className="px-4 font-semibold">{`${t('attachment')}: ${files.length}`}</p>
-            <div className="grid grid-cols-2 gap-4 px-4 py-4">
-              {files.map((item: FileType) => (
-                <div key={item.id} className="col-span-1">
-                  <FileItemMobile id={item.id} file={item.file} onRemove={handleRemoveFileItem} />
+            <div className="flex items-center space-x-3 text-gray-800">
+              <Tooltip position="bottom" title="insert link">
+                <div className="" role="button" tabIndex={0} onClick={handleClickInsert}>
+                  <IoLink className="" size={22} />
                 </div>
-              ))}
+                <input className="hidden" type="file" ref={inputRef} multiple onChange={handleChangeInput} />
+              </Tooltip>
+
+              <Tooltip position="bottom" title="sent">
+                <div className="" role="button" tabIndex={0} onClick={() => handleClickSend()}>
+                  <TbSend size={20} className="ml-1 rotate-45" />
+                </div>
+              </Tooltip>
+
+              <FilterDropdown
+                data={filterDropDown as FilterItemType[]}
+                position="right-5 top-7"
+                className="-mx-1 h-3"
+                type={type}
+                icon={<MdMoreVert size={20} />}
+              />
             </div>
-          </>
-        )}
-      </div>
-    </Modal>
+          </div>
+          <div className="mx-4 mt-1 flex gap-3 border-b-[0.5px] py-3 text-sm">
+            <p className="text-[#9CA3AF]">From</p>
+            <p className="text-slate-800">{userEmail}</p>
+          </div>
+          <ComposePopupInput
+            placeholder={t('subject')}
+            value={subject}
+            onChange={onChangeSubjectInput}
+            className="mx-4"
+          />
+          <ComposePopupRecipient
+            selectRecipient={selectedRecipient}
+            selectedCcRecipient={selectedCcRecipient}
+            selectedBccRecipient={selectedBccRecipient}
+            onChangeSelectRecipient={handleOnChangeRecipient}
+            onChangeSelectCcRecipient={handleOnChangeCcRecipient}
+            onChangeSelectBccRecipient={handleOnChangeBccRecipient}
+            className="mx-4"
+          />
+          <div className={twMerge('mx-2 flex-1 overflow-auto')}>
+            <WriterCompose
+              isShowToolbar={false}
+              id="compose"
+              data={content}
+              handleChangeEditor={handleChangeEditor}
+              handleChangeBlur={undefined}
+              isLoading={undefined}
+              isDisabled={undefined}
+            />
+          </div>
+          {files.length !== 0 && (
+            <>
+              <p className="px-4 font-semibold">{`${t('attachment')}: ${files.length}`}</p>
+              <div className="grid grid-cols-2 gap-4 px-4 py-4">
+                {files.map((item: FileType) => (
+                  <div key={item.id} className="col-span-1">
+                    <FileItemMobile id={item.id} file={item.file} onRemove={handleRemoveFileItem} />
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      </Modal>
+      <ComposePopupSelectTimeModal
+        isOpen={isShowSelectTimeModal}
+        setOpen={setIsShowSelectTimeModal}
+        onSubmit={handleClickSend}
+      />
+      <ErrorSchedule isOpen={isShowError} onClose={handleCloseError} />
+    </>
   );
 };
 

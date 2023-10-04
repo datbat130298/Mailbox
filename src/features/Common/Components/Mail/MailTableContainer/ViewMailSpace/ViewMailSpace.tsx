@@ -7,20 +7,21 @@ interface ViewMailSpaceProp {
   mailData: MailType | null;
   type: string;
   getDetailById?: (id: number) => void;
+  onDeleteEmail?: (id: Array<number>) => void;
+  onRemoveItem?: (id: number) => void;
 }
 
 const ViewMailSpace = (
-  { handleClose, mailData, type, getDetailById }: ViewMailSpaceProp,
+  { handleClose, mailData, type, getDetailById, onDeleteEmail, onRemoveItem }: ViewMailSpaceProp,
   ref: ForwardedRef<HTMLDivElement>,
 ) => {
   return (
-    <div className="flex h-full justify-start bg-slate-50 shadow-left">
-      <div className="w-2 flex-shrink-0 hover:cursor-col-resize" ref={ref}>
-        {/* <div className="h-14 w-full border-b-[0.5px]" /> */}
-      </div>
+    <div className="flex h-full justify-start bg-gray-50 shadow-left">
+      <div className="w-2 flex-shrink-0 hover:cursor-col-resize" ref={ref} />
       <div className="h-full flex-1">
-        {/* <ViewMailSpaceHeader handleClose={handleClose} /> */}
         <ViewMailSpaceContainer
+          onRemoveItem={onRemoveItem}
+          onDeleteEmail={onDeleteEmail}
           mailData={mailData}
           type={type}
           getDetailById={getDetailById}

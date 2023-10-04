@@ -52,7 +52,7 @@ const ComposePopupRecipient = ({
 
   const transferString = useMemo(() => {
     const array = selectRecipient?.concat(selectedBccRecipient, selectedCcRecipient);
-    const string = array?.map((item: EmailType) => item.email);
+    const string = array?.map((item: EmailType) => item?.email);
     return string?.join(', ');
   }, [selectRecipient, selectedCcRecipient, selectedBccRecipient]);
 

@@ -129,8 +129,8 @@ const ButtonFilterTime = (
     <div className="relative" ref={refTime}>
       <div
         className={twMerge(
-          'flex w-max items-center justify-between gap-2 rounded-md border border-gray-500 px-2 py-1 text-gray-700 shadow-none transition-all',
-          selectTime !== 'any_time' && 'border-blue-100 bg-blue-100 shadow-md',
+          'flex w-max items-center justify-between gap-2 rounded-md bg-[#F5F6F8] px-2 py-1.5 text-gray-700 shadow-none transition-all',
+          selectTime !== 'any_time' && ' bg-blue-950 text-white',
         )}
         role="button"
         tabIndex={0}

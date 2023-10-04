@@ -7,14 +7,12 @@ import './style.scss';
 
 interface ComposePopupButtonSendProps {
   onClickSend: () => void;
-  onClickArrow: () => void;
   onClickSendWithTime: () => void;
   isLoading: boolean;
 }
 
 const ComposePopupButtonSend = ({
   onClickSend,
-  onClickArrow,
   onClickSendWithTime,
   isLoading,
 }: ComposePopupButtonSendProps) => {
@@ -22,7 +20,6 @@ const ComposePopupButtonSend = ({
 
   const { t } = useTranslation();
   const handleClickArrow = () => {
-    onClickArrow();
     setIsShowStatusSend(true);
   };
 

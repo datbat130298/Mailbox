@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { RxDotFilled } from 'react-icons/rx';
 import { Link, useLocation } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
+import { TypeChat } from '../../../../app/Enums/commonEnums';
 import { setIsShowFullSidebar } from '../../../../app/Slices/layoutSlice';
 import useDispatch from '../../../Hooks/useDispatch';
 import useSelector from '../../../Hooks/useSelector';
@@ -56,7 +57,7 @@ const SidebarItem = ({
       to={to || pathname}
       className={twMerge(
         'relative mx-3 my-0.5 flex w-[64px] items-center justify-between overflow-hidden rounded-md py-[11px] pl-5 text-gray-700  transition-width duration-300 before:absolute before:left-0 before:top-1/2 before:h-2/3 before:w-1 before:-translate-y-1/2 before:rounded-sm before:bg-primary-600 hover:bg-slate-200',
-        (isShowFullSidebar || isShowSidebar) && 'w-[92%] sm:w-60',
+        (isShowFullSidebar || isShowSidebar) && 'w-[92%] sm:w-[235px]',
         isActivated
           ? 'bg-slate-200 font-semibold text-primary-600 before:block'
           : 'text-slate-700 before:hidden',
@@ -74,8 +75,8 @@ const SidebarItem = ({
           <GetIconByKey name={title} />
         )}
 
-        {title === 'Inbox' && quantity !== 0 && !isShowFullSidebar && (
-          <div className="absolute -top-3 left-[9px] text-primary-600">
+        {title === TypeChat.INBOX && quantity !== 0 && !isShowFullSidebar && (
+          <div className="absolute -top-3 left-3 text-primary-600">
             <RxDotFilled size={25} />
           </div>
         )}
@@ -94,7 +95,7 @@ const SidebarItem = ({
           (isShowFullSidebar || isShowSidebar) && 'font-semibold text-primary-700 opacity-100',
         )}
       >
-        {title === 'Inbox' && quantity !== 0 && quantity}
+        {title === TypeChat.INBOX && quantity !== 0 && quantity}
       </div>
     </Link>
     // </Tooltip>

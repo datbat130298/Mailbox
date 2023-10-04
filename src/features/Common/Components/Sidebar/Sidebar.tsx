@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { nanoid } from 'nanoid';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RiSettings3Line } from 'react-icons/ri';
@@ -37,8 +38,14 @@ const Sidebar = () => {
 
   const fetchDataLabel = useCallback(() => {
     getSettingLabel()
-      .then((res) => dispatch(updateLabelSystemDisplay(res.value)))
-      .catch(() => toast.error('action_error'));
+      .then((res) => {
+        if (res.value.length === 8) {
+          dispatch(updateLabelSystemDisplay(res.value));
+        }
+      })
+      .catch(() => {
+        toast.error('action_error');
+      });
   }, []);
 
   useEffect(() => {
@@ -75,8 +82,8 @@ const Sidebar = () => {
   return (
     <div
       className={twMerge(
-        'fixed left-0 top-0 z-50 mt-16 h-screen w-0 bg-slate-50 py-6 pt-0 shadow-xl sm:bg-slate-100 lg:z-[49] lg:mt-px lg:w-20 lg:pt-20 lg:shadow-none',
-        (isShowFullSidebar || isShowSidebar) && 'lg:w-[270px]',
+        'fixed left-0 top-0 z-50 mt-16 h-screen w-0 bg-slate-50 py-6 pt-0 shadow-xl sm:bg-gray-100 lg:z-[49] lg:mt-px lg:w-20 lg:pt-20 lg:shadow-none',
+        (isShowFullSidebar || isShowSidebar) && 'lg:w-[250px]',
       )}
       style={{ transition: '.2s ease-in-out' }}
       onMouseMove={() => handleMouseMove()}
@@ -89,7 +96,7 @@ const Sidebar = () => {
         {visibleSide &&
           visibleSide.map((visibleSideItem) => (
             <SidebarItem
-              key={visibleSideItem.id}
+              key={nanoid()}
               to={visibleSideItem.to}
               title={visibleSideItem.name}
               tooltipText={t(visibleSideItem.name)}
@@ -101,7 +108,7 @@ const Sidebar = () => {
         <SidebarGroup title={t('more')} isShowSidebar={isShowSidebar}>
           {hiddenSidebar.map((hiddenSidebarItem) => (
             <SidebarItem
-              key={hiddenSidebarItem.id}
+              key={nanoid()}
               to={hiddenSidebarItem.to}
               title={hiddenSidebarItem.name}
               tooltipText={t(hiddenSidebarItem.name)}

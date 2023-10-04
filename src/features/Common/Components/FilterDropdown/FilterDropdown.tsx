@@ -1,11 +1,13 @@
 import { DefaultTFuncReturn } from 'i18next';
-import _ from 'lodash';
+import { nanoid } from 'nanoid';
 import React, { cloneElement, ReactElement, useEffect, useRef, useState } from 'react';
 import { FiChevronDown } from 'react-icons/fi';
 import { twMerge } from 'tailwind-merge';
+import { TypeChat } from '../../../../app/Enums/commonEnums';
 import { triggerClickOutside } from '../../../utils/helpers';
+import FilterDropdownItem from './FilterDropDownItem';
 
-interface FilterItemType {
+export interface FilterItemType {
   uuid: number;
   label: string;
   value: string;
@@ -19,9 +21,7 @@ interface FilterDropdownProps {
   icon?: React.ReactNode;
   label?: DefaultTFuncReturn;
   className?: string;
-  onClickReadSelectRows?: () => void;
-  onClickDeleteSelectRows?: () => void;
-  onClickUnReadSelectRows?: () => void;
+  type?: TypeChat;
 }
 
 const FilterDropdown = ({
@@ -31,9 +31,7 @@ const FilterDropdown = ({
   icon,
   label,
   className,
-  onClickReadSelectRows,
-  onClickDeleteSelectRows,
-  onClickUnReadSelectRows,
+  type,
 }: FilterDropdownProps) => {
   const filterRef = useRef<HTMLDivElement>(null);
   const [isShowFilterDropdown, setIsShowFilterDropdown] = useState(false);
@@ -42,17 +40,7 @@ const FilterDropdown = ({
     triggerClickOutside(filterRef, () => setIsShowFilterDropdown(false));
   }, [filterRef, triggerClickOutside]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleClick = (item: any) => {
-    if (item.value === 'mark_as_read' && _.isFunction(onClickReadSelectRows)) {
-      onClickReadSelectRows();
-    }
-    if (item.value === 'delete' && _.isFunction(onClickDeleteSelectRows)) {
-      onClickDeleteSelectRows();
-    }
-    if (item.value === 'mark_as_unread' && _.isFunction(onClickUnReadSelectRows)) {
-      onClickUnReadSelectRows();
-    }
+  const handleClose = () => {
     setIsShowFilterDropdown(false);
   };
 
@@ -66,10 +54,7 @@ const FilterDropdown = ({
             },
           })}
           <div
-            className={twMerge(
-              'flex-center ml-1.5 h-full w-max hover:text-primary-700  group-hover:text-primary-700',
-              isShowFilterDropdown && ' text-primary-700',
-            )}
+            className={twMerge('flex-center ml-1.5 h-full w-max ', isShowFilterDropdown && '')}
             role="button"
             tabIndex={0}
             onClick={() => {
@@ -83,8 +68,8 @@ const FilterDropdown = ({
       {!elementStyle && (
         <div
           className={twMerge(
-            'my-3 flex h-8 w-fit rounded-md px-3  hover:bg-gray-100 hover:text-primary-700',
-            isShowFilterDropdown && 'bg-gray-100 text-primary-700',
+            'my-3 flex h-8 w-fit rounded-md bg-[#F5F6F8] px-3 hover:bg-[#ececee]',
+            isShowFilterDropdown && 'bg-[#ececee]',
             className,
           )}
           role="button"
@@ -94,7 +79,7 @@ const FilterDropdown = ({
           }}
         >
           <div className="flex-center h-full w-max">{icon}</div>
-          <div className="ml-1 text-sm leading-8">{label}</div>
+          <div className="ml-1 hidden text-sm leading-8 md:block">{label}</div>
         </div>
       )}
       <div
@@ -105,15 +90,7 @@ const FilterDropdown = ({
         )}
       >
         {data?.map((item) => (
-          <div
-            className={twMerge('flex h-8 min-w-max rounded-sm hover:bg-gray-200 hover:text-primary-700')}
-            key={item.uuid}
-            role="button"
-            tabIndex={0}
-            onClick={() => handleClick(item)}
-          >
-            <div className="h-full w-full px-7 text-start text-sm leading-8">{item.label}</div>
-          </div>
+          <FilterDropdownItem item={item} key={nanoid()} onClose={handleClose} type={type} />
         ))}
       </div>
     </div>

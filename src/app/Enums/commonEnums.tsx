@@ -28,10 +28,12 @@ export enum TypeChat {
   SEARCH = 'search',
   SENTS = 'sents',
   EMAIL = 'email',
+  SCHEDULE = 'schedule',
 }
 
 export enum StatusSent {
   DONE = 'DONE',
+  SCHEDULE = 'SCHEDULE',
 }
 
 export enum ImageFileExtensionEnum {

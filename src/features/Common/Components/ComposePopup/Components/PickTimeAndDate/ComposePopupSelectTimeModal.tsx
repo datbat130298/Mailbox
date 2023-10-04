@@ -1,28 +1,30 @@
 import dayjs from 'dayjs';
-import { Dispatch, SetStateAction, useMemo, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BsCalendarEvent } from 'react-icons/bs';
 import { IoClose } from 'react-icons/io5';
 import { twMerge } from 'tailwind-merge';
-import Modal from '../../Modal/Modal';
+import Modal from '../../../Modal/Modal';
+import ComposePopupPickTimeAndDateMobile from './ComposePopupPickDateAndTimeMobile';
 import ComposePopupPickDateAndTimeModal from './ComposePopupPickDateAndTimeModal';
 
 interface ComposePopupSelectTimeModalProps {
   isOpen: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  onSubmit: () => void;
+  onSubmit: (date: string) => void;
 }
 
 const ComposePopupSelectTimeModal = ({ isOpen, setOpen, onSubmit }: ComposePopupSelectTimeModalProps) => {
-  const [selectTime, setSelectTime] = useState<number>(0);
+  const [selectTime, setSelectTime] = useState<string>('');
   const [isShowSelectTime, setIsShowSelectTime] = useState<boolean>(false);
+  const [isShowSelectTimeMobile, setIsShowSelectTimeMobile] = useState(false);
 
   const { t } = useTranslation();
 
-  const handleSelectTime = (id: number) => {
-    onSubmit();
+  const handleSelectTime = (date: string) => {
+    onSubmit(dayjs(date).format('YYYY-MM-DD hh:mm:ss'));
     setOpen(false);
-    setSelectTime(id);
+    setSelectTime(date);
   };
 
   const selectTimeOption = useMemo(
@@ -53,8 +55,21 @@ const ComposePopupSelectTimeModal = ({ isOpen, setOpen, onSubmit }: ComposePopup
   }, [isOpen]);
 
   const handleClickPickTime = () => {
+    if (window.innerWidth < 1024) {
+      setIsShowSelectTimeMobile(true);
+      setOpen(false);
+      return;
+    }
     setIsShowSelectTime(true);
     setOpen(false);
+  };
+
+  const handleSubmit = useCallback(() => {
+    onSubmit(selectTime);
+  }, [selectTime]);
+
+  const handleCloseSelectTimeMobile = () => {
+    setIsShowSelectTimeMobile(false);
   };
 
   return (
@@ -65,7 +80,7 @@ const ComposePopupSelectTimeModal = ({ isOpen, setOpen, onSubmit }: ComposePopup
         contentContainerClassName="w-[380px] h-fit py-0"
         isOpen={isOpen}
         onClose={() => setOpen(false)}
-        onSubmit={onSubmit}
+        onSubmit={handleSubmit}
       >
         <div className="border-b border-gray-300 pb-2">
           <div className="px-6 pb-2 pt-3">
@@ -83,16 +98,15 @@ const ComposePopupSelectTimeModal = ({ isOpen, setOpen, onSubmit }: ComposePopup
           </div>
           <span className="pl-9 pt-3 text-base font-normal text-gray-500">{currentTimezone}</span>
           <div className="pb-2 pt-5">
-            {selectTimeOption.map((item, id) => (
+            {selectTimeOption.map((item) => (
               <div
                 key={item.id}
                 className={twMerge(
                   'flex items-center justify-between px-9 py-2 text-sm font-normal hover:cursor-pointer hover:bg-gray-100',
-                  id === selectTime && 'bg-gray-200',
                 )}
                 tabIndex={0}
                 role="button"
-                onClick={() => handleSelectTime(id)}
+                onClick={() => handleSelectTime(item.date)}
               >
                 <div className="flex items-center">{item.label}</div>
                 <div className="flex items-center text-gray-500">{item.date}</div>
@@ -113,8 +127,14 @@ const ComposePopupSelectTimeModal = ({ isOpen, setOpen, onSubmit }: ComposePopup
         </div>
       </Modal>
       <ComposePopupPickDateAndTimeModal
+        onSubmit={onSubmit}
         isOpen={isShowSelectTime}
         onClose={() => setIsShowSelectTime(false)}
+      />
+      <ComposePopupPickTimeAndDateMobile
+        onSubmit={onSubmit}
+        isOpen={isShowSelectTimeMobile}
+        onClose={handleCloseSelectTimeMobile}
       />
     </>
   );

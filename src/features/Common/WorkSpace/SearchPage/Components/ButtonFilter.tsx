@@ -89,8 +89,8 @@ const ButtonFilter = ({ title, onSelect, selected, onRemove }: ButtonFilterProp)
   return (
     <div
       className={twMerge(
-        'relative flex w-max items-center justify-between gap-2 rounded-md border border-gray-500 px-2 py-1 text-gray-700 shadow-none transition-all duration-300',
-        !_.isEmpty(selected) && 'border-blue-100 bg-blue-100 shadow-md',
+        'relative flex w-max items-center justify-between gap-2 rounded-md bg-[#F5F6F8] px-2 py-1.5 text-gray-700 shadow-none transition-all duration-300',
+        !_.isEmpty(selected) && ' bg-blue-950  text-white',
       )}
       role="button"
       tabIndex={0}
