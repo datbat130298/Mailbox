@@ -1,3 +1,4 @@
+import { EmojiClickData } from 'emoji-picker-react';
 import _ from 'lodash';
 import React, { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -6,7 +7,7 @@ import { FaRegTrashAlt } from 'react-icons/fa';
 import { FiLink2, FiMoreVertical } from 'react-icons/fi';
 import { IoMdAttach } from 'react-icons/io';
 import { IoImageOutline } from 'react-icons/io5';
-import { MdOpenInNew, MdOutlineContentCopy, MdTagFaces } from 'react-icons/md';
+import { MdOpenInNew, MdOutlineContentCopy } from 'react-icons/md';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import striptags from 'striptags';
 import { twMerge } from 'tailwind-merge';
@@ -23,6 +24,7 @@ import ComposePopupInput from './ComposePopupInput';
 import ComposePopupRecipient from './ComposePopupRecipient/ComposePopupRecipient';
 import ComposePopupToolbarItem from './ComposePopupToolbarItem';
 import WriterCompose from './EditorWriterCompose';
+import ComposeButtonFooterEmotionPicker from './Emoji/ComposeButtonFooterEmojiPicker';
 import ComposePopupSelectTimeModal from './PickTimeAndDate/ComposePopupSelectTimeModal';
 
 export interface ComposePopupProps {
@@ -54,6 +56,7 @@ export interface ComposePopupProps {
   onChangeAttachment: (arr: FileLoadedType[]) => void;
   attachments: FileLoadedType[];
   isLoading: boolean;
+  onInsertEmoji: (emoji: EmojiClickData) => void;
 }
 
 const ComposePopup = ({
@@ -86,6 +89,7 @@ const ComposePopup = ({
   isShowToolbar = false,
   onClickSend,
   isLoading,
+  onInsertEmoji,
 }: ComposePopupProps) => {
   const [isVisibleToolbar, setIsVisibleToolbar] = useState<boolean>(false);
   const [isShowSelectTimeModal, setIsShowSelectTimeModal] = useState<boolean>(false);
@@ -323,11 +327,7 @@ const ComposePopup = ({
                 icon={<FiLink2 size={19} />}
                 onClick={handleClickFormat}
               />
-              <ComposePopupToolbarItem
-                title={t('insert_emotion')}
-                icon={<MdTagFaces size={19} />}
-                onClick={handleClickFormat}
-              />
+              <ComposeButtonFooterEmotionPicker onInsertEmoji={onInsertEmoji} />
               <ComposePopupToolbarItem
                 title={t('insert_photo')}
                 icon={<IoImageOutline size={19} />}

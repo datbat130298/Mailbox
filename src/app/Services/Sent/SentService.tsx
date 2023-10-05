@@ -19,6 +19,7 @@ const getSent = async (options: BaseQueryParamsType) => {
     page: options.page || 1,
     'filter[created_at.from]': options?.start,
     'filter[created_at.to]': options?.end,
+    'filter[status]': ['SCHEDULE', 'DONE'],
     'search_by[]': options?.searchBy,
     search: options?.searchValue,
   });
