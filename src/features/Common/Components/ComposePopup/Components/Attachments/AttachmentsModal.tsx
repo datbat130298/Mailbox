@@ -107,7 +107,7 @@ const AttachmentsModal = ({ isOpen, onClose, onChangeAttachment, attachments }: 
     });
     /* eslint-disable @typescript-eslint/no-explicit-any */
     const res: any = await Promise.all(imageArr)
-      .catch(() => toast.error(t('performing_action_error')))
+      .catch(() => toast.error(t('action_error')))
       .finally(() => {
         setIsLoading(false);
       });

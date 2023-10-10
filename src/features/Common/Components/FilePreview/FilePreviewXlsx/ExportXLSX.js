@@ -40,6 +40,7 @@ function exportSheet(sheet, filename) {
   try {
     XLSX.writeFile(newWb, filename || 'Export.xlsx');
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.log(e);
   }
 }

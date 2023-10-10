@@ -15,7 +15,9 @@ const WorkSpaceRoutes = () => {
       <Route path="/sent/*" element={<ContainerSent />} />
       <Route path="/drafts/*" element={<ContainerDrafts />} />
       <Route path="/trash/*" element={<ContainerTrash />} />
-      <Route path="/settings" element={<SettingsManagement />} />
+      <Route path="/settings/" element={<SettingsManagement />}>
+        <Route path=":idTag" element={<SettingsManagement />} />
+      </Route>
       <Route path="/search" element={<SearchPage />} />
       <Route path="/starred" element={<Starred />} />
       <Route path="/schedule" element={<ContainerSchedule />} />

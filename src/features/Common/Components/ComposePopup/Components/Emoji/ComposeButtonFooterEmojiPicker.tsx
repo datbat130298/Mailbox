@@ -2,9 +2,8 @@ import EmojiPicker, { EmojiClickData, EmojiStyle } from 'emoji-picker-react';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdTagFaces } from 'react-icons/md';
-import { twMerge } from 'tailwind-merge';
 import { triggerClickOutside } from '../../../../../utils/helpers';
-import Tooltip from '../../../Tooltip/Tooltip';
+import ComposePopupToolbarItem from '../ComposePopupToolbarItem';
 import './Emoji.scss';
 
 interface ComposeButtonFooterEmotionPickerProp {
@@ -31,19 +30,11 @@ const ComposeButtonFooterEmotionPicker = ({ onInsertEmoji }: ComposeButtonFooter
 
   return (
     <div className="relative">
-      <Tooltip title={t('insert_emotion')} position="top">
-        <div
-          className={twMerge(
-            '-mb-2.5 -mr-1 flex h-8 w-8 items-center justify-center rounded-md hover:bg-gray-100',
-          )}
-          onClick={handleClickShowEmojiPicker}
-          role="button"
-          tabIndex={0}
-          // ref={emojiRef}
-        >
-          <MdTagFaces size={20} />
-        </div>
-      </Tooltip>
+      <ComposePopupToolbarItem
+        title={t('insert_emotion')}
+        icon={<MdTagFaces size={20} />}
+        onClick={handleClickShowEmojiPicker}
+      />
       {isShowEmoji && (
         <div className="absolute bottom-full" ref={emojiRef}>
           <EmojiPicker

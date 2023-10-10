@@ -100,6 +100,18 @@ const ContainerSent = () => {
       });
   };
 
+  const deleteEmailSent = (ids: Array<number>) => {
+    setIsShowLoading(true);
+    const data = ids.map((id) => ({ id, source: 'sents' }));
+    deleteEmailSentById(data)
+      .then(() => {
+        toast.success(t('delete_success'));
+        fetchData();
+      })
+      .catch(() => toast.error(t('action_error')))
+      .finally(() => setIsShowLoading(false));
+  };
+
   return (
     <div className="relative h-full w-full rounded-t-lg">
       <MailTableContainer
@@ -113,7 +125,7 @@ const ContainerSent = () => {
         fetchData={fetchData}
         meta={meta}
         onChangePage={handleChangePage}
-        deleteEmail={deleteEmailSentById}
+        deleteEmail={deleteEmailSent}
         onRateStar={handleClickStar}
         emptyComponent={
           <EmptyData message={t('sent_empty_message')} description={t('sent_empty_description')} />

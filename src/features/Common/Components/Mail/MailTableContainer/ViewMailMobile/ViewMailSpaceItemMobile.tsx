@@ -79,7 +79,7 @@ const ViewMailSpaceItemMobile = ({
 
   useEffect(() => {
     if (!_.isEmpty(mail) && !mail.read && !isRead && isOpen) {
-      readEmailById([mail.id]).catch(() => toast.error('action_error'));
+      readEmailById([mail.id]).catch(() => toast.error(t('action_error')));
       setIsRead(true);
     }
   }, [mail, isOpen]);

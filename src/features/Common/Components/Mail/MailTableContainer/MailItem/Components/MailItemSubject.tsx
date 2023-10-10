@@ -14,7 +14,7 @@ const MailItemSubject = ({ isReadMail, subject }: MailItemSubjectProp) => {
   return (
     <div
       className={twMerge(
-        'my-auto line-clamp-1 flex h-full w-fit items-baseline text-left font-semibold text-gray-900 md:items-center',
+        'my-auto line-clamp-1 flex h-full w-fit text-left font-semibold text-gray-900 md:items-center',
         isReadMail && 'font-normal',
         itemMailStyle === 'classic' && 'flex-1 md:flex-none md:items-baseline',
       )}

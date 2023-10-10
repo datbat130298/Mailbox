@@ -1,8 +1,9 @@
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { updateLabelSystemDisplay } from '../../../../app/Slices/labelSlice';
-import useDispatch from '../../../Hooks/useDispatch';
-import useSelector from '../../../Hooks/useSelector';
-import Table from './Table';
+import { updateLabelSystemDisplay } from '../../../../../app/Slices/labelSlice';
+import useDispatch from '../../../../Hooks/useDispatch';
+import useSelector from '../../../../Hooks/useSelector';
+import Table from '../Table';
 
 export interface DisplayLabel {
   hide?: boolean;
@@ -25,8 +26,13 @@ export interface TitleLabelTable {
 
 const LabelTable = () => {
   const { t } = useTranslation();
+  const [labelData, setLabelData] = useState<ValueLabelTable[]>([]);
 
   const { labelSystem: systemLabels } = useSelector((state) => state.labelSidebar);
+
+  useEffect(() => {
+    setLabelData(systemLabels);
+  }, [systemLabels]);
 
   const dispatch = useDispatch();
 
@@ -47,7 +53,7 @@ const LabelTable = () => {
 
   return (
     <div className="h-fit w-3/4 border-b border-gray-200 pb-2 pt-0.5">
-      <Table titles={titleLabels} values={systemLabels} handleChange={handleChangeLabel} />
+      <Table titles={titleLabels} values={labelData} handleChange={handleChangeLabel} />
     </div>
   );
 };

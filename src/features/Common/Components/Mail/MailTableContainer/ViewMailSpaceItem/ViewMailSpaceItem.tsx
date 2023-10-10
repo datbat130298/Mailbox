@@ -171,7 +171,7 @@ const ViewMailSpaceItem = ({
 
   useEffect(() => {
     if (!_.isEmpty(mail) && !mail.read && !isRead && isOpen) {
-      readEmailById([mail.id]).catch(() => toast.error('action_error'));
+      readEmailById([mail.id]).catch(() => toast.error(t('action_error')));
       setIsRead(true);
     }
   }, [mail, isOpen]);
@@ -194,7 +194,7 @@ const ViewMailSpaceItem = ({
       >
         <div
           className={twMerge(
-            'ml-1 flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-cyan-500',
+            'ml-1 flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-cyan-500',
             userEmail === mail?.email_account?.email_address && 'bg-sky-300 italic opacity-40',
           )}
         >
@@ -276,7 +276,7 @@ const ViewMailSpaceItem = ({
       {isOpen && (
         <>
           <div className="-mt-1 ml-4 flex gap-10 pb-3">
-            <div className="flex h-full items-start">
+            <div className="flex h-full w-8 items-start">
               <BiRightArrowCircle size={17} className="mx-1 mt-0.5 text-gray-600" />
             </div>
             <div className="flex items-start justify-start gap-2">
@@ -293,7 +293,9 @@ const ViewMailSpaceItem = ({
           >
             <div className="flex items-center gap-10">
               <MdOutlineScheduleSend size={17} className="mx-[5px] mt-0.5 text-gray-600" />
-              <p className="text-sm text-gray-600">Send scheduled for {dayjs(mail?.schedule_at).format()}</p>
+              <p className="text-sm text-gray-600">
+                Send scheduled for {dayjs(mail?.schedule_at).format('YYYY-MM-DD, h:mm')}
+              </p>
             </div>
           </div>
           <div className="mx-4 break-all border-y py-4 text-left text-base">

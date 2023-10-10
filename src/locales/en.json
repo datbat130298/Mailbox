@@ -147,5 +147,12 @@
   "no_subject": "No subject",
   "notification": "Notification",
   "recipient_and_content_cannot_empty": "Recipient and content cannot be empty",
-  "cancel_schedule": "Cancel schedule"
+  "cancel_schedule": "Cancel schedule",
+  "manage_signatures": "Manage signatures",
+  "signature": "Signature",
+  "add_signature": "Add Signature",
+  "delete_success": "Delete success",
+  "restore_success": "Restore success",
+  "restore_error": "Restore error",
+  "alert_scheduled": "Messages in Scheduled will be sent at their scheduled time."
 }

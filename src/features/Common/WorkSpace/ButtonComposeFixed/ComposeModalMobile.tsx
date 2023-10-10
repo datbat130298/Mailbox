@@ -103,10 +103,9 @@ const ComposeModalMobile = ({
           return res.absolute_slug;
         });
       }
-
       return item;
     });
-    const res = await Promise.all(imageArr).catch(() => toast.error(t('performing_action_error')));
+    const res = await Promise.all(imageArr).catch(() => toast.error(t('action_error')));
     return res;
   };
 

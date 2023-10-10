@@ -104,6 +104,18 @@ const ContainerInbox = () => {
       });
   };
 
+  const deleteEmailSent = (ids: Array<number>) => {
+    setIsShowLoading(true);
+    const data = ids.map((id) => ({ id, source: 'email' }));
+    deleteEmailById(data)
+      .then(() => {
+        toast.success(t('delete_success'));
+        fetchDataListEmail();
+      })
+      .catch(() => toast.error(t('action_error')))
+      .finally(() => setIsShowLoading(false));
+  };
+
   return (
     <div className="relative h-full w-full rounded-t-lg">
       <MailTableContainer
@@ -115,7 +127,7 @@ const ContainerInbox = () => {
         readEmail={readEmailById}
         unReadEmail={handleClickUnread}
         fetchData={fetchDataListEmail}
-        deleteEmail={deleteEmailById}
+        deleteEmail={deleteEmailSent}
         meta={meta}
         onChangePage={handleChangePage}
         onRateStar={handleClickStar}

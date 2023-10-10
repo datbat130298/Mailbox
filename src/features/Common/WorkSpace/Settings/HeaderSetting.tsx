@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 
 interface TabArray {
@@ -20,23 +21,25 @@ const HeaderSetting = ({ selectTab, handleClickTab, tab }: HeaderSettingProps) =
       <p className="px-5 py-4 text-2xl font-semibold capitalize">{t('setting')}</p>
       <div className="flex w-full items-center justify-start rounded-t-lg border-b border-gray-200 px-2">
         {tab.map((item) => (
-          <div
-            role="button"
-            tabIndex={0}
-            onClick={() => handleClickTab(item.id)}
-            className={twMerge(
-              'relative px-3 py-1 pb-2 text-sm font-medium text-slate-500',
-              selectTab === item.id && 'rounded-t-lg  border-b-0 border-gray-200 text-primary-600 ',
-            )}
-          >
-            {item.label}
-            {item.id === selectTab && (
-              <motion.div
-                className="absolute bottom-[-1px] left-0 right-0 h-[1px] bg-primary-500"
-                layoutId="underline"
-              />
-            )}
-          </div>
+          <Link to={`${item.id}`} key={item.id}>
+            <div
+              role="button"
+              tabIndex={0}
+              onClick={() => handleClickTab(item.id)}
+              className={twMerge(
+                'relative px-3 py-1 pb-2 text-sm font-medium text-slate-500',
+                selectTab === item.id && 'rounded-t-lg  border-b-0 border-gray-200 text-primary-600 ',
+              )}
+            >
+              {item.label}
+              {item.id === selectTab && (
+                <motion.div
+                  className="absolute bottom-[-1px] left-0 right-0 h-[1px] bg-primary-500"
+                  layoutId="underline"
+                />
+              )}
+            </div>
+          </Link>
         ))}
       </div>
     </div>
