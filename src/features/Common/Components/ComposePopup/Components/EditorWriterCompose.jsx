@@ -27,11 +27,12 @@ const editorConfiguration = {
       'outdent',
       'indent',
       '|',
-      // 'link',
-      // 'imageUpload',
+      'link',
+      'imageUpload',
       // 'mediaEmbed',
       // 'blockQuote',
       'insertTable',
+      'emoji',
     ],
     shouldNotGroupWhenFull: false,
   },
@@ -63,19 +64,15 @@ const editorConfiguration = {
   },
 };
 
-const WriterCompose = ({
-  data,
-  handleChangeEditor,
-  handleChangeBlur,
-  isLoading,
-  isDisabled,
-  id,
-  isShowToolbar,
-}) => {
+const WriterCompose = (
+  { data, handleChangeEditor, handleChangeBlur, isLoading, isDisabled, id, isShowToolbar },
+  ref,
+) => {
   const render = useMemo(() => {
     return (
       <div className="h-full w-full text-sm" id={id}>
         <CKEditor5
+          ref={ref}
           isShowToolbar={isShowToolbar}
           config={editorConfiguration}
           data={data}
@@ -89,4 +86,4 @@ const WriterCompose = ({
   }, [data]);
   return render;
 };
-export default React.memo(WriterCompose);
+export default React.forwardRef(WriterCompose);

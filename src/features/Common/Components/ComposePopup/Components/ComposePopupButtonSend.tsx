@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RiArrowUpSFill } from 'react-icons/ri';
 import { twMerge } from 'tailwind-merge';
+import ButtonRipple from '../../Button/ButtonRipple/ButtonRiple';
 import ComposePopupSelectStatusSend from './ComposePopupSelectStatusSend';
 import './style.scss';
 
@@ -36,22 +37,25 @@ const ComposePopupButtonSend = ({
             'item-center relative flex translate-y-1 rounded-full bg-primary-500 text-white',
           )}
         >
-          <div
-            className="flex h-9 w-16 items-center justify-center rounded-l-full border-r border-gray-200 text-sm font-medium uppercase hover:bg-primary-700"
-            tabIndex={0}
-            role="button"
+          <ButtonRipple
+            className=" flex h-9 w-16 items-center justify-center rounded-l-full border-r border-gray-200 text-sm font-medium uppercase ring-0 hover:bg-primary-700"
             onClick={onClickSend}
           >
             {t('send')}
-          </div>
-          <div
-            className="py-auto flex items-center rounded-r-full px-2 hover:bg-primary-700"
-            tabIndex={0}
-            role="button"
+          </ButtonRipple>
+
+          <ButtonRipple
+            className="py-auto flex items-center rounded-r-full px-2 ring-0 hover:bg-primary-700"
             onClick={handleClickArrow}
           >
             <RiArrowUpSFill size={15} className="rotate-180" />
-          </div>
+          </ButtonRipple>
+          {/* <div
+            className="py-auto flex items-center rounded-r-full px-2 hover:bg-primary-700"
+            tabIndex={0}
+            role="button"
+          >
+          </div> */}
         </div>
       )}
       {isLoading && (

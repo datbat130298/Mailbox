@@ -68,17 +68,20 @@ const editorConfiguration = {
   toolbarLocation: 'bottom',
 };
 
-const CKEditor5 = ({
-  config = editorConfiguration,
-  data = ' ',
-  onChange,
-  onBlur,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  isLoading,
-  isDisabled,
-  isRadiousToolbar = false,
-  isShowToolbar,
-}) => {
+const CKEditor5 = (
+  {
+    config = editorConfiguration,
+    data = ' ',
+    onChange,
+    onBlur,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    isLoading,
+    isDisabled,
+    isRadiousToolbar = false,
+    isShowToolbar,
+  },
+  ref,
+) => {
   const editWriter = (editor) => {
     if (editor) {
       editor?.editing?.view.focus();
@@ -109,10 +112,10 @@ const CKEditor5 = ({
 
   const handleOnReady = useCallback((editor) => {
     editWriter(editor);
+    ref.current = editor;
   }, []);
 
   const handleOnBlur = useCallback((event, editor) => onBlur?.(editor.getData()), []);
-
   const render = useMemo(() => {
     return (
       <div className={twMerge('relative h-full w-full')}>
@@ -131,4 +134,4 @@ const CKEditor5 = ({
 
   return render;
 };
-export default React.memo(CKEditor5);
+export default React.forwardRef(CKEditor5);

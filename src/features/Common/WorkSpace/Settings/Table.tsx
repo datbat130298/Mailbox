@@ -1,11 +1,12 @@
 import { cloneDeep } from 'lodash';
+import { nanoid } from 'nanoid';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { twMerge } from 'tailwind-merge';
 import { uploadSettingSidebar } from '../../../../app/Services/Setting/Seting';
 import useNotify from '../../../Hooks/useNotify';
 import Button from '../../Components/Button';
-import { TitleLabelTable, ValueLabelTable } from './LabelTable';
+import { TitleLabelTable, ValueLabelTable } from './Tabs/LabelTab';
 
 interface TableSettingProps {
   titles: TitleLabelTable[];
@@ -57,11 +58,13 @@ const Table = ({ titles, values, handleChange }: TableSettingProps) => {
       <table className="w-full">
         <thead className="w-full">
           {titles.map((item) => (
-            <th className="w-32 py-2 pl-2 text-left text-sm font-medium text-slate-900">{item.title}</th>
+            <th className="w-32 py-2 pl-2 text-left text-sm font-medium text-slate-900" key={nanoid()}>
+              {item.title}
+            </th>
           ))}
         </thead>
         {valueArray.map((item, index) => (
-          <tr className="hover:bg-gray-100">
+          <tr className="hover:bg-gray-100" key={nanoid()}>
             <td className="py-1.5 pl-2 text-sm text-slate-600">{t(item.name)}</td>
             <td className={twMerge('pl-2 text-base')}>
               {item.display && (

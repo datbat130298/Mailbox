@@ -1,5 +1,6 @@
 import axiosInstance from '../../../features/utils/Http/axios';
 import { BaseQueryParamsType } from '../../Types/commonTypes';
+import { TrashDataType } from '../../Types/configTypes';
 import { generateParamString } from '../Common/CommonService';
 
 const getConversationById = async (id: number) => {
@@ -38,8 +39,8 @@ const unReadEmailById = async (data: Array<number>) => {
   return response.data;
 };
 
-const deleteEmailById = async (data: Array<number>) => {
-  const response = await axiosInstance.post(`/mailbox/email/delete-emails`, { ids: data });
+const deleteEmailById = async (data: Array<TrashDataType>) => {
+  const response = await axiosInstance.post(`/mailbox/trash/delete`, { objects: data });
   return response;
 };
 

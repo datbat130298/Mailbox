@@ -1,5 +1,6 @@
 import axiosInstance from '../../../features/utils/Http/axios';
 import { BaseQueryParamsType } from '../../Types/commonTypes';
+import { TrashDataType } from '../../Types/configTypes';
 import { generateParamString } from '../Common/CommonService';
 
 const getTrash = async (options: BaseQueryParamsType) => {
@@ -18,8 +19,8 @@ const getTrash = async (options: BaseQueryParamsType) => {
   return response.data;
 };
 
-const restoreEmailIds = async (ids: Array<number>) => {
-  const response = await axiosInstance.post(`/mailbox/email/restore-emails`, { ids });
+const restoreEmailIds = async (ids: Array<TrashDataType>) => {
+  const response = await axiosInstance.post(`/mailbox/trash/restore`, { objects: ids });
   return response.data.data;
 };
 

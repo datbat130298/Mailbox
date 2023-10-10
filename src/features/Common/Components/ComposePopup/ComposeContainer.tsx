@@ -1,4 +1,3 @@
-import { EmojiClickData } from 'emoji-picker-react';
 import _ from 'lodash';
 import { nanoid } from 'nanoid';
 import React, { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react';
@@ -83,12 +82,18 @@ const ComposePopupContainer = ({
     setBody(value);
   }, []);
 
-  const handleInsertEmoji = useCallback((emoji: EmojiClickData) => {
+  const handleInsertSignature = useCallback((value: string) => {
+    const idSig = `sig-${id}`;
+    const tagSig = document.getElementById(idSig);
     const popup = document.getElementById(`${id}`);
-    if (!_.isEmpty(popup?.getElementsByTagName('p'))) {
-      const textContent = popup?.getElementsByTagName('p')[0].textContent;
-      handleChangeEditor(textContent + emoji.emoji);
+    const textContent = popup?.getElementsByTagName('p')[0].textContent;
+    if (_.isEmpty(tagSig)) {
+      handleChangeEditor(`${textContent}</br><p id={${idSig}}>${value}</p>`);
+      return;
     }
+    const textSig = tagSig?.getElementsByTagName('p')[0];
+    textSig?.parentNode?.removeChild(textSig);
+    handleChangeEditor(`${textContent}</br><p id={${idSig}}>${value}</p>`);
   }, []);
 
   const handleClose = (isSave?: boolean) => {
@@ -97,35 +102,32 @@ const ComposePopupContainer = ({
       onClear();
     }
     if (!isSave && compose?.typeMail !== TypeChat.DRAFT) {
-      if (
-        !_.isEmpty(selectedRecipient) ||
-        !_.isEmpty(selectedBccRecipient) ||
-        !_.isEmpty(selectedCcRecipient) ||
-        !_.isEmpty(body)
-      ) {
-        const attachmentArrayString = attachments.map((item) => item.absolute_slug);
-        const recipient = selectedRecipient.map((item) => item.email);
-        const recipientBcc = selectedBccRecipient.map((item) => item.email);
-        const recipientCc = selectedCcRecipient.map((item) => item.email);
-        const dataSubmit = {
-          email_address: [...recipient],
-          cc: [...recipientCc],
-          bcc: [...recipientBcc],
-          files: attachmentArrayString,
-          body,
-          type: 'DRAFT',
-          subject: _.isEmpty(subject) ? 'No Subject' : subject,
-        };
-        sendEmail(dataSubmit)
-          .then(() => {
-            toast.success(t('save_draft'));
-          })
-          .catch((err) => {
-            if (_.isEmpty(err)) {
-              toast.error(t('save_draft_error'));
-            }
-          });
+      if (_.isEmpty(selectedRecipient) && _.isEmpty(selectedBccRecipient) && _.isEmpty(selectedCcRecipient)) {
+        return;
       }
+
+      const attachmentArrayString = attachments.map((item) => item.absolute_slug);
+      const recipient = selectedRecipient.map((item) => item.email);
+      const recipientBcc = selectedBccRecipient.map((item) => item.email);
+      const recipientCc = selectedCcRecipient.map((item) => item.email);
+      const dataSubmit = {
+        email_address: [...recipient],
+        cc: [...recipientCc],
+        bcc: [...recipientBcc],
+        files: attachmentArrayString,
+        body,
+        type: 'DRAFT',
+        subject: _.isEmpty(subject) ? 'No Subject' : subject,
+      };
+      sendEmail(dataSubmit)
+        .then(() => {
+          toast.success(t('save_draft'));
+        })
+        .catch((err) => {
+          if (_.isEmpty(err)) {
+            toast.error(t('save_draft_error'));
+          }
+        });
     }
   };
 
@@ -296,6 +298,7 @@ const ComposePopupContainer = ({
         (composeViewType === ComposeViewTypeEnum.REPLY ||
           composeViewType === ComposeViewTypeEnum.FORWARD) && (
           <ComposePopup
+            onInsertSignature={handleInsertSignature}
             isLoading={isLoadingSend}
             attachments={attachments}
             onChangeAttachment={handleChangeAttachment}
@@ -306,7 +309,6 @@ const ComposePopupContainer = ({
             handleClickInsertContent={handleClickInsertContent}
             body={body}
             onClose={handleClose}
-            onInsertEmoji={handleInsertEmoji}
             onChangeEditor={handleChangeEditor}
             selectRecipient={selectedRecipient || undefined}
             selectedCcRecipient={selectedCcRecipient || undefined}
@@ -328,7 +330,7 @@ const ComposePopupContainer = ({
         )}
       {compose && compose.viewType === ComposeViewTypeEnum.POPUP && (
         <ComposePopup
-          onInsertEmoji={handleInsertEmoji}
+          onInsertSignature={handleInsertSignature}
           isLoading={isLoadingSend}
           attachments={attachments}
           onChangeAttachment={handleChangeAttachment}
@@ -363,11 +365,11 @@ const ComposePopupContainer = ({
           contentContainerClassName="w-[80vw] h-[90vh] bg-white p-0 rounded-lg"
         >
           <ComposePopup
+            onInsertSignature={handleInsertSignature}
             isLoading={isLoadingSend}
             attachments={attachments}
             onChangeAttachment={handleChangeAttachment}
             onClickSend={handleClickSend}
-            onInsertEmoji={handleInsertEmoji}
             id={id}
             body={body}
             onChangeEditor={handleChangeEditor}

@@ -27,7 +27,7 @@ interface MailItemProps {
   onRemoveItem?: (id: number) => void;
 }
 
-const MailItem2 = ({
+const MailItem = ({
   onClickDeleteMail,
   onClickRestoreMail,
   selected,
@@ -101,8 +101,7 @@ const MailItem2 = ({
   return (
     <div
       className={twMerge(
-        'group relative flex h-fit w-full gap-1.5 border-b bg-white pl-2 pr-2 text-ms hover:z-20 hover:shadow-md md:pl-4',
-        // isReadMail && 'bg-[#F2F6FC]',
+        'group relative flex h-fit w-full gap-1.5 overflow-hidden border-b bg-white px-4 text-ms hover:z-20 hover:shadow-md md:pl-6',
         isReadMail && 'bg-gray-100',
         selected && 'z-20 bg-indigo-50 shadow-md',
         selectedMail?.id === mail.id && 'z-20 bg-gray-50 shadow-md',
@@ -121,7 +120,7 @@ const MailItem2 = ({
       </div>
       <div
         className={twMerge(
-          'flex h-12 w-full justify-between px-1 md:px-3',
+          'flex h-12 flex-1 justify-between px-1 md:px-3',
           itemMailStyle === 'compact' && 'h-9 text-sm',
           itemMailStyle === 'classic' && 'h-14 w-2/3 flex-1 md:w-full md:overflow-hidden',
         )}
@@ -163,4 +162,4 @@ const MailItem2 = ({
   );
 };
 
-export default MailItem2;
+export default MailItem;

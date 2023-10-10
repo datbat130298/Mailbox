@@ -28,3 +28,8 @@ export interface ConfigModifyModalProps extends Omit<ModalProps, 'onSubmit'> {
   errors?: ConfigFormErrorType;
   onEdit: (data: ConfigDataType) => void;
 }
+
+export interface TrashDataType {
+  id: number;
+  source: string;
+}

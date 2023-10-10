@@ -6,6 +6,7 @@ import { twMerge } from 'tailwind-merge';
 export interface CheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
   indeterminate?: boolean;
   classNameBorder?: string;
+  classNameIcon?: string;
 }
 
 const Checkbox = ({
@@ -15,6 +16,7 @@ const Checkbox = ({
   disabled,
   type = 'checkbox',
   classNameBorder,
+  classNameIcon,
   ...otherProps
 }: CheckboxProps) => {
   const iconTouchedClassName = twMerge(
@@ -28,6 +30,7 @@ const Checkbox = ({
   const iconClassName = twMerge(
     'absolute top-1/2 left-1/2 z-0 mt-px -translate-x-1/2 -translate-y-1/2 group-hover:text-primary-600',
     iconTouchedClassName,
+    classNameIcon,
   );
 
   return (

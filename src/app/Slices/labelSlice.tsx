@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ValueLabelTable } from '../../features/Common/WorkSpace/Settings/LabelTable';
+import { ValueLabelTable } from '../../features/Common/WorkSpace/Settings/Tabs/LabelTab';
 
 const systemLabels = [
   {

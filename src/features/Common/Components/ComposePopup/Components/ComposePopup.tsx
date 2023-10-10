@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { EmojiClickData } from 'emoji-picker-react';
 import _ from 'lodash';
-import React, { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CgFormatColor } from 'react-icons/cg';
 import { FaRegTrashAlt } from 'react-icons/fa';
@@ -14,6 +15,7 @@ import { twMerge } from 'tailwind-merge';
 import { DraftActionEnum, useDraftsDispatch } from '../../../../../app/Context/DraftContext';
 import { ComposeViewTypeEnum } from '../../../../../app/Enums/commonEnums';
 import { ComposePopupStyleType, MailType } from '../../../../../app/Types/commonTypes';
+import useSelector from '../../../../Hooks/useSelector';
 import { EmailType } from '../../SelectMultiEmail/SelectMultiEmail';
 import Tooltip from '../../Tooltip/Tooltip';
 import AttachmentsModal, { FileLoadedType } from './Attachments/AttachmentsModal';
@@ -26,6 +28,7 @@ import ComposePopupToolbarItem from './ComposePopupToolbarItem';
 import WriterCompose from './EditorWriterCompose';
 import ComposeButtonFooterEmotionPicker from './Emoji/ComposeButtonFooterEmojiPicker';
 import ComposePopupSelectTimeModal from './PickTimeAndDate/ComposePopupSelectTimeModal';
+import ComposeButtonFooterSignature from './Signature/ComposeButtonFooterSignature';
 
 export interface ComposePopupProps {
   body: string;
@@ -56,7 +59,7 @@ export interface ComposePopupProps {
   onChangeAttachment: (arr: FileLoadedType[]) => void;
   attachments: FileLoadedType[];
   isLoading: boolean;
-  onInsertEmoji: (emoji: EmojiClickData) => void;
+  onInsertSignature: (value: string) => void;
 }
 
 const ComposePopup = ({
@@ -89,7 +92,7 @@ const ComposePopup = ({
   isShowToolbar = false,
   onClickSend,
   isLoading,
-  onInsertEmoji,
+  onInsertSignature,
 }: ComposePopupProps) => {
   const [isVisibleToolbar, setIsVisibleToolbar] = useState<boolean>(false);
   const [isShowSelectTimeModal, setIsShowSelectTimeModal] = useState<boolean>(false);
@@ -98,8 +101,11 @@ const ComposePopup = ({
   const [isShowAttachmentModal, setIsShowAttachmentModal] = useState(false);
 
   const { t } = useTranslation();
-
   const dispatch = useDraftsDispatch();
+
+  const selectSignature = useSelector((state) => state.signature);
+
+  const dataSig = useSelector((state) => state.signature.signatureData);
 
   useEffect(() => {
     if (contentInbox && viewType === ComposeViewTypeEnum.REPLY) {
@@ -205,6 +211,20 @@ const ComposePopup = ({
     return undefined;
   }, [viewType]);
 
+  useEffect(() => {
+    if (selectSignature?.signatureSelect?.id === '1') return undefined;
+    if (selectSignature?.signatureSelect?.id !== '1') {
+      const idSig = `sig-${id}`;
+      const popup = document.getElementById(`${id}`);
+      const delay = setTimeout(() => {
+        const textContent = popup?.getElementsByTagName('p')[0]?.textContent;
+        onChangeEditor(`${textContent}</br><p id={${idSig}}>${selectSignature.signatureSelect.value}</p>`);
+      }, 300);
+      return () => clearTimeout(delay);
+    }
+    return undefined;
+  }, []);
+
   const handleFormat = () => {
     onChangeEditor(striptags(body));
   };
@@ -234,6 +254,16 @@ const ComposePopup = ({
       subject,
     });
     if (_.isFunction(handleClickChangeView)) handleClickChangeView();
+  };
+
+  const ckRef = useRef<any>(null);
+
+  const handleClickInsertContentRef = (emoji: EmojiClickData) => {
+    if (ckRef.current) {
+      ckRef.current.model.change((writer: any) =>
+        ckRef.current.model.insertContent(writer.createText(emoji.emoji)),
+      );
+    }
   };
 
   return (
@@ -286,6 +316,7 @@ const ComposePopup = ({
           )}
         >
           <WriterCompose
+            ref={ckRef}
             isShowToolbar={isShowToolbar}
             id={id}
             data={body}
@@ -309,7 +340,7 @@ const ComposePopup = ({
               onClickSend={handleClickSend}
               onClickSendWithTime={handleClickSendWihTime}
             />
-            <div className="hidden w-full items-center justify-start sm:flex">
+            <div className="hidden w-full items-center justify-start text-gray-900 sm:flex">
               <ComposePopupToolbarItem
                 id="format"
                 isActive={isVisibleToolbar}
@@ -327,7 +358,8 @@ const ComposePopup = ({
                 icon={<FiLink2 size={19} />}
                 onClick={handleClickFormat}
               />
-              <ComposeButtonFooterEmotionPicker onInsertEmoji={onInsertEmoji} />
+              <ComposeButtonFooterEmotionPicker onInsertEmoji={handleClickInsertContentRef} />
+              <ComposeButtonFooterSignature onInsertSignature={onInsertSignature} data={dataSig} />
               <ComposePopupToolbarItem
                 title={t('insert_photo')}
                 icon={<IoImageOutline size={19} />}

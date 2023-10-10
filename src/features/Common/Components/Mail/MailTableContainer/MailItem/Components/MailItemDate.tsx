@@ -21,7 +21,7 @@ const MailItemDate = ({ date, type, mail, isReadMail }: MailItemDateProp) => {
   return (
     <div
       className={twMerge(
-        'my-auto line-clamp-1 h-fit w-20 flex-shrink-0 text-right text-xs md:w-32',
+        'my-auto line-clamp-1 h-fit w-20 shrink-0 text-right text-xs md:w-32',
         !isReadMail && 'font-semibold',
         type === TypeChat.SCHEDULE && 'text-sm font-semibold text-yellow-900',
       )}

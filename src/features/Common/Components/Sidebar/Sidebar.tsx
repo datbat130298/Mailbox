@@ -10,7 +10,7 @@ import { updateLabelSystemDisplay } from '../../../../app/Slices/labelSlice';
 import useDispatch from '../../../Hooks/useDispatch';
 import useNotify from '../../../Hooks/useNotify';
 import useSelector from '../../../Hooks/useSelector';
-import { DisplayLabel } from '../../WorkSpace/Settings/LabelTable';
+import { DisplayLabel } from '../../WorkSpace/Settings/Tabs/LabelTab';
 import ComposeButton from './ComposeButton';
 import LabelManagement from './Labels/LabelManagement';
 import SidebarGroup from './SidebarGroup';
@@ -33,18 +33,21 @@ const Sidebar = () => {
       .then((res) => {
         setUnreadInbox(res.count);
       })
-      .catch(() => toast.error('action_error'));
+      .catch(() => {
+        toast.error(t('action_error'));
+      });
   }, []);
 
   const fetchDataLabel = useCallback(() => {
     getSettingLabel()
       .then((res) => {
-        if (res.value.length === 8) {
-          dispatch(updateLabelSystemDisplay(res.value));
+        if (res?.value?.length !== 8) {
+          return;
         }
+        dispatch(updateLabelSystemDisplay(res.value));
       })
       .catch(() => {
-        toast.error('action_error');
+        toast.error(t('action_error'));
       });
   }, []);
 

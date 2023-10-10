@@ -105,8 +105,8 @@ const ViewMailSpaceContainer = ({
 
   return (
     <>
-      <div className={twMerge('ml-0.5 flex items-center justify-between px-5 py-4', isShowShadow && '')}>
-        <p className="h-max text-left text-base font-medium">{`Re: ${subjectRe}`}</p>
+      <div className={twMerge('ml-0.5 flex h-10 items-center justify-between px-5', isShowShadow && '')}>
+        <p className="h-max text-left text-base font-medium text-gray-700">{`Subject: ${subjectRe}`}</p>
         <Tooltip title={t('close')} position="bottom">
           <div
             className="flex justify-center rounded-lg text-gray-500 transition-all duration-150 hover:cursor-pointer hover:bg-white  hover:text-primary-500"

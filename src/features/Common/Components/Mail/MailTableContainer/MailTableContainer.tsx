@@ -212,37 +212,25 @@ const MailTableContainer = ({
   const handleClickDeleteMultiEmail = () => {
     if (!_.isFunction(deleteEmail) || _.isEmpty(selectRows)) return;
     setIsShowLoading(true);
-    deleteEmail(selectRows)
-      .then(() => {
-        setSelectRows([]);
-        fetchData();
-      })
-      .catch(() => toast.error(t('action_error')))
-      .finally(() => setIsShowLoading(false));
+    deleteEmail(selectRows);
+    setSelectRows([]);
+    setIsShowLoading(false);
   };
 
   const handleClickDelete = (id: number) => {
     if (!_.isFunction(deleteEmail)) return;
     setIsShowLoading(true);
-    deleteEmail([id])
-      .then(() => {
-        setSelectedMail(null);
-        fetchData();
-      })
-      .catch(() => toast.error(t('action_error')))
-      .finally(() => setIsShowLoading(false));
+    deleteEmail([id]);
+    setSelectedMail(null);
+    setIsShowLoading(false);
   };
 
   const handleRestoreMailIds = () => {
     if (!_.isFunction(onRestoreEmail) || _.isEmpty(selectRows)) return;
     setIsShowLoading(true);
-    onRestoreEmail(selectRows)
-      .then(() => {
-        setSelectRows([]);
-        fetchData();
-      })
-      .catch(() => toast.error(t('action_error')))
-      .finally(() => setIsShowLoading(false));
+    onRestoreEmail(selectRows);
+    setSelectRows([]);
+    setIsShowLoading(false);
   };
 
   const handleRestore = (id: number) => {

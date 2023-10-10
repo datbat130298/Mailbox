@@ -114,7 +114,7 @@ const HeaderMailTable = (
         <div className="flex h-full items-start">
           <MdOutlineScheduleSend size={24} />
         </div>
-        <p className="text-left text-gray-600">Messages in Scheduled will be sent at their scheduled time.</p>
+        <p className="text-ellipsis text-left font-semibold italic text-gray-500">{t('alert_scheduled')}</p>
       </div>
       <div
         className={twMerge(
@@ -123,15 +123,15 @@ const HeaderMailTable = (
         )}
         ref={ref}
       >
-        <div className="flex h-full w-fit items-center gap-x-1 md:gap-x-4">
+        <div className="flex h-full w-fit items-center gap-x-1 px-2 md:gap-x-4">
           <div className="group flex h-8 w-fit rounded-md bg-[#F5F6F8] px-2 hover:bg-[#ECEDF0]">
             <div className="flex-center h-full w-max">
               <Checkbox
                 checked={isChecked}
                 indeterminate={isChecked}
                 onChange={(e) => onClickSelectAll(e.target.checked)}
-                className=""
-                classNameBorder="border-gray-600"
+                classNameIcon="text-gray-500"
+                classNameBorder="border-gray-600 "
               />
             </div>
             <FilterDropdown

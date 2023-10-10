@@ -34,7 +34,7 @@ input.compose-time[type='time']::-webkit-calendar-picker-indicator {
 
 *:not(.normal-scrollbar) {
   ::-webkit-scrollbar {
-    @apply w-3.5 bg-gray-50;
+    @apply w-0 bg-gray-50 md:w-3.5;
   }
 
   ::-webkit-scrollbar-thumb {

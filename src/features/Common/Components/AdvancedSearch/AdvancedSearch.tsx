@@ -7,7 +7,7 @@ import { MdClose } from 'react-icons/md';
 import { createSearchParams, useLocation, useNavigate } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 import { triggerClickOutside } from '../../../utils/helpers';
-import Button from '../Button';
+import ButtonRipple from '../Button/ButtonRipple/ButtonRiple';
 import Checkbox from '../Form/Checkbox';
 import Input from '../Form/Input';
 import ItemSearchAdvanced from './ItemSearchAdvanced';
@@ -89,7 +89,7 @@ const AdvancedSearch = () => {
   }, [pathname]);
 
   return (
-    <div ref={dropdownSearchTabRef} className="relative w-0 py-0 md:ml-6 md:w-fit lg:py-3.5">
+    <div ref={dropdownSearchTabRef} className="relative w-0 py-0 md:ml-2 md:w-fit lg:py-3.5">
       <div
         className={twMerge(
           'flex h-12 w-0 items-center justify-start rounded-4xl bg-slate-200 p-0 md:w-[450px] md:pl-1.5 lg:p-1.5 xl:w-[720px]',
@@ -144,7 +144,7 @@ const AdvancedSearch = () => {
         </div>
       </div>
       {isShowDropdown && (
-        <div className=" absolute left-0 top-[37px] z-10 h-fit w-full rounded-sm rounded-b-md border-t-0 bg-white px-5 pb-3 shadow-md xl:top-14">
+        <div className=" absolute left-0 top-[37px] z-10 h-fit w-full rounded-sm rounded-b-4xl border-t-0 bg-white px-5 pb-3 shadow-md xl:top-14">
           <SearchInput label={t('from')} value={fromKeyWord} onChange={setFromKeyWord} />
           <SearchInput label={t('to')} value={toKeyWord} onChange={setToKeyWord} />
           <ItemSearchAdvanced label={t('subject')} value={subjectKeyWord} onChange={setSubjectKeyWord} />
@@ -168,9 +168,9 @@ const AdvancedSearch = () => {
             </div>
           </div>
           <div className="mt-4 flex justify-end gap-x-2 py-3">
-            <Button size="xs" className="w-28 py-2 text-xs shadow-none ring-1" onClick={handleApply}>
+            <ButtonRipple className="w-28 py-2 text-xs shadow-none" onClick={handleApply}>
               {t('apply')}
-            </Button>
+            </ButtonRipple>
           </div>
         </div>
       )}

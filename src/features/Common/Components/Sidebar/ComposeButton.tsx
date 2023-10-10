@@ -4,7 +4,7 @@ import { twMerge } from 'tailwind-merge';
 import { DraftActionEnum, useDraftsDispatch } from '../../../../app/Context/DraftContext';
 import { ComposeViewTypeEnum } from '../../../../app/Enums/commonEnums';
 import useSelector from '../../../Hooks/useSelector';
-import Button from '../Button';
+import ButtonRipple from '../Button/ButtonRipple/ButtonRiple';
 import ListOfMiniatureDrafts from '../ListOfMiniatureDrafts/ListOfMiniatureDrafts';
 
 interface ComposeButtonProp {
@@ -26,12 +26,11 @@ const ComposeButton = ({ isShowSidebar }: ComposeButtonProp) => {
 
   return (
     <>
-      <Button
+      <ButtonRipple
         className={twMerge(
-          'group mb-2 ml-3 hidden h-14 w-0 justify-center overflow-hidden border-0 bg-slate-300 text-gray-700 shadow-none ring-1 hover:bg-slate-200 hover:text-primary-700 hover:drop-shadow-md active:bg-slate-300 active:drop-shadow-none lg:flex lg:w-10',
+          'group mb-2 ml-3 hidden h-14 w-0 justify-center overflow-hidden border-0 bg-slate-300 text-gray-700 shadow-none ring-0 hover:bg-slate-200 hover:text-primary-700 hover:drop-shadow-md active:bg-slate-300 active:drop-shadow-none lg:flex lg:w-10',
           (isShowFullSidebar || isShowSidebar) && 'w-0 lg:w-40',
         )}
-        color="light"
         onClick={handleClickCompose}
         style={{ transition: '.3s' }}
       >
@@ -53,7 +52,7 @@ const ComposeButton = ({ isShowSidebar }: ComposeButtonProp) => {
             {t('compose')}
           </div>
         </div>
-      </Button>
+      </ButtonRipple>
       <ListOfMiniatureDrafts />
     </>
   );

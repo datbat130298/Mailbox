@@ -14,7 +14,7 @@ import logoText from '../../../../../assets/image/logo_text.png';
 import useDispatch from '../../../../Hooks/useDispatch';
 import useNotify from '../../../../Hooks/useNotify';
 import useSelector from '../../../../Hooks/useSelector';
-import { DisplayLabel } from '../../../WorkSpace/Settings/LabelTable';
+import { DisplayLabel } from '../../../WorkSpace/Settings/Tabs/LabelTab';
 import SidebarGroup from '../SidebarGroup';
 import SidebarItem from '../SidebarItem';
 
@@ -39,11 +39,14 @@ const SidebarResponsive = (
   const fetchDataLabel = useCallback(() => {
     getSettingLabel()
       .then((res) => {
-        if (res.value.length() === 8) {
-          dispatch(updateLabelSystemDisplay(res.value));
+        if (res?.value?.length !== 8) {
+          return;
         }
+        dispatch(updateLabelSystemDisplay(res.value));
       })
-      .catch(() => toast.error('action_error'));
+      .catch(() => {
+        toast.error(t('action_error'));
+      });
   }, []);
 
   useEffect(() => {
