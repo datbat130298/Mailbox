@@ -29,6 +29,7 @@ export interface UserDetailType {
 export interface UserDataType {
   uuid: number;
   id?: number;
+  sid: string;
   username: string;
   first_name: string;
   last_name: string;
@@ -36,6 +37,7 @@ export interface UserDataType {
   email?: string;
   email_address?: string;
   banned_at?: string;
+  name?: string;
   avatar_img?: string;
   avatar_img_absolute?: string;
   cover_img?: string;
@@ -43,9 +45,11 @@ export interface UserDataType {
   deleted_at?: string;
   created_at?: string;
   updated_at?: string;
-  roles: UserRoleType[];
+  roles: string[];
   config?: UserConfigType;
   token?: string;
+  access_token?: string;
+  refresh_token?: string;
 }
 
 export interface UserFormDataType {

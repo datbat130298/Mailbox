@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { FiHelpCircle, FiLogOut, FiSettings, FiUser } from 'react-icons/fi';
 import { Link, useNavigate } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
+import { USER_ROLE } from '../../../../app/Const/USER';
 import { logOut } from '../../../../app/Services/Common/AuthService';
 import { clearUser } from '../../../../app/Slices/userSlice';
 import useDispatch from '../../../Hooks/useDispatch';
@@ -39,7 +40,7 @@ const UserDropdown = ({ onClick }: UserDropdownProps) => {
   };
 
   const getURLforRole = useMemo(() => {
-    if (user.roles.find((role) => role.slug === 'admin')) {
+    if (user.roles.find((role) => role === USER_ROLE.ADMIN)) {
       return '/admin';
     }
     return '/my';
@@ -74,8 +75,8 @@ const UserDropdown = ({ onClick }: UserDropdownProps) => {
         <p className="ml-3 text-sm">
           <Link
             to={`${
-              (user.roles?.find((role) => role.slug === 'admin') && '/admin/profile') ||
-              (user.roles?.find((role) => role.slug === 'user') && '/my/profile')
+              (user.roles?.find((role) => role === USER_ROLE.ADMIN) && '/admin/profile') ||
+              (user.roles?.find((role) => role === USER_ROLE.USER) && '/my/profile')
             }`}
           >
             {t('profile')}
@@ -93,8 +94,8 @@ const UserDropdown = ({ onClick }: UserDropdownProps) => {
         <p className="ml-3 text-sm">
           <Link
             to={`${
-              (user.roles?.find((role) => role.slug === 'admin') && 'admin') ||
-              (user.roles?.find((role) => role.slug === 'user') && 'my')
+              (user.roles?.find((role) => role === USER_ROLE.ADMIN) && 'admin') ||
+              (user.roles?.find((role) => role === USER_ROLE.USER) && 'my')
             }`}
           >
             {t('setting')}
@@ -111,9 +112,9 @@ const UserDropdown = ({ onClick }: UserDropdownProps) => {
         <FiHelpCircle />
         <Link
           to={`${
-            (user.roles?.find((role) => role.slug === 'admin') && 'admin/help') ||
-            (user.roles?.find((role) => role.slug === 'user') && 'my/help') ||
-            (user.roles?.find((role) => role.slug === 'editor') && 'editor/help')
+            (user.roles?.find((role) => role === 'admin') && 'admin/help') ||
+            (user.roles?.find((role) => role === 'user') && 'my/help') ||
+            (user.roles?.find((role) => role === 'editor') && 'editor/help')
           }`}
         >
           <p className="ml-3 text-sm">{t('help_and_contact')}</p>

@@ -1,8 +1,8 @@
 const COMMON_AUTH_API = {
-  GETME: '/api/me',
-  REGISTER: '/api/register',
-  LOGIN: '/api/login',
-  LOGOUT: '/api/logout',
+  GETME: '/me',
+  REGISTER: '/register',
+  LOGIN: '/login',
+  LOGOUT: '/logout',
 };
 
 const COMMON_UPLOAD_FILE_API = {

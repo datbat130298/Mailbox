@@ -19,12 +19,13 @@ const getMe = (): Promise<AxiosResponseType<UserDataType>> =>
       'expand[]': ['user__user_config', 'user__roles'],
     }),
     {
-      redirectWhenError: false,
+      willRedirect: false,
+      basePath: process.env.REACT_APP_BACKEND_API_AUTH_BASE_PATH,
     },
   );
 
 const getAccessTokens = () => ({
-  accessToken: cookie.get('access_token') || '',
+  accessToken: window.localStorage.getItem('accessToken') || '',
   refreshToken: window.localStorage.getItem('refreshToken') || '',
 });
 
@@ -65,10 +66,7 @@ const createAccount = ({
   });
 };
 
-const loginWithEmailPassword = (
-  email: AuthLoginType['email'],
-  password: AuthLoginType['password'],
-): Promise<AxiosResponseType<UserDataType>> =>
+const loginWithEmailPassword = (email: AuthLoginType['email'], password: AuthLoginType['password']) =>
   axiosInstance.post(
     getQueryURL(COMMON_AUTH_API.LOGIN, {
       'expand[]': ['user__roles'],
@@ -76,6 +74,10 @@ const loginWithEmailPassword = (
     {
       email,
       password,
+    },
+    {
+      willRedirect: false,
+      basePath: process.env.REACT_APP_BACKEND_API_AUTH_BASE_PATH,
     },
   );
 
@@ -94,7 +96,7 @@ const getLoginStatus = async () => {
 };
 
 const getAccessToken = () => {
-  return window.localStorage.getItem('access_token');
+  return window.localStorage.getItem('accessToken');
 };
 
 const setTokens = (accessToken: string) => {
@@ -102,14 +104,14 @@ const setTokens = (accessToken: string) => {
 };
 
 export {
+  createAccount,
   getAccessToken,
-  setTokens,
+  getAccessTokens,
+  getLoginStatus,
   getMe,
   logOut,
-  createAccount,
-  getAccessTokens,
-  setAccessTokens,
-  refreshAccessToken,
   loginWithEmailPassword,
-  getLoginStatus,
+  refreshAccessToken,
+  setAccessTokens,
+  setTokens,
 };

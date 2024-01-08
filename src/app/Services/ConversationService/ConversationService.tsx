@@ -4,7 +4,7 @@ import { TrashDataType } from '../../Types/configTypes';
 import { generateParamString } from '../Common/CommonService';
 
 const getConversationById = async (id: number) => {
-  const response = await axiosInstance.get(`/mailbox/email/get-email-conversation/${id}`);
+  const response = await axiosInstance.get(`/email/get-email-conversation/${id}`);
   return response.data.data;
 };
 
@@ -20,47 +20,47 @@ const getListEmail = async (options: BaseQueryParamsType) => {
     },
     options.filterParams,
   );
-  const response = await axiosInstance.get(`/mailbox/emails?${paramString}`);
+  const response = await axiosInstance.get(`/emails?${paramString}`);
   return response.data;
 };
 
 const getCountUnread = async () => {
-  const response = await axiosInstance.get(`/mailbox/email/count-unread`);
+  const response = await axiosInstance.get(`/email/count-unread`);
   return response.data.data;
 };
 
 const readEmailById = async (data: Array<number>) => {
-  const response = await axiosInstance.post(`/mailbox/email/update-read`, { ids: data });
+  const response = await axiosInstance.post(`/email/update-read`, { ids: data });
   return response.data;
 };
 
 const unReadEmailById = async (data: Array<number>) => {
-  const response = await axiosInstance.post(`/mailbox/email/update-unread`, { ids: data });
+  const response = await axiosInstance.post(`/email/update-unread`, { ids: data });
   return response.data;
 };
 
 const deleteEmailById = async (data: Array<TrashDataType>) => {
-  const response = await axiosInstance.post(`/mailbox/trash/delete`, { objects: data });
+  const response = await axiosInstance.post(`/trash/delete`, { objects: data });
   return response;
 };
 
 const rateStarById = async (id: number, value: boolean) => {
-  const response = await axiosInstance.put(`/mailbox/email/${id}`, { star: value });
+  const response = await axiosInstance.put(`/email/${id}`, { star: value });
   return response.data.data;
 };
 
 const getMailFromServer = async () => {
-  const response = await axiosInstance.get(`/mailbox/mail-box`);
+  const response = await axiosInstance.get(`/mail-box`);
   return response.data.data;
 };
 
 export {
-  getMailFromServer,
-  getConversationById,
-  getListEmail,
-  getCountUnread,
-  readEmailById,
   deleteEmailById,
+  getConversationById,
+  getCountUnread,
+  getListEmail,
+  getMailFromServer,
   rateStarById,
+  readEmailById,
   unReadEmailById,
 };

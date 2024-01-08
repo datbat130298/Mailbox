@@ -14,7 +14,7 @@ const CommonRoutes = () => {
   const user = useSelector((state) => state.user);
 
   useLayoutEffect(() => {
-    if (user.uuid) return;
+    if (user.sid) return;
     getMe()
       .then((res) => {
         return dispatch(setUser(res.data.data));
