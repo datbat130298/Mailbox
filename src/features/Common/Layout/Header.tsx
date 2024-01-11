@@ -83,10 +83,10 @@ const Header = () => {
           <div className="flex h-full w-fit flex-shrink-0 items-center justify-start pl-0 lg:w-[185px] lg:pl-4">
             <img className="h-6 max-w-[120px] lg:h-[28px] lg:w-[120px]" src={logoText} alt="Workflow" />
           </div>
-          {user?.uuid !== 0 && <AdvancedSearch />}
+          {user?.sid && <AdvancedSearch />}
         </div>
         <div className="flex h-full w-fit flex-shrink-0 items-center justify-center">
-          {user?.uuid === 0 ? (
+          {!user?.sid ? (
             <div className="hidden lg:block">
               <NavLink to="/auth/login">
                 <Button type="button" className="rounded-lg px-6 py-3 text-center text-sm font-semibold">

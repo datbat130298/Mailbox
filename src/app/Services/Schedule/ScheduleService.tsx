@@ -15,7 +15,7 @@ const getSentSchedule = async (options: BaseQueryParamsType) => {
     },
     options?.filterParams,
   );
-  const response = await axiosInstance.get(`/mailbox/sents?${paramString}`);
+  const response = await axiosInstance.get(`/sents?${paramString}`);
   return response.data;
 };
 

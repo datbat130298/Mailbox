@@ -19,7 +19,7 @@ const search = async (options: any) => {
     },
     options.filterParams,
   );
-  const response = await axiosInstance.get(`/mailbox/email-searchs?${paramString}`);
+  const response = await axiosInstance.get(`/email-searchs?${paramString}`);
 
   return response.data;
 };

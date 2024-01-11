@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
+import { USER_ROLE } from '../../../../app/Const/USER';
 import {
   getNotification,
   markAsRead,
@@ -54,8 +55,8 @@ const HeaderNotificationDropdown = ({ isShow, onClose }: HeaderNotificationDropd
 
     const role = first(user.roles);
 
-    if (role?.slug !== 'user') {
-      return `/${role?.slug}`;
+    if (role !== USER_ROLE.USER) {
+      return `/${role}`;
     }
 
     return '/my';
