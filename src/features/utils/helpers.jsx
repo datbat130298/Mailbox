@@ -32,6 +32,10 @@ const convertHtmlToString = (html) => {
   return tempDivElement.textContent || tempDivElement.innerText || '';
 };
 
+const joinURL = (...args) => {
+  return args.join('/').replace(/([^:]\/)\/+/g, '$1');
+};
+
 const queryParamsDefault = {
   searchValue: '',
   searchBy: [],
@@ -49,4 +53,11 @@ const queryParamsDefault = {
   searchTerm: '',
 };
 
-export { triggerClickOutside, triggerClickNext, triggerClickPrev, convertHtmlToString, queryParamsDefault };
+export {
+  convertHtmlToString,
+  joinURL,
+  queryParamsDefault,
+  triggerClickNext,
+  triggerClickOutside,
+  triggerClickPrev,
+};

@@ -3,6 +3,7 @@ import _ from 'lodash';
 import { UserDataType } from '../Types/userTypes';
 
 const initialState: UserDataType = {
+  sid: '',
   uuid: 0,
   email: '',
   first_name: '',
@@ -10,6 +11,7 @@ const initialState: UserDataType = {
   username: '',
   roles: [],
   token: '',
+  name: '',
 };
 
 export const userSlice = createSlice({

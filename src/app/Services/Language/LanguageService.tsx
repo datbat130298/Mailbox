@@ -19,10 +19,12 @@ const getFlagURL = (code: string) => {
 };
 
 const getActiveLanguageList = async () => {
-  const response = await axiosInstance.get('api/languages', {
-    params: {
-      'filter[status]': true,
-    },
+  const paramString = generateParamString({
+    'filter[status]': 'true',
+  });
+  const response = await axiosInstance.get(`/languages?${paramString}`, {
+    willRedirect: false,
+    basePath: 'https://api.ps.techupzone.com/beauth_TSLR67tOR3/send',
   });
 
   return response.data;
@@ -33,7 +35,7 @@ const setLanguagesPage = ({ lang, langs }: LanguageType) => {
     lang: [lang],
     langs: [langs],
   });
-  return axiosInstance.get(`api/support-multiple-languages?${paramString}`);
+  return axiosInstance.get(`/support-multiple-languages?${paramString}`);
 };
 
 const getLanguagesPage = () => {
@@ -42,4 +44,4 @@ const getLanguagesPage = () => {
   return _.isUndefined(language) ? 'en' : language;
 };
 
-export { getFlagURL, getFlagURLPattern, getActiveLanguageList, setLanguagesPage, getLanguagesPage };
+export { getActiveLanguageList, getFlagURL, getFlagURLPattern, getLanguagesPage, setLanguagesPage };

@@ -5,12 +5,12 @@ import { TrashDataType } from '../../Types/configTypes';
 import { generateParamString } from '../Common/CommonService';
 
 const sendEmail = async (data: any) => {
-  const response = await axiosInstance.post('/mailbox/send-email', data);
+  const response = await axiosInstance.post('/send-email', data);
   return response.data.data;
 };
 
 const getDetailSentById = async (id: number) => {
-  const response = await axiosInstance.get(`/mailbox/sent/${id}`);
+  const response = await axiosInstance.get(`/sent/${id}`);
   return response.data.data;
 };
 
@@ -24,18 +24,18 @@ const getSent = async (options: BaseQueryParamsType) => {
     'search_by[]': options?.searchBy,
     search: options?.searchValue,
   });
-  const response = await axiosInstance.get(`/mailbox/sents?${queryParams}`);
+  const response = await axiosInstance.get(`/sents?${queryParams}`);
   return response.data;
 };
 
 const deleteEmailSentById = async (ids: Array<TrashDataType>) => {
-  const response = await axiosInstance.post(`/mailbox/trash/delete`, { objects: ids });
+  const response = await axiosInstance.post(`/trash/delete`, { objects: ids });
   return response.data.data;
 };
 
 const rateStarSentById = async (id: number, value: boolean) => {
-  const response = await axiosInstance.put(`/mailbox/sent/${id}`, { star: value });
+  const response = await axiosInstance.put(`/sent/${id}`, { star: value });
   return response.data.data;
 };
 
-export { getSent, sendEmail, deleteEmailSentById, getDetailSentById, rateStarSentById };
+export { deleteEmailSentById, getDetailSentById, getSent, rateStarSentById, sendEmail };

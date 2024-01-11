@@ -180,7 +180,7 @@ const SelectMultiEmail = (
         {label}
       </div>
       <div
-        className="ml-5 flex max-h-max flex-1 flex-wrap items-center gap-2"
+        className="ml-6 flex max-h-max flex-1 flex-wrap items-center gap-2"
         tabIndex={0}
         role="button"
         onClick={handleClickInput}

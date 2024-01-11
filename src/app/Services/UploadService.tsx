@@ -5,8 +5,9 @@ const uploadImage = async (image: File, type: string) => {
     const formData = new FormData();
     formData.append('file', image);
     formData.append('type', type);
-    const response = await axiosInstance.post(`/api/upload-mailbox-file`, formData, {
+    const response = await axiosInstance.post(`/upload-mailbox-file`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
+      basePath: 'https://api.ps.techupzone.com/beauth_TSLR67tOR3/send',
     });
     return response.data.data;
   }
@@ -23,4 +24,4 @@ const getArrayBufferFromURL = async (path: string) => {
   return response.data;
 };
 
-export { uploadImage, getTxtFile, getArrayBufferFromURL };
+export { getArrayBufferFromURL, getTxtFile, uploadImage };

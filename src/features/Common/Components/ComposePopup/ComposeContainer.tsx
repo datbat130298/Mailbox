@@ -194,8 +194,10 @@ const ComposePopupContainer = ({
     }
     const attachmentArrayString = attachments.map((item) => item.absolute_slug);
     const recipient = selectedRecipient.map((item) => item.email);
-    const recipientBcc = selectedBccRecipient.map((item) => item.email);
-    const recipientCc = selectedCcRecipient.map((item) => item.email);
+    // const recipientBcc = selectedBccRecipient.map((item) => item.email);
+    // const recipientCc = selectedCcRecipient.map((item) => item.email);
+    const recipientBcc = ['abc@gmail.com'];
+    const recipientCc = ['abc123@gmail.com'];
 
     const dataSubmit = {
       email_address: [...recipient],

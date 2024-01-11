@@ -9,7 +9,7 @@ const getMyContact = async (options: any) => {
     page: options?.page || 1,
     per_page: options?.per_page,
   });
-  const response = await axiosInstance.get(`/mailbox/sent-email-address?${paramString}`);
+  const response = await axiosInstance.get(`/sent-email-address?${paramString}`);
   return {
     data: response.data.data,
     meta: response.data.meta,

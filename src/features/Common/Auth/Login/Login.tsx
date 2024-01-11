@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import isEmail from 'validator/lib/isEmail';
+import { USER_ROLE } from '../../../../app/Const/USER';
 import { AuthService } from '../../../../app/Services';
-import { setTokens } from '../../../../app/Services/Common/AuthService';
+import { setAccessTokens } from '../../../../app/Services/Common/AuthService';
 import { setUser } from '../../../../app/Slices/userSlice';
 import { AxiosErrorDataType } from '../../../../app/Types/commonTypes';
 import useDispatch from '../../../Hooks/useDispatch';
@@ -62,10 +63,21 @@ const Login = () => {
     setError(null);
     AuthService.loginWithEmailPassword(email, password)
       .then((res) => {
-        const { token } = res.data.data;
-        setTokens(token || '');
-        dispatch(setUser(res.data.data));
-        const from = '/inbox';
+        setAccessTokens(res.data.data.access_token || '', res.data.data.refresh_token || '');
+        return AuthService.getMe();
+      })
+      .then((response) => {
+        dispatch(setUser(response.data.data));
+
+        let from = '';
+        if (response?.data?.data?.roles?.find((role) => role === USER_ROLE.SYSTEM)) {
+          from = searchParams.get('redirect') || `/${USER_ROLE.SYSTEM.replaceAll('_', '-')}`;
+        } else if (response?.data?.data?.roles?.find((role) => role === USER_ROLE.ADMIN)) {
+          from = searchParams.get('redirect') || `/${USER_ROLE.ADMIN.replaceAll('_', '-')}`;
+        } else {
+          from = searchParams.get('redirect') || `/${USER_ROLE.USER.replaceAll('_', '-')}`;
+        }
+
         navigate(from, {
           replace: true,
         });
