@@ -8,7 +8,7 @@ import SearchHeader from './SearchHeader';
 
 interface SearchTableContainerProp {
   searchData: MailType[];
-  readEmail: (ids: Array<number>) => void;
+  readEmail: (ids: Array<number>) => Promise<void>;
   unReadEmail: (ids: Array<number>) => void;
   meta: MetaType;
 }

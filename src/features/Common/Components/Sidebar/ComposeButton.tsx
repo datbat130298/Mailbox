@@ -28,7 +28,7 @@ const ComposeButton = ({ isShowSidebar }: ComposeButtonProp) => {
     <>
       <ButtonRipple
         className={twMerge(
-          'group mb-2 ml-3 hidden h-14 w-0 justify-center overflow-hidden border-0 bg-slate-300 text-gray-700 shadow-none ring-0 hover:bg-slate-200 hover:text-primary-700 hover:drop-shadow-md active:bg-slate-300 active:drop-shadow-none lg:flex lg:w-10',
+          'bg-mainColor-500 group mb-2 ml-3 hidden h-14 w-0 justify-center overflow-hidden border-0 text-white shadow-none ring-0 hover:bg-blue-700 hover:bg-opacity-90 hover:text-white hover:drop-shadow-md active:bg-slate-300 active:drop-shadow-none lg:flex lg:w-10',
           (isShowFullSidebar || isShowSidebar) && 'w-0 lg:w-40',
         )}
         onClick={handleClickCompose}

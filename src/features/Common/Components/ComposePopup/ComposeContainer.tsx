@@ -150,8 +150,7 @@ const ComposePopupContainer = ({
     debounceInput(e.target.value);
   };
 
-  const handleClickZoom = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handleClickZoom = () => {
     if (compose?.viewType !== ComposeViewTypeEnum.ZOOM_OUT) {
       dispatch({
         type: DraftActionEnum.CHANGE_VIEW,
@@ -321,7 +320,7 @@ const ComposePopupContainer = ({
             onChangeSubjectInput={onChangeSubjectInput}
             debounceSubject={debounceSubject}
             subject={subject}
-            onZoom={(e: React.MouseEvent) => handleClickZoom(e)}
+            onZoom={handleClickZoom}
             viewType={composeViewType}
             fromMail={fromMail}
             onClear={onClear}
@@ -350,7 +349,7 @@ const ComposePopupContainer = ({
           onChangeSubjectInput={onChangeSubjectInput}
           debounceSubject={debounceSubject}
           subject={subject}
-          onZoom={(e: React.MouseEvent) => handleClickZoom(e)}
+          onZoom={handleClickZoom}
           viewType={compose.viewType}
           fromMail={fromMail}
           onClear={onClear}
@@ -385,7 +384,7 @@ const ComposePopupContainer = ({
             onChangeSubjectInput={onChangeSubjectInput}
             debounceSubject={debounceSubject}
             subject={subject}
-            onZoom={(e: React.MouseEvent) => handleClickZoom(e)}
+            onZoom={handleClickZoom}
             onClear={onClear}
             viewType={compose.viewType}
             composePopupStyle={{
@@ -402,7 +401,7 @@ const ComposePopupContainer = ({
             onChangeViewType={(e: React.MouseEvent) => handleChangeViewTypeToModal(e)}
             title={debounceSubject}
             onClose={handleClosePopupZoomIn}
-            onZoom={(e: React.MouseEvent) => handleClickZoom(e)}
+            onZoom={handleClickZoom}
           />
         </div>
       )}

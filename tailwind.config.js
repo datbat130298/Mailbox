@@ -31,6 +31,9 @@ module.exports = {
           500: '#FACF39',
           700: '#F9C307',
         },
+        mainColor: {
+          500: '#4834F7',
+        },
         excel: {
           text: '#525E6F',
           bordertitle: '#646464',

@@ -7,7 +7,7 @@ interface MailItemBodyProp {
 
 const MailItemBody = ({ body }: MailItemBodyProp) => {
   return (
-    <div className={twMerge('my-auto line-clamp-1 h-fit flex-1 text-ellipsis text-left text-gray-700 ')}>
+    <div className={twMerge('my-auto line-clamp-1 h-fit flex-1 text-ellipsis text-left text-gray-500 ')}>
       {`${convertHtmlToString(body)}`}
     </div>
   );

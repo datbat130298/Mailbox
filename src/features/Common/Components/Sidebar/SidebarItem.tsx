@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { cloneElement, ReactElement, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { RxDotFilled } from 'react-icons/rx';
+import { LuDot } from 'react-icons/lu';
 import { Link, useLocation } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 import { TypeChat } from '../../../../app/Enums/commonEnums';
@@ -56,17 +56,23 @@ const SidebarItem = ({
       onClick={handleClickSidebarItem}
       to={to || pathname}
       className={twMerge(
-        'relative mx-3 my-0.5 flex w-[64px] items-center justify-between overflow-hidden rounded-md py-[11px] pl-5 text-gray-700  transition-width duration-300 before:absolute before:left-0 before:top-1/2 before:h-2/3 before:w-1 before:-translate-y-1/2 before:rounded-sm before:bg-primary-600 hover:bg-slate-200',
+        'relative mx-3 my-0.5 flex w-[64px] items-center justify-between overflow-hidden rounded-md py-[11px] pl-5 text-gray-700  transition-width duration-300 before:absolute before:left-0 before:top-1/2 before:h-2/3 before:w-1 before:-translate-y-1/2 before:rounded-sm before:bg-blue-700 hover:bg-slate-200',
         (isShowFullSidebar || isShowSidebar) && 'w-[92%] sm:w-[235px]',
-        isActivated
-          ? 'bg-slate-200 font-semibold text-primary-600 before:block'
-          : 'text-slate-700 before:hidden',
+        isActivated ? 'bg-slate-200 font-semibold before:block' : 'text-mainColor-500 before:hidden',
         className,
       )}
     >
-      <div className="relative ml-px flex flex-shrink-0 items-center justify-center text-slate-800">
+      <div
+        className={twMerge(
+          'relative ml-px flex flex-shrink-0 items-center justify-center text-gray-500 ',
+          // fix again
+          quantity !== 0 && title === 'inbox' && 'text-mainColor-500',
+          isActivated && 'text-mainColor-500',
+          !isActivated && isShowFullSidebar && quantity !== 0 && title === 'inbox' && 'text-gray-500',
+        )}
+      >
         {icon ? (
-          <div className="flex w-6 items-center justify-center">
+          <div className="flex w-6 items-center justify-center text-gray-500">
             {cloneElement(icon, {
               className: twMerge(''),
             })}
@@ -76,14 +82,15 @@ const SidebarItem = ({
         )}
 
         {title === TypeChat.INBOX && quantity !== 0 && !isShowFullSidebar && (
-          <div className="absolute -top-3 left-3 text-primary-600">
-            <RxDotFilled size={25} />
+          <div className="absolute -top-5 left-3 text-mainColor-500">
+            <LuDot size={40} />
           </div>
         )}
         <div
           className={twMerge(
-            'pl-4 text-sm opacity-0 transition-[.4s] delay-[.05s]',
+            'pl-4 text-sm font-semibold text-gray-700 opacity-0 transition-[.4s] delay-[.05s]',
             (isShowFullSidebar || isShowSidebar) && 'opacity-100',
+            isActivated && 'text-blue-700',
           )}
         >
           {t(title)}
@@ -91,8 +98,9 @@ const SidebarItem = ({
       </div>
       <div
         className={twMerge(
-          'pr-6 text-xs text-gray-500 opacity-0 transition-[.4s] delay-[.05s]',
-          (isShowFullSidebar || isShowSidebar) && 'font-semibold text-primary-700 opacity-100',
+          'pr-6 text-xs font-semibold text-gray-500 opacity-0 transition-[.4s] delay-[.05s]',
+          (isShowFullSidebar || isShowSidebar) && 'font-semibold text-gray-700 opacity-100',
+          isActivated && 'text-blue-700',
         )}
       >
         {title === TypeChat.INBOX && quantity !== 0 && quantity}

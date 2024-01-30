@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 const initialState = {
   isShowFullSidebar: false,
   isSidebarOpen: window.localStorage.getItem('isSidebarOpen') === 'true',
-  itemMailStyle: 'classic',
+  itemMailStyle: 'grid',
 };
 
 export const layoutSlice = createSlice({

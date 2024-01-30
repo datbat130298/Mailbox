@@ -6,7 +6,7 @@ interface ViewMailSpaceProp {
   handleClose: () => void;
   mailData: MailType | null;
   type: string;
-  getDetailById?: (id: number) => void;
+  getDetailById?: (id: number) => Promise<void>;
   onDeleteEmail?: (id: Array<number>) => void;
   onRemoveItem?: (id: number) => void;
 }

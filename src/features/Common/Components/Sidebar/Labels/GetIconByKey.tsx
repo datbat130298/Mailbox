@@ -38,7 +38,7 @@ const GetIconByKey = ({ name }: GetIconByKeyProp) => {
       icon = <HiOutlineChatAlt size={21} className="" />;
       break;
     case 'sent':
-      icon = <BiSend size={21} className="" />;
+      icon = <BiSend size={20} className="" />;
       break;
     case 'spam':
       icon = <RiSpam2Line size={18} />;
@@ -50,13 +50,13 @@ const GetIconByKey = ({ name }: GetIconByKeyProp) => {
       icon = <BsMailbox size={16} />;
       break;
     case 'drafts':
-      icon = <RiDraftLine size={19} />;
+      icon = <RiDraftLine size={18} />;
       break;
     case 'forums':
       icon = <MdOutlineContactMail size={18} />;
       break;
     case 'schedule':
-      icon = <MdOutlineScheduleSend size={22} />;
+      icon = <MdOutlineScheduleSend size={21} />;
       break;
     case 'social':
       icon = <BsPersonLinesFill size={18} />;
