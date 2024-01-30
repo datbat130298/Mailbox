@@ -49,7 +49,7 @@ const Header = () => {
   const isShowFullSidebar = useSelector((state) => state.layout.isShowFullSidebar);
 
   const handleShowFullSidebar = useCallback(() => {
-    if (user?.uuid === 0) {
+    if (!user?.sid) {
       return undefined;
     }
     if (isShowFullSidebar) {
@@ -58,7 +58,7 @@ const Header = () => {
     return dispatch(setIsShowFullSidebar(true));
   }, [user, isShowFullSidebar]);
   const handleShowSidebarMobile = useCallback(() => {
-    if (user?.uuid === 0) {
+    if (!user?.sid) {
       return undefined;
     }
     return setIsShowSidebarMobile((prev) => !prev);
@@ -73,8 +73,8 @@ const Header = () => {
             tabIndex={0}
             onClick={window.innerWidth >= 1024 ? handleShowFullSidebar : handleShowSidebarMobile}
             className={twMerge(
-              'mr-1 flex h-10 w-10 items-center rounded-full active:bg-slate-50 active:drop-shadow-sm lg:mr-2',
-              isShowFullSidebar && 'bg-slate-200',
+              'mr-1 flex h-10 w-10 items-center rounded-full bg-gray-50 lg:mr-2',
+              isShowFullSidebar && 'bg-none text-mainColor-500 shadow-sm',
             )}
           >
             <CgMenu size={20} className="mx-auto " />
@@ -127,7 +127,7 @@ const Header = () => {
           )}
         </div>
       </div>
-      <SidebarResponsive isOpen={isShowSidebarMobile} onClose={handleShowSidebarMobile} />
+      {user?.sid && <SidebarResponsive isOpen={isShowSidebarMobile} onClose={handleShowSidebarMobile} />}
     </>
   );
 };

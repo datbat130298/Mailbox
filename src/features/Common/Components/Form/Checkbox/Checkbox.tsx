@@ -20,10 +20,10 @@ const Checkbox = ({
   ...otherProps
 }: CheckboxProps) => {
   const iconTouchedClassName = twMerge(
-    !indeterminate && !checked && 'text-white group-hover:text-gray-400',
+    !indeterminate && !checked && 'text-transparent group-hover:text-gray-400',
     !indeterminate && checked && 'text-primary-700 group-hover:text-primary-700 border-primary-700',
     indeterminate && 'text-slate-500 group-hover:text-slate-500',
-    disabled && checked && 'text-white group-hover:text-white',
+    disabled && checked && 'text-transparent group-hover:text-white',
     disabled && !checked && 'text-gray-100 group-hover:text-gray-100',
   );
 
@@ -43,11 +43,11 @@ const Checkbox = ({
     >
       <div
         className={twMerge(
-          'group-hover:primary-700 absolute inset-0 -z-10 cursor-pointer rounded-md border border-gray-300 group-hover:border-primary-700',
+          'group-hover:primary-700 absolute inset-0 -z-10 cursor-pointer rounded-md border border-gray-300 group-hover:border-gray-600',
           checked &&
             !indeterminate &&
             !disabled &&
-            'group-border:primary-700 border-primary-700 hover:border-primary-700',
+            'group-border:primary-700 border-gray-600 hover:border-gray-600',
           indeterminate && !disabled && 'border-slate-500',
           disabled && 'cursor-not-allowed bg-gray-100 group-hover:border-gray-100',
           classNameBorder,

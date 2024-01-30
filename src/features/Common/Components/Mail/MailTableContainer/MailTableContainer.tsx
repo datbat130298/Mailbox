@@ -22,19 +22,19 @@ interface MailTableContainerProp {
   mailData: Array<MailType>;
   isLoading: boolean;
   type: TypeChat;
-  readEmail?: (arrayId: Array<number>) => void;
+  readEmail?: (arrayId: Array<number>) => Promise<void>;
   unReadEmail?: (arrayId: Array<number>) => void;
   fetchData: () => void;
   deleteEmail?: (arrayId: Array<number>) => void;
   meta: MetaType;
   onChangePage?: (page: number) => void;
-  onRestoreEmail?: (ids: Array<number>) => void;
+  onRestoreEmail?: (ids: Array<number>) => Promise<void>;
   handleChangeSearchTerm?: (query: BaseQueryParamsType, type: string) => void;
   onRateStar?: (id: number, value: boolean) => void;
   onRemoveItem?: (id: number) => void;
   actionArray?: Array<string>;
   emptyComponent?: React.ReactNode;
-  getDetailById?: (id: number) => void;
+  getDetailById?: (id: number) => Promise<void>;
 }
 
 export interface SentListEmailProp {

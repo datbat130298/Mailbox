@@ -48,7 +48,7 @@ const MailItemAction = ({
           <Tooltip title={!star ? t('not_starred') : t('starred')} position="bottom">
             <div className="flex-center h-full w-fit" role="button" tabIndex={0} onClick={handleClickStar}>
               <div className="flex-center h-9 w-9 rounded-full hover:bg-gray-300  hover:text-primary-700">
-                {!star ? <FaRegStar size={17} /> : <FaStar size={17} className="text-amber-400 shadow-lg" />}
+                {!star ? <FaRegStar size={17} /> : <FaStar size={17} className="text-amber-300" />}
               </div>
             </div>
           </Tooltip>
@@ -66,7 +66,7 @@ const MailItemAction = ({
               }}
             >
               <div className="flex-center h-9 w-9 rounded-full hover:bg-gray-300  hover:text-primary-700">
-                <FiTrash2 size={17} />
+                <FiTrash2 size={16} />
               </div>
             </div>
           </Tooltip>
@@ -91,8 +91,8 @@ const MailItemAction = ({
         {type === TypeChat.INBOX && (
           <Tooltip title={isRead ? t('mark_as_unread') : t('mark_as_read')} position="bottom">
             <div className="flex-center h-full w-fit" tabIndex={0} role="button" onClick={onClickRead}>
-              <div className="flex-center h-9 w-9 rounded-full hover:bg-gray-300  hover:text-primary-700">
-                {isRead ? <LuMailOpen size={17} /> : <LuMail size={18} />}
+              <div className="flex h-9 w-9 items-center justify-center rounded-full hover:bg-gray-300  hover:text-primary-700">
+                {isRead ? <LuMailOpen size={16} /> : <LuMail size={17} />}
               </div>
             </div>
           </Tooltip>

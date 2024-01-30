@@ -64,7 +64,7 @@ const MailItem = ({
     setIsStar((prev) => !prev);
     if (_.isFunction(onRateStar) && _.isFunction(onRemoveItem)) {
       if (mail.source) {
-        onRateStar(mail.id, false, mail.source);
+        onRateStar(mail.id, false);
         onRemoveItem(mail.id);
         return;
       }
@@ -103,7 +103,7 @@ const MailItem = ({
       className={twMerge(
         'group relative flex h-fit w-full gap-1.5 overflow-hidden border-b bg-white px-4 text-ms hover:z-20 hover:shadow-md md:pl-6',
         isReadMail && 'bg-gray-100',
-        selected && 'z-20 bg-indigo-50 shadow-md',
+        selected && 'z-20 bg-gray-100 shadow-md',
         selectedMail?.id === mail.id && 'z-20 bg-gray-50 shadow-md',
         itemMailStyle === 'classic' && 'py-0.5',
       )}

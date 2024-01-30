@@ -8,7 +8,7 @@ import Tooltip from '../../Tooltip/Tooltip';
 interface ComposePopupHeaderProps {
   onClose: (isSave?: boolean) => void;
   onChangeViewType: (e: React.MouseEvent) => void;
-  onZoom: (e: React.MouseEvent) => void;
+  onZoom: () => void;
   title?: string;
   className?: string;
 }
@@ -22,14 +22,14 @@ const ComposePopupHeader = ({
 }: ComposePopupHeaderProps) => {
   const { t } = useTranslation();
   return (
-    <div
-      className={twMerge('z-50  rounded-t-md bg-[#F2F6FC]', className)}
-      role="button"
-      onClick={(e) => onZoom(e)}
-      tabIndex={0}
-    >
+    <div className={twMerge('z-50  rounded-t-md bg-[#F2F6FC]', className)}>
       <div className="relative flex w-full justify-between p-2 px-2 py-2">
-        <div className="line-clamp-1 w-[calc(100%-68px)] text-ellipsis break-all pl-2 text-sm font-semibold">
+        <div
+          className="line-clamp-1 w-[calc(100%-68px)] text-ellipsis break-all pl-2 text-sm font-semibold"
+          role="button"
+          onClick={onZoom}
+          tabIndex={0}
+        >
           {title || t('new_message')}
         </div>
         <div className="absolute right-3 top-[8px] flex items-center gap-x-1">
@@ -38,7 +38,7 @@ const ComposePopupHeader = ({
               className="h-[15px] w-[18px] hover:bg-slate-200"
               role="button"
               tabIndex={0}
-              onClick={(e) => onZoom(e)}
+              onClick={() => onZoom()}
             >
               <MdMinimize size={18} className="absolute -bottom-[1px]" />
             </div>

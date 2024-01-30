@@ -114,7 +114,7 @@ const LabelManagement = ({ isShowSidebar }: LabelManagementProp) => {
   };
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full border-t pt-1">
       <ButtonAddLabel isShowSidebar={isShowSidebar} onClickAdd={handleClickAdd} />
       {labelOption?.map((item) => (
         <LabelGroup

@@ -85,7 +85,7 @@ const LabelGroup = ({ label, id, childrenLabel, className, onRemove, onClickEdit
                 tabIndex={0}
                 onClick={handleClickLabelGroup}
                 className={twMerge(
-                  'rounded-full p-1.5 pl-[9px]  duration-200',
+                  'rounded-full p-1.5 pl-[9px]  text-gray-500 duration-200',
                   isShowChildren && 'rotate-90',
                   _.isEmpty(childrenLabel) && '',
                   isShowFullSidebar && !_.isEmpty(childrenLabel) && 'group-hover:opacity-90',
@@ -94,7 +94,9 @@ const LabelGroup = ({ label, id, childrenLabel, className, onRemove, onClickEdit
               >
                 <BiLabel size={18} />
               </div>
-              <p className={twMerge('-ml-1 w-3/4 truncate text-sm', `text-[${colorPicker}]`)}>{label}</p>
+              <p className={twMerge('-ml-1 w-3/4 truncate text-sm font-semibold', `text-[${colorPicker}]`)}>
+                {label}
+              </p>
             </div>
           </div>
           <div

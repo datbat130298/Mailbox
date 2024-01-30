@@ -14,7 +14,7 @@ import ViewMailSpaceItem from '../ViewMailSpaceItem/ViewMailSpaceItem';
 interface ViewMailSpaceContainerProp {
   mailData: MailType | null;
   type: string;
-  getDetailById?: (id: number) => void;
+  getDetailById?: (id: number) => Promise<void>;
   handleClose: () => void;
   onDeleteEmail?: (id: Array<number>) => void;
   onRemoveItem?: (id: number) => void;
@@ -39,27 +39,27 @@ const ViewMailSpaceContainer = ({
     setIsLoading(true);
     if (_.isFunction(getDetailById)) {
       getDetailById(id)
-        .then((res: Array<MailType> | MailType) => {
+        .then((res) => {
           if (_.isArray(res)) {
             setConversation(res);
             return;
           }
-          setSelectedMail(res as MailType);
+          setSelectedMail(res as unknown as MailType);
         })
         .finally(() => setIsLoading(false));
     }
   }, []);
 
-  const fetchDataDetailCustom = useCallback((id: number, functionCallback: (id: number) => void) => {
+  const fetchDataDetailCustom = useCallback((id: number, functionCallback: (id: number) => Promise<void>) => {
     setIsLoading(true);
     if (_.isFunction(functionCallback)) {
       functionCallback(id)
-        .then((res: Array<MailType> | MailType) => {
+        .then((res) => {
           if (_.isArray(res)) {
             setConversation(res);
             return;
           }
-          setSelectedMail(res as MailType);
+          setSelectedMail(res as unknown as MailType);
         })
         .finally(() => setIsLoading(false));
     }

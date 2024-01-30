@@ -96,7 +96,7 @@ const ContainerTrash = () => {
         const filterTrash = trashDataType.filter((trashItem) => trashItem.id === id);
         return filterTrash[0];
       });
-      restoreEmailIds(param as unknown as TrashDataType[])
+      return restoreEmailIds(param as unknown as TrashDataType[])
         .then(() => {
           toast.success(t('restore_success'));
           fetchData();
