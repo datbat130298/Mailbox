@@ -8,8 +8,8 @@ import { TableColumnFilterState } from './elementTypes';
 import { UserDataType } from './userTypes';
 
 export interface AuthTokensType {
-  accessToken: string;
-  refreshToken: string;
+  access_token: string;
+  refresh_token: string;
   token?: string;
 }
 

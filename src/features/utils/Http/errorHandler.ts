@@ -24,10 +24,10 @@ const errorHandler = async (
         if (refreshToken) {
           try {
             const newTokens = await AuthService.refreshAccessToken(refreshToken);
-            AuthService.setAccessTokens(newTokens.accessToken, newTokens.refreshToken);
+            AuthService.setAccessTokens(newTokens.access_token, newTokens.refresh_token);
             config.headers = {
               ...config.headers,
-              Authorization: `Bearer ${newTokens.accessToken}`,
+              Authorization: `Bearer ${newTokens.access_token}`,
             };
             config.autoRefreshToken = false;
             return await instance?.(config);

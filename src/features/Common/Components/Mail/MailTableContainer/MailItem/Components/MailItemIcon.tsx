@@ -17,7 +17,7 @@ const MailItemIcon = ({ onChangeSelectRow, isStar, id, selected, onClickStar }: 
   return (
     <div className="hidden h-full w-full items-center gap-[13px] md:flex">
       <Checkbox checked={selected} onChange={handleOnChangeCheck} />
-      <div className="mb-0.5" role="button" tabIndex={0} onClick={onClickStar}>
+      <div className="mb-0.5 hidden w-0" role="button" tabIndex={0} onClick={onClickStar}>
         {!isStar ? (
           <FaRegStar size={17} className="text-gray-700 opacity-30 group-hover:opacity-90" />
         ) : (

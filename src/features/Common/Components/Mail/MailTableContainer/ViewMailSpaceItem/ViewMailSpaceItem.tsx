@@ -181,7 +181,7 @@ const ViewMailSpaceItem = ({
       className={twMerge(
         'mr-4 h-fit flex-col items-center justify-start border-b-[0.5px]',
         isActive && 'border-l-2 border-l-blue-500 bg-white',
-        mail.id === selectedMail.id && 'border-l-2 border-l-blue-500 bg-white',
+        mail.id === selectedMail.id && 'border-l-2 border-l-mainColor-500 bg-white',
         isOpen && 'bg-white',
         !isOpen && 'group',
       )}

@@ -29,7 +29,7 @@ const MailItemEmail = ({ mail, type, isReadMail }: MailItemEmailProp) => {
   return (
     <div
       className={twMerge(
-        'my-auto h-fit w-40 overflow-hidden text-ellipsis whitespace-nowrap text-left font-semibold text-gray-900 md:flex-shrink-0',
+        'my-auto h-fit w-40 overflow-hidden text-ellipsis whitespace-nowrap text-left font-semibold text-gray-700 md:flex-shrink-0',
         itemMailStyle === 'classic' && 'my-0 w-full flex-1 text-left',
         isReadMail && 'font-normal',
         type === TypeChat.DRAFT && 'font-semibold text-primary-500',

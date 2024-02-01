@@ -63,7 +63,6 @@ const Login = () => {
     setError(null);
     AuthService.loginWithEmailPassword(email, password)
       .then((res) => {
-        console.log(res.data.data.refresh_token);
         setAccessTokens(res.data.data.access_token || '', res.data.data.refresh_token || '');
         return AuthService.getMe();
       })

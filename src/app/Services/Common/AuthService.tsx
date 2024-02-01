@@ -1,12 +1,8 @@
 import Cookies from 'universal-cookie';
 import axiosInstance from '../../../features/utils/Http/axios';
-import { COMMON_AUTH_API } from '../../Const/COMMON_API';
-import {
-  AuthLoginType,
-  AuthRegisterFormDataType,
-  AuthTokensType,
-  AxiosResponseType,
-} from '../../Types/commonTypes';
+import storage from '../../../features/utils/storage';
+import { COMMON_AUTH_API, IS_ALLOW_LOGIN_FORM, IS_ALLOW_LOGIN_TOKEN } from '../../Const/COMMON_API';
+import { AuthLoginType, AuthRegisterFormDataType, AxiosResponseType } from '../../Types/commonTypes';
 import { UserDataType } from '../../Types/userTypes';
 import { getQueryURL } from './CommonService';
 
@@ -25,27 +21,36 @@ const getMe = (): Promise<AxiosResponseType<UserDataType>> =>
   );
 
 const getAccessTokens = () => ({
-  accessToken: window.localStorage.getItem('accessToken') || '',
-  refreshToken: window.localStorage.getItem('refreshToken') || '',
+  accessToken: window.localStorage.getItem('access_token') || '',
+  refreshToken: window.localStorage.getItem('refresh_token') || '',
 });
 
-const setAccessTokens = (
-  accessToken: AuthTokensType['accessToken'],
-  refreshToken: AuthTokensType['refreshToken'],
-) => {
-  window.localStorage.setItem('accessToken', accessToken);
-  window.localStorage.setItem('refreshToken', refreshToken);
+const setAccessTokens = (accessToken: string, refreshToken: string, isGlobal = false) => {
+  if (IS_ALLOW_LOGIN_FORM) {
+    storage.local.set('access_token', accessToken);
+    storage.local.set('refresh_token', refreshToken);
+  }
+
+  if (isGlobal || IS_ALLOW_LOGIN_TOKEN) {
+    storage.cookies.set('access_token', accessToken);
+    storage.cookies.set('refresh_token', refreshToken);
+  }
 };
 
-const refreshAccessToken = (refreshToken: AuthTokensType['refreshToken']): Promise<AuthTokensType> => {
-  return new Promise((resolve) => {
-    window.setTimeout(() => {
-      resolve({
-        accessToken: 'newAccessToken',
-        refreshToken,
-      });
-    }, 1000);
-  });
+const refreshAccessToken = async (token: string) => {
+  const response = await axiosInstance.post(
+    'refresh-token',
+    {
+      token,
+    },
+    {
+      autoRefreshToken: false,
+      willRedirect: false,
+      basePath: process.env.REACT_APP_BACKEND_API_AUTH_BASE_PATH,
+    },
+  );
+
+  return response.data.data;
 };
 
 const createAccount = ({
@@ -81,14 +86,6 @@ const loginWithEmailPassword = (email: AuthLoginType['email'], password: AuthLog
     },
   );
 
-const logOut = async () => {
-  const response = await axiosInstance.post(COMMON_AUTH_API.LOGOUT);
-  window.localStorage.removeItem('access_token');
-  window.localStorage.removeItem('refresh_token');
-
-  return response.data.data;
-};
-
 const getLoginStatus = async () => {
   const isLogged = cookie.get('logged');
   if (!isLogged) throw Error();
@@ -96,14 +93,50 @@ const getLoginStatus = async () => {
 };
 
 const getAccessToken = () => {
-  return window.localStorage.getItem('accessToken');
+  const localToken = storage.local.get('access_token');
+
+  if (localToken) {
+    return localToken;
+  }
+
+  if (!IS_ALLOW_LOGIN_TOKEN) {
+    return null;
+  }
+
+  return storage.cookies.get('access_token');
 };
 
-const setTokens = (accessToken: string) => {
-  window.localStorage.setItem('access_token', accessToken);
+const setTokens = (accessToken: string, refreshToken: string, isGlobal = false) => {
+  storage.local.set('access_token', accessToken);
+  storage.local.set('refresh_token', refreshToken);
+
+  if (isGlobal || IS_ALLOW_LOGIN_TOKEN) {
+    storage.cookies.set('access_token', accessToken);
+    storage.cookies.set('refresh_token', refreshToken);
+  }
 };
 
+const clearTokens = (isRemoveGlobal = false) => {
+  storage.local.remove('access_token');
+  storage.local.remove('refresh_token');
+
+  if (IS_ALLOW_LOGIN_TOKEN || isRemoveGlobal) {
+    storage.cookies.remove('access_token');
+    storage.cookies.remove('refresh_token');
+  }
+};
+
+const logOut = async (isRemoveGlobal = false) => {
+  const response = await axiosInstance.post(COMMON_AUTH_API.LOGOUT);
+  window.localStorage.removeItem('access_token');
+  window.localStorage.removeItem('refresh_token');
+
+  clearTokens(isRemoveGlobal);
+
+  return response.data.data;
+};
 export {
+  clearTokens,
   createAccount,
   getAccessToken,
   getAccessTokens,

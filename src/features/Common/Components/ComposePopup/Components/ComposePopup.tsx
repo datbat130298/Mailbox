@@ -47,7 +47,7 @@ export interface ComposePopupProps {
   composePopupStyle?: ComposePopupStyleType;
   id?: string;
   onClose?: (isSave?: boolean) => void;
-  onZoom: (e: React.MouseEvent) => void;
+  onZoom: () => void;
   onChangeSubjectInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onClear?: () => void;
   setComposeViewType?: Dispatch<SetStateAction<ComposeViewTypeEnum>>;
@@ -279,7 +279,7 @@ const ComposePopup = ({
         <ComposePopupHeader
           title={!_.isEmpty(fromMail) ? `${t('reply')}: ${debounceSubject}` : debounceSubject}
           onClose={handleClose}
-          onZoom={(e: React.MouseEvent) => onZoom(e)}
+          onZoom={onZoom}
           onChangeViewType={(e: React.MouseEvent) => handleChangeViewTypeCompose(e)}
         />
       )}

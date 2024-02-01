@@ -30,13 +30,15 @@ const SidebarGroup = ({ children, title, isShowSidebar }: SidebarGroupProp) => {
         className={twMerge(
           'relative mx-3 my-0.5 flex w-[64px] items-center justify-between rounded-lg py-2 pl-4 text-gray-700  transition-width duration-300 hover:bg-slate-200',
           (isShowFullSidebar || isShowSidebar) && 'w-[92%] sm:w-60',
-          isShow && (!isShowFullSidebar || !isShowSidebar) && ' bg-slate-200 text-primary-700',
-          isShow && (isShowFullSidebar || isShowSidebar) && ' bg-slate-200 font-semibold text-primary-700',
+          isShow && (!isShowFullSidebar || !isShowSidebar) && ' bg-slate-200 text-blue-700',
+          isShow && (isShowFullSidebar || isShowSidebar) && ' bg-slate-200 font-semibold text-blue-700',
         )}
       >
         <div className="ml-[5px] flex h-full w-full items-center">
           <div
-            className={twMerge('relative flex  w-6  flex-shrink-0 items-center justify-center rounded-full')}
+            className={twMerge(
+              'relative flex w-6 flex-shrink-0  items-center justify-center rounded-full text-gray-500',
+            )}
           >
             <BiChevronRight
               className={twMerge('duration-200', isShow && 'rotate-90', isCollapsed && '')}
@@ -46,7 +48,7 @@ const SidebarGroup = ({ children, title, isShowSidebar }: SidebarGroupProp) => {
 
           <div
             className={twMerge(
-              '-mt-[2px] line-clamp-1 text-ellipsis break-all pl-4 text-center text-sm opacity-0',
+              '-mt-[2px] line-clamp-1 text-ellipsis break-all pl-4 text-center text-sm font-semibold text-gray-700 opacity-0',
               (isShowFullSidebar || isShowSidebar) && 'opacity-1',
             )}
             style={{ transition: '.4s', transitionDelay: '.05s' }}

@@ -15,12 +15,12 @@ const getTrash = async (options: BaseQueryParamsType) => {
     },
     options?.filterParams,
   );
-  const response = await axiosInstance.get(`/mailbox/emails/trash?${paramString}`);
+  const response = await axiosInstance.get(`/emails/trash?${paramString}`);
   return response.data;
 };
 
 const restoreEmailIds = async (ids: Array<TrashDataType>) => {
-  const response = await axiosInstance.post(`/mailbox/trash/restore`, { objects: ids });
+  const response = await axiosInstance.post(`/trash/restore`, { objects: ids });
   return response.data.data;
 };
 

@@ -34,18 +34,18 @@ const ComposePopupButtonSend = ({
       {!isLoading && (
         <div
           className={twMerge(
-            'item-center relative flex translate-y-1 rounded-full bg-primary-500 text-white',
+            'relative flex translate-y-1 items-center rounded-full bg-mainColor-500 text-white',
           )}
         >
           <ButtonRipple
-            className=" flex h-9 w-16 items-center justify-center rounded-l-full border-r border-gray-200 text-sm font-medium uppercase ring-0 hover:bg-primary-700"
+            className=" flex h-9 w-16 items-center justify-center rounded-l-full border-r border-gray-200 bg-mainColor-500 text-sm font-medium uppercase ring-0 hover:bg-primary-700"
             onClick={onClickSend}
           >
             {t('send')}
           </ButtonRipple>
 
           <ButtonRipple
-            className="py-auto flex items-center rounded-r-full px-2 ring-0 hover:bg-primary-700"
+            className="py-auto flex items-center rounded-r-full bg-mainColor-500 px-2 ring-0 hover:bg-mainColor-500"
             onClick={handleClickArrow}
           >
             <RiArrowUpSFill size={15} className="rotate-180" />

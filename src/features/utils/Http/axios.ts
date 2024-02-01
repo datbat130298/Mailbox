@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { remove } from 'lodash';
+import { List, remove } from 'lodash';
 import { AuthService } from '../../../app/Services';
 import { joinURL } from '../helpers';
 import errorHandler from './errorHandler';
@@ -24,11 +24,15 @@ const axiosInstance = axios.create({
   withCredentials: true,
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-axiosInstance.interceptors.request.use((request: any) => {
+axiosInstance.interceptors.request.use((request) => {
   const { url: originUrl, basePath } = request;
-  const defaultBasePath = process.env.REACT_APP_BACKEND_API_BASE_PATH;
-  const url = joinURL(basePath ?? defaultBasePath, originUrl);
+  const defaultBasePath = process.env.REACT_APP_BACKEND_API_BASE_PATH!;
+  const defaultAuthBasePath = process.env.REACT_APP_BACKEND_API_AUTH_BASE_PATH!;
+  let url = originUrl;
+
+  if (!(originUrl!.includes(defaultAuthBasePath) || originUrl!.includes(defaultBasePath))) {
+    url = joinURL(basePath ?? defaultBasePath, originUrl);
+  }
 
   request.url = url;
 
@@ -36,12 +40,11 @@ axiosInstance.interceptors.request.use((request: any) => {
     request.headers['Content-Type'] = 'application/json';
   }
 
-  if (!request.headers.Authorization || request.headers.Authorization.includes('undefined')) {
+  if (!request.headers.Authorization || request.headers.Authorization.toString().includes('undefined')) {
     const token = AuthService.getAccessToken();
 
     if (!token) {
-      console.log(token);
-      remove(request.headers, 'Authorization');
+      remove(request!.headers as unknown as List<string>, 'Authorization');
     } else {
       request.headers.Authorization = `Bearer ${AuthService.getAccessToken()}`;
     }
